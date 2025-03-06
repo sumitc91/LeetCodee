@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCodee - Solutions to LeetCode Problems</title>
+    <meta name="description" content="Find detailed solutions to LeetCode problems in multiple programming languages. Easy to understand explanations and optimal approaches.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .problem-list {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .problem {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .problem:last-child {
+            border-bottom: none;
+        }
+        .problem h3 {
+            margin: 0;
+            color: #2a2a2a;
+        }
+        .problem p {
+            margin: 10px 0;
+            color: #666;
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #90EE90; color: #1a1a1a; }
+        .medium { background-color: #FFB84D; color: #1a1a1a; }
+        .hard { background-color: #FF7676; color: #1a1a1a; }
+        .languages {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>LeetCodee</h1>
+        <p>Detailed solutions to LeetCode problems in multiple programming languages</p>
+    </header>
+
+    <input type="text" class="search-box" placeholder="Search problems..." id="searchBox">
+
+    <div class="problem-list">
+        <div class="problem">
+            <span class="difficulty easy">Easy</span>
+            <h3><a href="/problems/remove-element/description/">27. Remove Element</a></h3>
+            <p>Remove all occurrences of a value from an array in-place.</p>
+            <div class="languages">
+                Solutions: 
+                <a href="/problems/remove-element/description/#python">Python</a> |
+                <a href="/problems/remove-element/description/#java">Java</a> |
+                <a href="/problems/remove-element/description/#cpp">C++</a> |
+                <a href="/problems/remove-element/description/#javascript">JavaScript</a> |
+                <a href="/problems/remove-element/description/#csharp">C#</a>
+            </div>
+        </div>
+
+        <div class="problem">
+            <span class="difficulty easy">Easy</span>
+            <h3><a href="/problems/merge-sorted-array/description/">88. Merge Sorted Array</a></h3>
+            <p>Merge two sorted arrays into one sorted array in-place.</p>
+            <div class="languages">
+                Solutions: 
+                <a href="/problems/merge-sorted-array/description/#python">Python</a> |
+                <a href="/problems/merge-sorted-array/description/#java">Java</a> |
+                <a href="/problems/merge-sorted-array/description/#cpp">C++</a> |
+                <a href="/problems/merge-sorted-array/description/#javascript">JavaScript</a> |
+                <a href="/problems/merge-sorted-array/description/#csharp">C#</a>
+            </div>
+        </div>
+
+        <div class="problem">
+            <span class="difficulty easy">Easy</span>
+            <h3><a href="/problems/best-time-to-buy-and-sell-stock/description/">121. Best Time to Buy and Sell Stock</a></h3>
+            <p>Find the maximum profit you can achieve by buying and selling a stock once.</p>
+            <div class="languages">
+                Solutions: 
+                <a href="/problems/best-time-to-buy-and-sell-stock/description/#python">Python</a> |
+                <a href="/problems/best-time-to-buy-and-sell-stock/description/#java">Java</a> |
+                <a href="/problems/best-time-to-buy-and-sell-stock/description/#cpp">C++</a> |
+                <a href="/problems/best-time-to-buy-and-sell-stock/description/#javascript">JavaScript</a> |
+                <a href="/problems/best-time-to-buy-and-sell-stock/description/#csharp">C#</a>
+            </div>
+        </div>
+
+        <div class="problem">
+            <span class="difficulty easy">Easy</span>
+            <h3><a href="/problems/remove-duplicates-from-sorted-array/description/">26. Remove Duplicates from Sorted Array</a></h3>
+            <p>Remove duplicates from a sorted array in-place while maintaining the relative order of elements.</p>
+            <div class="languages">
+                Solutions: 
+                <a href="/problems/remove-duplicates-from-sorted-array/description/#python">Python</a> |
+                <a href="/problems/remove-duplicates-from-sorted-array/description/#java">Java</a> |
+                <a href="/problems/remove-duplicates-from-sorted-array/description/#cpp">C++</a> |
+                <a href="/problems/remove-duplicates-from-sorted-array/description/#javascript">JavaScript</a> |
+                <a href="/problems/remove-duplicates-from-sorted-array/description/#csharp">C#</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchBox = document.getElementById('searchBox');
+        const problems = document.querySelectorAll('.problem');
+
+        searchBox.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            problems.forEach(problem => {
+                const title = problem.querySelector('h3').textContent.toLowerCase();
+                const description = problem.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    problem.style.display = '';
+                } else {
+                    problem.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

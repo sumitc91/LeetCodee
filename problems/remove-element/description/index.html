@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Element - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 27: Remove Element. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #90EE90; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>27. Remove Element</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer array <code>nums</code> and an integer <code>val</code>, remove all occurrences of <code>val</code> in <code>nums</code> in-place. The order of the elements may be changed. Then return the number of elements in <code>nums</code> which are not equal to <code>val</code>.</p>
+        <p>Consider the number of elements in <code>nums</code> which are not equal to <code>val</code> be <code>k</code>, to get accepted, you need to do the following things:</p>
+        <ul>
+            <li>Change the array <code>nums</code> such that the first <code>k</code> elements of <code>nums</code> contain the elements which are not equal to <code>val</code>. The remaining elements of <code>nums</code> are not important as well as the size of <code>nums</code>.</li>
+            <li>Return <code>k</code>.</li>
+        </ul>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [3,2,2,3], val = 3
+Output: 2, nums = [2,2,_,_]
+Explanation: Your function should return k = 2, with the first two elements of nums being 2.
+It does not matter what you leave beyond the returned k (hence they are underscores).
+
+Example 2:
+Input: nums = [0,1,2,2,3,0,4,2], val = 2
+Output: 5, nums = [0,1,4,0,3,_,_,_]
+Explanation: Your function should return k = 5, with the first five elements of nums containing 0, 0, 1, 3, and 4.
+Note that the five elements can be returned in any order.
+It does not matter what you leave beyond the returned k (hence they are underscores).</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        # Initialize the pointer for next position to place non-val element
+        k = 0
+        
+        # Iterate through the array
+        for i in range(len(nums)):
+            # If current element is not val, place it at position k
+            if nums[i] != val:
+                nums[k] = nums[i]
+                k += 1
+        
+        return k</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public int removeElement(int[] nums, int val) {
+        // Initialize the pointer for next position to place non-val element
+        int k = 0;
+        
+        // Iterate through the array
+        for (int i = 0; i < nums.length; i++) {
+            // If current element is not val, place it at position k
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        
+        return k;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        // Initialize the pointer for next position to place non-val element
+        int k = 0;
+        
+        // Iterate through the array
+        for (int i = 0; i < nums.size(); i++) {
+            // If current element is not val, place it at position k
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        
+        return k;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {number[]} nums
+ * @param {number} val
+ * @return {number}
+ */
+var removeElement = function(nums, val) {
+    // Initialize the pointer for next position to place non-val element
+    let k = 0;
+    
+    // Iterate through the array
+    for (let i = 0; i < nums.length; i++) {
+        // If current element is not val, place it at position k
+        if (nums[i] !== val) {
+            nums[k] = nums[i];
+            k++;
+        }
+    }
+    
+    return k;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public int RemoveElement(int[] nums, int val) {
+        // Initialize the pointer for next position to place non-val element
+        int k = 0;
+        
+        // Iterate through the array
+        for (int i = 0; i < nums.Length; i++) {
+            // If current element is not val, place it at position k
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        
+        return k;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(1) as we modify the array in-place</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a two-pointer approach:</p>
+            <ul>
+                <li><code>k</code>: Points to the position where we'll place the next element that's not equal to val</li>
+                <li><code>i</code>: Iterates through the array</li>
+            </ul>
+            <p>Key points of the solution:</p>
+            <ul>
+                <li>We only move elements that are not equal to val</li>
+                <li>Elements equal to val are effectively "skipped"</li>
+                <li>The order of remaining elements might change</li>
+                <li>We don't need to worry about elements beyond position k</li>
+            </ul>
+            <p>The approach is optimal because:</p>
+            <ul>
+                <li>It works in-place without requiring extra space</li>
+                <li>Each element is examined exactly once</li>
+                <li>Elements are moved at most once</li>
+                <li>We don't need to maintain the relative order of elements</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
