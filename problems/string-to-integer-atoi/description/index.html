@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String to Integer (atoi) - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 8: String to Integer (atoi). Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>8. String to Integer (atoi)</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Implement the <code>myAtoi(string s)</code> function, which converts a string to a 32-bit signed integer (similar to C/C++'s <code>atoi</code> function).</p>
+        <p>The algorithm for <code>myAtoi(string s)</code> is as follows:</p>
+        <ol>
+            <li>Read in and ignore any leading whitespace.</li>
+            <li>Check if the next character (if not already at the end of the string) is <code>'-'</code> or <code>'+'</code>. Read this character in if it is either. This determines if the final result is negative or positive respectively. If neither is present, assume the result is positive.</li>
+            <li>Read in next the characters until the next non-digit character or the end of the input is reached. The rest of the string is ignored.</li>
+            <li>Convert these digits into an integer (i.e. <code>"123" → 123</code>, <code>"0032" → 32</code>). If no digits were read, then the integer is <code>0</code>. Change the sign as necessary (from step 2).</li>
+            <li>If the integer is out of the 32-bit signed integer range [-2³¹, 2³¹ - 1], then clamp the integer so that it remains in the range. Specifically, integers less than -2³¹ should be clamped to -2³¹, and integers greater than 2³¹ - 1 should be clamped to 2³¹ - 1.</li>
+            <li>Return the integer as the final result.</li>
+        </ol>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "42"
+Output: 42
+Explanation: The underlined characters are what is read in, the caret is the current reader position.
+Step 1: "42" (no characters read because there is no leading whitespace)
+         ^
+Step 2: "42" (no characters read because there is neither a '-' nor '+')
+         ^
+Step 3: "42" ("42" is read in)
+           ^
+The parsed integer is 42.
+Since 42 is in the range [-2³¹, 2³¹ - 1], the final result is 42.
+
+Example 2:
+Input: s = "   -42"
+Output: -42
+Explanation:
+Step 1: "   -42" (leading whitespace is read and ignored)
+            ^
+Step 2: "   -42" ('-' is read, so the result should be negative)
+             ^
+Step 3: "   -42" ("42" is read in)
+               ^
+The parsed integer is -42.
+Since -42 is in the range [-2³¹, 2³¹ - 1], the final result is -42.
+
+Example 3:
+Input: s = "4193 with words"
+Output: 4193
+Explanation:
+Step 1: "4193 with words" (no characters read because there is no leading whitespace)
+         ^
+Step 2: "4193 with words" (no characters read because there is neither a '-' nor '+')
+         ^
+Step 3: "4193 with words" ("4193" is read in; reading stops because the next character is a non-digit)
+             ^
+The parsed integer is 4193.
+Since 4193 is in the range [-2³¹, 2³¹ - 1], the final result is 4193.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def myAtoi(self, s: str) -> int:
+        s = s.strip()
+        if not s:
+            return 0
+            
+        sign = 1
+        result = 0
+        i = 0
+        
+        if s[0] in ['+', '-']:
+            sign = 1 if s[0] == '+' else -1
+            i += 1
+            
+        while i < len(s) and s[i].isdigit():
+            digit = int(s[i])
+            if result > (2**31 - 1) // 10 or (result == (2**31 - 1) // 10 and digit > 7):
+                return 2**31 - 1 if sign == 1 else -2**31
+            if result < -2**31 // 10 or (result == -2**31 // 10 and digit > 8):
+                return -2**31
+            result = result * 10 + sign * digit
+            i += 1
+            
+        return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public int myAtoi(String s) {
+        s = s.trim();
+        if (s.isEmpty()) {
+            return 0;
+        }
+        
+        int sign = 1;
+        int result = 0;
+        int i = 0;
+        
+        if (s.charAt(0) == '+' || s.charAt(0) == '-') {
+            sign = s.charAt(0) == '+' ? 1 : -1;
+            i++;
+        }
+        
+        while (i < s.length() && Character.isDigit(s.charAt(i))) {
+            int digit = s.charAt(i) - '0';
+            if (result > Integer.MAX_VALUE / 10 || 
+                (result == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)) {
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            if (result < Integer.MIN_VALUE / 10 || 
+                (result == Integer.MIN_VALUE / 10 && digit > -(Integer.MIN_VALUE % 10))) {
+                return Integer.MIN_VALUE;
+            }
+            result = result * 10 + sign * digit;
+            i++;
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    int myAtoi(string s) {
+        // Remove leading whitespace
+        s.erase(0, s.find_first_not_of(" "));
+        if (s.empty()) {
+            return 0;
+        }
+        
+        int sign = 1;
+        int result = 0;
+        int i = 0;
+        
+        if (s[0] == '+' || s[0] == '-') {
+            sign = s[0] == '+' ? 1 : -1;
+            i++;
+        }
+        
+        while (i < s.length() && isdigit(s[i])) {
+            int digit = s[i] - '0';
+            if (result > INT_MAX / 10 || 
+                (result == INT_MAX / 10 && digit > INT_MAX % 10)) {
+                return sign == 1 ? INT_MAX : INT_MIN;
+            }
+            if (result < INT_MIN / 10 || 
+                (result == INT_MIN / 10 && digit > -(INT_MIN % 10))) {
+                return INT_MIN;
+            }
+            result = result * 10 + sign * digit;
+            i++;
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {string} s
+ * @return {number}
+ */
+var myAtoi = function(s) {
+    s = s.trim();
+    if (!s) {
+        return 0;
+    }
+    
+    let sign = 1;
+    let result = 0;
+    let i = 0;
+    
+    if (s[0] === '+' || s[0] === '-') {
+        sign = s[0] === '+' ? 1 : -1;
+        i++;
+    }
+    
+    while (i < s.length && /\d/.test(s[i])) {
+        const digit = parseInt(s[i]);
+        if (result > Math.floor(Number.MAX_SAFE_INTEGER / 10) || 
+            (result === Math.floor(Number.MAX_SAFE_INTEGER / 10) && 
+             digit > Number.MAX_SAFE_INTEGER % 10)) {
+            return sign === 1 ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+        }
+        if (result < Math.floor(Number.MIN_SAFE_INTEGER / 10) || 
+            (result === Math.floor(Number.MIN_SAFE_INTEGER / 10) && 
+             digit > -(Number.MIN_SAFE_INTEGER % 10))) {
+            return Number.MIN_SAFE_INTEGER;
+        }
+        result = result * 10 + sign * digit;
+        i++;
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public int MyAtoi(string s) {
+        s = s.Trim();
+        if (string.IsNullOrEmpty(s)) {
+            return 0;
+        }
+        
+        int sign = 1;
+        int result = 0;
+        int i = 0;
+        
+        if (s[0] == '+' || s[0] == '-') {
+            sign = s[0] == '+' ? 1 : -1;
+            i++;
+        }
+        
+        while (i < s.Length && char.IsDigit(s[i])) {
+            int digit = s[i] - '0';
+            if (result > int.MaxValue / 10 || 
+                (result == int.MaxValue / 10 && digit > int.MaxValue % 10)) {
+                return sign == 1 ? int.MaxValue : int.MinValue;
+            }
+            if (result < int.MinValue / 10 || 
+                (result == int.MinValue / 10 && digit > -(int.MinValue % 10))) {
+                return int.MinValue;
+            }
+            result = result * 10 + sign * digit;
+            i++;
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input string</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a constant amount of extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution follows the Atoi algorithm step by step:</p>
+            <ul>
+                <li>First, we remove leading whitespace</li>
+                <li>We handle the sign character if present</li>
+                <li>We process digits one by one:
+                    <ul>
+                        <li>Convert each digit to an integer</li>
+                        <li>Check for overflow before multiplication</li>
+                        <li>Build the result with proper sign</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>We handle all edge cases (empty string, whitespace, signs)</li>
+                <li>We check for overflow at each step</li>
+                <li>We stop processing when we encounter non-digit characters</li>
+                <li>The solution is efficient as we only need to traverse the string once</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

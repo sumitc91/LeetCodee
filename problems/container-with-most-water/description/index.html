@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container With Most Water - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 11: Container With Most Water. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>11. Container With Most Water</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given an integer array <code>height</code> of length <code>n</code>. There are <code>n</code> vertical lines drawn such that the two endpoints of the <code>i<sup>th</sup></code> line are <code>(i, 0)</code> and <code>(i, height[i])</code>.</p>
+        <p>Find two lines that together with the x-axis form a container, such that the container contains the most water.</p>
+        <p>Return the maximum amount of water a container can store.</p>
+        <p>Notice that you may not slant the container.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+Example 2:
+Input: height = [1,1]
+Output: 1</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        left, right = 0, len(height) - 1
+        max_area = 0
+        
+        while left < right:
+            width = right - left
+            h = min(height[left], height[right])
+            area = width * h
+            max_area = max(max_area, area)
+            
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+                
+        return max_area</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int maxArea = 0;
+        
+        while (left < right) {
+            int width = right - left;
+            int h = Math.min(height[left], height[right]);
+            int area = width * h;
+            maxArea = Math.max(maxArea, area);
+            
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return maxArea;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int left = 0;
+        int right = height.size() - 1;
+        int maxArea = 0;
+        
+        while (left < right) {
+            int width = right - left;
+            int h = min(height[left], height[right]);
+            int area = width * h;
+            maxArea = max(maxArea, area);
+            
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return maxArea;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {number[]} height
+ * @return {number}
+ */
+var maxArea = function(height) {
+    let left = 0;
+    let right = height.length - 1;
+    let maxArea = 0;
+    
+    while (left < right) {
+        const width = right - left;
+        const h = Math.min(height[left], height[right]);
+        const area = width * h;
+        maxArea = Math.max(maxArea, area);
+        
+        if (height[left] < height[right]) {
+            left++;
+        } else {
+            right--;
+        }
+    }
+    
+    return maxArea;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public int MaxArea(int[] height) {
+        int left = 0;
+        int right = height.Length - 1;
+        int maxArea = 0;
+        
+        while (left < right) {
+            int width = right - left;
+            int h = Math.Min(height[left], height[right]);
+            int area = width * h;
+            maxArea = Math.Max(maxArea, area);
+            
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return maxArea;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a constant amount of extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the two-pointer technique:</p>
+            <ul>
+                <li>We start with two pointers at the ends of the array</li>
+                <li>For each pair of lines:
+                    <ul>
+                        <li>Calculate the width (distance between lines)</li>
+                        <li>Calculate the height (minimum of the two line heights)</li>
+                        <li>Calculate the area and update maximum if needed</li>
+                        <li>Move the pointer at the shorter line inward</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Moving the shorter line inward can only increase the area</li>
+                <li>Moving the taller line inward can only decrease the area</li>
+                <li>We only need to traverse the array once</li>
+                <li>We handle edge cases (empty array, single element) properly</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

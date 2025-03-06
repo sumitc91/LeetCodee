@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Expression Matching - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 10: Regular Expression Matching. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF375F; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>10. Regular Expression Matching</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an input string <code>s</code> and a pattern <code>p</code>, implement regular expression matching with support for <code>'.'</code> and <code>'*'</code> where:</p>
+        <ul>
+            <li><code>'.'</code> Matches any single character.</li>
+            <li><code>'*'</code> Matches zero or more of the preceding element.</li>
+        </ul>
+        <p>The matching should cover the entire input string (not partial).</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+
+Example 2:
+Input: s = "aa", p = "a*"
+Output: true
+Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
+
+Example 3:
+Input: s = "ab", p = ".*"
+Output: true
+Explanation: ".*" means "zero or more (*) of any character (.)".</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        m, n = len(s), len(p)
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
+        dp[0][0] = True
+        
+        for j in range(1, n + 1):
+            if p[j - 1] == '*':
+                dp[0][j] = dp[0][j - 2]
+                
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if p[j - 1] == s[i - 1] or p[j - 1] == '.':
+                    dp[i][j] = dp[i - 1][j - 1]
+                elif p[j - 1] == '*':
+                    dp[i][j] = dp[i][j - 2]
+                    if p[j - 2] == s[i - 1] or p[j - 2] == '.':
+                        dp[i][j] = dp[i][j] or dp[i - 1][j]
+                        
+        return dp[m][n]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public boolean isMatch(String s, String p) {
+        int m = s.length(), n = p.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+        
+        for (int j = 1; j <= n; j++) {
+            if (p.charAt(j - 1) == '*') {
+                dp[0][j] = dp[0][j - 2];
+            }
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p.charAt(j - 1) == s.charAt(i - 1) || p.charAt(j - 1) == '.') {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p.charAt(j - 1) == '*') {
+                    dp[i][j] = dp[i][j - 2];
+                    if (p.charAt(j - 2) == s.charAt(i - 1) || p.charAt(j - 2) == '.') {
+                        dp[i][j] = dp[i][j] || dp[i - 1][j];
+                    }
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.length(), n = p.length();
+        vector<vector<bool>> dp(m + 1, vector<bool>(n + 1, false));
+        dp[0][0] = true;
+        
+        for (int j = 1; j <= n; j++) {
+            if (p[j - 1] == '*') {
+                dp[0][j] = dp[0][j - 2];
+            }
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p[j - 1] == s[i - 1] || p[j - 1] == '.') {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p[j - 1] == '*') {
+                    dp[i][j] = dp[i][j - 2];
+                    if (p[j - 2] == s[i - 1] || p[j - 2] == '.') {
+                        dp[i][j] = dp[i][j] || dp[i - 1][j];
+                    }
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {string} s
+ * @param {string} p
+ * @return {boolean}
+ */
+var isMatch = function(s, p) {
+    const m = s.length, n = p.length;
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(false));
+    dp[0][0] = true;
+    
+    for (let j = 1; j <= n; j++) {
+        if (p[j - 1] === '*') {
+            dp[0][j] = dp[0][j - 2];
+        }
+    }
+    
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (p[j - 1] === s[i - 1] || p[j - 1] === '.') {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else if (p[j - 1] === '*') {
+                dp[i][j] = dp[i][j - 2];
+                if (p[j - 2] === s[i - 1] || p[j - 2] === '.') {
+                    dp[i][j] = dp[i][j] || dp[i - 1][j];
+                }
+            }
+        }
+    }
+    
+    return dp[m][n];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public bool IsMatch(string s, string p) {
+        int m = s.Length, n = p.Length;
+        bool[,] dp = new bool[m + 1, n + 1];
+        dp[0, 0] = true;
+        
+        for (int j = 1; j <= n; j++) {
+            if (p[j - 1] == '*') {
+                dp[0, j] = dp[0, j - 2];
+            }
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p[j - 1] == s[i - 1] || p[j - 1] == '.') {
+                    dp[i, j] = dp[i - 1, j - 1];
+                } else if (p[j - 1] == '*') {
+                    dp[i, j] = dp[i, j - 2];
+                    if (p[j - 2] == s[i - 1] || p[j - 2] == '.') {
+                        dp[i, j] = dp[i, j] || dp[i - 1, j];
+                    }
+                }
+            }
+        }
+        
+        return dp[m, n];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(mn) where m and n are the lengths of the input string and pattern</li>
+                <li><strong>Space Complexity:</strong> O(mn) for the dynamic programming table</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses dynamic programming:</p>
+            <ul>
+                <li>We create a 2D DP table where dp[i][j] represents if s[0:i] matches p[0:j]</li>
+                <li>For the base cases:
+                    <ul>
+                        <li>dp[0][0] = true (empty string matches empty pattern)</li>
+                        <li>dp[0][j] = dp[0][j-2] if p[j-1] is '*' (skip the pattern)</li>
+                    </ul>
+                </li>
+                <li>For each character:
+                    <ul>
+                        <li>If characters match or pattern has '.', use previous state</li>
+                        <li>If pattern has '*', we can either skip it or use it</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>We handle all special cases ('.', '*') properly</li>
+                <li>The DP approach ensures we don't recalculate states</li>
+                <li>We handle edge cases (empty strings, single characters) properly</li>
+                <li>The solution is efficient as we only need to fill the DP table once</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

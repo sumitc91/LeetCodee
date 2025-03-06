@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palindrome Number - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 9: Palindrome Number. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #90EE90; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>9. Palindrome Number</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer <code>x</code>, return <code>true</code> if <code>x</code> is a palindrome, and <code>false</code> otherwise.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: x = 121
+Output: true
+Explanation: 121 reads as 121 from left to right and from right to left.
+
+Example 2:
+Input: x = -121
+Output: false
+Explanation: From left to right, it reads -121. From right to left, reads 121-. Therefore it is not a palindrome.
+
+Example 3:
+Input: x = 10
+Output: false
+Explanation: Reads 01 from right to left. Therefore it is not a palindrome.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        if x < 0:
+            return False
+            
+        original = x
+        reversed_num = 0
+        
+        while x > 0:
+            digit = x % 10
+            reversed_num = reversed_num * 10 + digit
+            x //= 10
+            
+        return original == reversed_num</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public boolean isPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+        
+        int original = x;
+        int reversed = 0;
+        
+        while (x > 0) {
+            int digit = x % 10;
+            reversed = reversed * 10 + digit;
+            x /= 10;
+        }
+        
+        return original == reversed;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+        
+        int original = x;
+        int reversed = 0;
+        
+        while (x > 0) {
+            int digit = x % 10;
+            reversed = reversed * 10 + digit;
+            x /= 10;
+        }
+        
+        return original == reversed;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {number} x
+ * @return {boolean}
+ */
+var isPalindrome = function(x) {
+    if (x < 0) {
+        return false;
+    }
+    
+    const original = x;
+    let reversed = 0;
+    
+    while (x > 0) {
+        const digit = x % 10;
+        reversed = reversed * 10 + digit;
+        x = Math.floor(x / 10);
+    }
+    
+    return original === reversed;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public bool IsPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+        
+        int original = x;
+        int reversed = 0;
+        
+        while (x > 0) {
+            int digit = x % 10;
+            reversed = reversed * 10 + digit;
+            x /= 10;
+        }
+        
+        return original == reversed;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(log n) where n is the input number</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a constant amount of extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a number reversal approach:</p>
+            <ul>
+                <li>First, we handle negative numbers (they can't be palindromes)</li>
+                <li>We store the original number</li>
+                <li>We build the reversed number by:
+                    <ul>
+                        <li>Getting the last digit using modulo 10</li>
+                        <li>Building the reversed number by multiplying by 10 and adding the digit</li>
+                        <li>Removing the last digit by dividing by 10</li>
+                    </ul>
+                </li>
+                <li>Finally, we compare the original and reversed numbers</li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>We don't need to convert to string, making it more efficient</li>
+                <li>We handle edge cases (negative numbers, single digits) properly</li>
+                <li>The solution is space efficient as we only use a few variables</li>
+                <li>We can stop early if we detect it's not a palindrome</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
