@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substring with Concatenation of All Words - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 30: Substring with Concatenation of All Words. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF375F; color: #ffffff; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>30. Substring with Concatenation of All Words</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given a string <code>s</code> and an array of strings <code>words</code> of the same length. Return all starting indices of substring(s) in <code>s</code> that is a concatenation of each word in <code>words</code> exactly once, in any order, and without any intervening characters.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "barfoothefoobarman", words = ["foo","bar"]
+Output: [0,9]
+Explanation: Substrings starting at index 0 and 9 are "barfoo" and "foobar" respectively.
+The output order does not matter, returning [9,0] is fine too.
+
+Example 2:
+Input: s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
+Output: []
+
+Example 3:
+Input: s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
+Output: [6,9,12]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def findSubstring(s: str, words: List[str]) -> List[int]:
+    if not s or not words:
+        return []
+    
+    word_len = len(words[0])
+    word_count = len(words)
+    total_len = word_len * word_count
+    word_freq = Counter(words)
+    result = []
+    
+    for i in range(len(s) - total_len + 1):
+        seen = Counter()
+        j = 0
+        
+        while j < word_count:
+            word = s[i + j * word_len:i + (j + 1) * word_len]
+            
+            if word not in word_freq:
+                break
+                
+            seen[word] += 1
+            if seen[word] > word_freq[word]:
+                break
+                
+            j += 1
+            
+        if j == word_count:
+            result.append(i)
+    
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> result = new ArrayList<>();
+        if (s == null || s.length() == 0 || words == null || words.length == 0) {
+            return result;
+        }
+        
+        Map<String, Integer> wordFreq = new HashMap<>();
+        for (String word : words) {
+            wordFreq.put(word, wordFreq.getOrDefault(word, 0) + 1);
+        }
+        
+        int wordLen = words[0].length();
+        int wordCount = words.length;
+        int totalLen = wordLen * wordCount;
+        
+        for (int i = 0; i <= s.length() - totalLen; i++) {
+            Map<String, Integer> seen = new HashMap<>();
+            int j;
+            
+            for (j = 0; j < wordCount; j++) {
+                int start = i + j * wordLen;
+                String word = s.substring(start, start + wordLen);
+                
+                if (!wordFreq.containsKey(word)) {
+                    break;
+                }
+                
+                seen.put(word, seen.getOrDefault(word, 0) + 1);
+                if (seen.get(word) > wordFreq.get(word)) {
+                    break;
+                }
+            }
+            
+            if (j == wordCount) {
+                result.add(i);
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> result;
+        if (s.empty() || words.empty()) {
+            return result;
+        }
+        
+        unordered_map<string, int> wordFreq;
+        for (const string& word : words) {
+            wordFreq[word]++;
+        }
+        
+        int wordLen = words[0].length();
+        int wordCount = words.size();
+        int totalLen = wordLen * wordCount;
+        
+        for (int i = 0; i <= s.length() - totalLen; i++) {
+            unordered_map<string, int> seen;
+            int j;
+            
+            for (j = 0; j < wordCount; j++) {
+                string word = s.substr(i + j * wordLen, wordLen);
+                
+                if (wordFreq.find(word) == wordFreq.end()) {
+                    break;
+                }
+                
+                seen[word]++;
+                if (seen[word] > wordFreq[word]) {
+                    break;
+                }
+            }
+            
+            if (j == wordCount) {
+                result.push_back(i);
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @param {string[]} words
+ * @return {number[]}
+ */
+var findSubstring = function(s, words) {
+    if (!s || !words.length) return [];
+    
+    const result = [];
+    const wordLen = words[0].length;
+    const wordCount = words.length;
+    const totalLen = wordLen * wordCount;
+    const wordFreq = new Map();
+    
+    // Count word frequencies
+    for (const word of words) {
+        wordFreq.set(word, (wordFreq.get(word) || 0) + 1);
+    }
+    
+    for (let i = 0; i <= s.length - totalLen; i++) {
+        const seen = new Map();
+        let j;
+        
+        for (j = 0; j < wordCount; j++) {
+            const start = i + j * wordLen;
+            const word = s.slice(start, start + wordLen);
+            
+            if (!wordFreq.has(word)) break;
+            
+            seen.set(word, (seen.get(word) || 0) + 1);
+            if (seen.get(word) > wordFreq.get(word)) break;
+        }
+        
+        if (j === wordCount) result.push(i);
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<int> FindSubstring(string s, string[] words) {
+        var result = new List<int>();
+        if (string.IsNullOrEmpty(s) || words == null || words.Length == 0) {
+            return result;
+        }
+        
+        var wordFreq = new Dictionary<string, int>();
+        foreach (var word in words) {
+            if (!wordFreq.ContainsKey(word)) {
+                wordFreq[word] = 0;
+            }
+            wordFreq[word]++;
+        }
+        
+        int wordLen = words[0].Length;
+        int wordCount = words.Length;
+        int totalLen = wordLen * wordCount;
+        
+        for (int i = 0; i <= s.Length - totalLen; i++) {
+            var seen = new Dictionary<string, int>();
+            int j;
+            
+            for (j = 0; j < wordCount; j++) {
+                int start = i + j * wordLen;
+                string word = s.Substring(start, wordLen);
+                
+                if (!wordFreq.ContainsKey(word)) {
+                    break;
+                }
+                
+                if (!seen.ContainsKey(word)) {
+                    seen[word] = 0;
+                }
+                seen[word]++;
+                
+                if (seen[word] > wordFreq[word]) {
+                    break;
+                }
+            }
+            
+            if (j == wordCount) {
+                result.Add(i);
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n * m * k) where n is the length of string s, m is the length of each word, and k is the number of words</li>
+                <li><strong>Space Complexity:</strong> O(k) for storing word frequencies</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a sliding window approach with hash maps. Here's how it works:</p>
+            <ul>
+                <li>Create a frequency map of all words</li>
+                <li>For each possible starting position:
+                    <ul>
+                        <li>Try to match all words in any order</li>
+                        <li>Keep track of seen words and their frequencies</li>
+                        <li>If all words are matched, add the starting index</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>All words are of the same length</li>
+                <li>Words can be used only once</li>
+                <li>Order of words doesn't matter</li>
+                <li>Handle edge cases (empty string, empty words array)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
