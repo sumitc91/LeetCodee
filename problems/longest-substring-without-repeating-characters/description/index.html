@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Substring Without Repeating Characters - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 3: Longest Substring Without Repeating Characters. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>3. Longest Substring Without Repeating Characters</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a string <code>s</code>, find the length of the longest substring without repeating characters.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+
+Example 2:
+Input: s = "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+
+Example 3:
+Input: s = "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        seen = {}
+        max_length = 0
+        start = 0
+        
+        for end, char in enumerate(s):
+            if char in seen:
+                start = max(start, seen[char] + 1)
+            seen[char] = end
+            max_length = max(max_length, end - start + 1)
+            
+        return max_length</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        int maxLength = 0;
+        int start = 0;
+        
+        for (int end = 0; end < s.length(); end++) {
+            char c = s.charAt(end);
+            if (map.containsKey(c)) {
+                start = Math.max(start, map.get(c) + 1);
+            }
+            map.put(c, end);
+            maxLength = Math.max(maxLength, end - start + 1);
+        }
+        
+        return maxLength;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char, int> map;
+        int maxLength = 0;
+        int start = 0;
+        
+        for (int end = 0; end < s.length(); end++) {
+            char c = s[end];
+            if (map.find(c) != map.end()) {
+                start = max(start, map[c] + 1);
+            }
+            map[c] = end;
+            maxLength = max(maxLength, end - start + 1);
+        }
+        
+        return maxLength;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function(s) {
+    const map = new Map();
+    let maxLength = 0;
+    let start = 0;
+    
+    for (let end = 0; end < s.length; end++) {
+        const char = s[end];
+        if (map.has(char)) {
+            start = Math.max(start, map.get(char) + 1);
+        }
+        map.set(char, end);
+        maxLength = Math.max(maxLength, end - start + 1);
+    }
+    
+    return maxLength;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public int LengthOfLongestSubstring(string s) {
+        Dictionary<char, int> map = new Dictionary<char, int>();
+        int maxLength = 0;
+        int start = 0;
+        
+        for (int end = 0; end < s.Length; end++) {
+            char c = s[end];
+            if (map.ContainsKey(c)) {
+                start = Math.Max(start, map[c] + 1);
+            }
+            map[c] = end;
+            maxLength = Math.Max(maxLength, end - start + 1);
+        }
+        
+        return maxLength;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input string</li>
+                <li><strong>Space Complexity:</strong> O(min(m,n)) where m is the size of the character set</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the sliding window technique with a hash map:</p>
+            <ul>
+                <li>We maintain a window using start and end pointers</li>
+                <li>We use a hash map to store the last position of each character</li>
+                <li>For each character:
+                    <ul>
+                        <li>If we've seen it before, we update the start pointer to the position after its last occurrence</li>
+                        <li>We update the character's position in the hash map</li>
+                        <li>We update the maximum length if the current window is longer</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>The sliding window ensures we only consider valid substrings</li>
+                <li>The hash map helps us quickly find the last position of repeating characters</li>
+                <li>We only need to traverse the string once</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

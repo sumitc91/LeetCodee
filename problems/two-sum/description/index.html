@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Sum - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 1: Two Sum. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #90EE90; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>1. Two Sum</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers in <code>nums</code> such that they add up to <code>target</code>.</p>
+        <p>You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
+        <p>You can return the answer in any order.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] = 2 + 7 = 9, we return [0, 1].
+
+Example 2:
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+
+Example 3:
+Input: nums = [3,3], target = 6
+Output: [0,1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        seen = {}
+        for i, num in enumerate(nums):
+            complement = target - num
+            if complement in seen:
+                return [seen[complement], i]
+            seen[num] = i
+        return []</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        return new int[] {};
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> map;
+        for (int i = 0; i < nums.size(); i++) {
+            int complement = target - nums[i];
+            if (map.find(complement) != map.end()) {
+                return {map[complement], i};
+            }
+            map[nums[i]] = i;
+        }
+        return {};
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function(nums, target) {
+    const map = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        const complement = target - nums[i];
+        if (map.has(complement)) {
+            return [map.get(complement), i];
+        }
+        map.set(nums[i], i);
+    }
+    return [];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public int[] TwoSum(int[] nums, int target) {
+        Dictionary<int, int> map = new Dictionary<int, int>();
+        for (int i = 0; i < nums.Length; i++) {
+            int complement = target - nums[i];
+            if (map.ContainsKey(complement)) {
+                return new int[] { map[complement], i };
+            }
+            map[nums[i]] = i;
+        }
+        return new int[] {};
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(n) as we store at most n elements in the hash map</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a hash map approach:</p>
+            <ul>
+                <li>We use a hash map to store each number and its index as we iterate through the array</li>
+                <li>For each number, we:
+                    <ul>
+                        <li>Calculate its complement (target - current number)</li>
+                        <li>Check if the complement exists in our hash map</li>
+                        <li>If it exists, we've found our pair</li>
+                        <li>If not, we add the current number and its index to the hash map</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Why this works:</p>
+            <ul>
+                <li>By storing numbers we've seen in a hash map, we can look up complements in O(1) time</li>
+                <li>We only need to traverse the array once</li>
+                <li>The hash map ensures we don't use the same element twice</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
