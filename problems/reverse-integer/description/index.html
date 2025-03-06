@@ -1,1 +1,277 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Integer - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 7: Reverse Integer. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>7. Reverse Integer</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a signed 32-bit integer <code>x</code>, return <code>x</code> with its digits reversed. If reversing <code>x</code> causes the value to go outside the signed 32-bit integer range [-2³¹, 2³¹ - 1], then return <code>0</code>.</p>
+        <p>Assume the environment does not allow you to store 64-bit integers (signed or unsigned).</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: x = 123
+Output: 321
+
+Example 2:
+Input: x = -123
+Output: -321
+
+Example 3:
+Input: x = 120
+Output: 21</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>class Solution:
+    def reverse(self, x: int) -> int:
+        sign = 1 if x >= 0 else -1
+        x = abs(x)
+        result = 0
+        
+        while x > 0:
+            digit = x % 10
+            if result > (2**31 - 1) // 10 or (result == (2**31 - 1) // 10 and digit > 7):
+                return 0
+            if result < -2**31 // 10 or (result == -2**31 // 10 and digit > 8):
+                return 0
+            result = result * 10 + digit
+            x //= 10
+            
+        return sign * result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>class Solution {
+    public int reverse(int x) {
+        int sign = x >= 0 ? 1 : -1;
+        x = Math.abs(x);
+        int result = 0;
+        
+        while (x > 0) {
+            int digit = x % 10;
+            if (result > Integer.MAX_VALUE / 10 || 
+                (result == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10)) {
+                return 0;
+            }
+            if (result < Integer.MIN_VALUE / 10 || 
+                (result == Integer.MIN_VALUE / 10 && digit > -(Integer.MIN_VALUE % 10))) {
+                return 0;
+            }
+            result = result * 10 + digit;
+            x /= 10;
+        }
+        
+        return sign * result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>class Solution {
+public:
+    int reverse(int x) {
+        int sign = x >= 0 ? 1 : -1;
+        x = abs(x);
+        int result = 0;
+        
+        while (x > 0) {
+            int digit = x % 10;
+            if (result > INT_MAX / 10 || 
+                (result == INT_MAX / 10 && digit > INT_MAX % 10)) {
+                return 0;
+            }
+            if (result < INT_MIN / 10 || 
+                (result == INT_MIN / 10 && digit > -(INT_MIN % 10))) {
+                return 0;
+            }
+            result = result * 10 + digit;
+            x /= 10;
+        }
+        
+        return sign * result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>/**
+ * @param {number} x
+ * @return {number}
+ */
+var reverse = function(x) {
+    const sign = x >= 0 ? 1 : -1;
+    x = Math.abs(x);
+    let result = 0;
+    
+    while (x > 0) {
+        const digit = x % 10;
+        if (result > Math.floor(Number.MAX_SAFE_INTEGER / 10) || 
+            (result === Math.floor(Number.MAX_SAFE_INTEGER / 10) && 
+             digit > Number.MAX_SAFE_INTEGER % 10)) {
+            return 0;
+        }
+        if (result < Math.floor(Number.MIN_SAFE_INTEGER / 10) || 
+            (result === Math.floor(Number.MIN_SAFE_INTEGER / 10) && 
+             digit > -(Number.MIN_SAFE_INTEGER % 10))) {
+            return 0;
+        }
+        result = result * 10 + digit;
+        x = Math.floor(x / 10);
+    }
+    
+    return sign * result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>public class Solution {
+    public int Reverse(int x) {
+        int sign = x >= 0 ? 1 : -1;
+        x = Math.Abs(x);
+        int result = 0;
+        
+        while (x > 0) {
+            int digit = x % 10;
+            if (result > int.MaxValue / 10 || 
+                (result == int.MaxValue / 10 && digit > int.MaxValue % 10)) {
+                return 0;
+            }
+            if (result < int.MinValue / 10 || 
+                (result == int.MinValue / 10 && digit > -(int.MinValue % 10))) {
+                return 0;
+            }
+            result = result * 10 + digit;
+            x /= 10;
+        }
+        
+        return sign * result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(log |x|) where |x| is the absolute value of the input number</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a constant amount of extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a digit-by-digit approach:</p>
+            <ul>
+                <li>First, we handle the sign of the number</li>
+                <li>We work with the absolute value of the number</li>
+                <li>For each digit:
+                    <ul>
+                        <li>Get the last digit using modulo 10</li>
+                        <li>Check for overflow before multiplication</li>
+                        <li>Build the reversed number</li>
+                        <li>Remove the last digit by dividing by 10</li>
+                    </ul>
+                </li>
+                <li>Finally, we apply the sign to the result</li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>We handle overflow carefully at each step</li>
+                <li>We work with the absolute value to simplify the logic</li>
+                <li>We handle edge cases (0, negative numbers) properly</li>
+                <li>The solution is efficient as we only need to process each digit once</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
