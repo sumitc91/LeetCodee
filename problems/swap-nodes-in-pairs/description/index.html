@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swap Nodes in Pairs - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 24: Swap Nodes in Pairs. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>24. Swap Nodes in Pairs</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the values in the list's nodes (i.e., only nodes themselves may be changed.)</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [1,2,3,4]
+Output: [2,1,4,3]
+
+Example 2:
+Input: head = []
+Output: []
+
+Example 3:
+Input: head = [1]
+Output: [1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+def swapPairs(head: Optional[ListNode]) -> Optional[ListNode]:
+    if not head or not head.next:
+        return head
+        
+    dummy = ListNode(0)
+    dummy.next = head
+    prev = dummy
+    
+    while head and head.next:
+        # Nodes to be swapped
+        first = head
+        second = head.next
+        
+        # Swapping
+        prev.next = second
+        first.next = second.next
+        second.next = first
+        
+        # Move pointers
+        prev = first
+        head = first.next
+    
+    return dummy.next</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy;
+        
+        while (head != null && head.next != null) {
+            // Nodes to be swapped
+            ListNode first = head;
+            ListNode second = head.next;
+            
+            // Swapping
+            prev.next = second;
+            first.next = second.next;
+            second.next = first;
+            
+            // Move pointers
+            prev = first;
+            head = first.next;
+        }
+        
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if (!head || !head->next) {
+            return head;
+        }
+        
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* prev = dummy;
+        
+        while (head && head->next) {
+            // Nodes to be swapped
+            ListNode* first = head;
+            ListNode* second = head->next;
+            
+            // Swapping
+            prev->next = second;
+            first->next = second->next;
+            second->next = first;
+            
+            // Move pointers
+            prev = first;
+            head = first->next;
+        }
+        
+        ListNode* result = dummy->next;
+        delete dummy;
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var swapPairs = function(head) {
+    if (!head || !head.next) {
+        return head;
+    }
+    
+    const dummy = new ListNode(0);
+    dummy.next = head;
+    let prev = dummy;
+    
+    while (head && head.next) {
+        // Nodes to be swapped
+        const first = head;
+        const second = head.next;
+        
+        // Swapping
+        prev.next = second;
+        first.next = second.next;
+        second.next = first;
+        
+        // Move pointers
+        prev = first;
+        head = first.next;
+    }
+    
+    return dummy.next;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy;
+        
+        while (head != null && head.next != null) {
+            // Nodes to be swapped
+            ListNode first = head;
+            ListNode second = head.next;
+            
+            // Swapping
+            prev.next = second;
+            first.next = second.next;
+            second.next = first;
+            
+            // Move pointers
+            prev = first;
+            head = first.next;
+        }
+        
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the linked list</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a constant amount of extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses an iterative approach to swap adjacent nodes. Here's how it works:</p>
+            <ul>
+                <li>Use a dummy node to handle the case of swapping the head</li>
+                <li>For each pair of nodes:
+                    <ul>
+                        <li>Store references to both nodes</li>
+                        <li>Adjust the next pointers to swap them</li>
+                        <li>Move to the next pair</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Dummy node simplifies handling the head of the list</li>
+                <li>We maintain a prev pointer to connect the swapped pairs</li>
+                <li>The solution handles edge cases (empty list, single node) properly</li>
+                <li>No extra space is needed as we only modify pointers</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

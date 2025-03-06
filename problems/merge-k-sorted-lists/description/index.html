@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge k Sorted Lists - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 23: Merge k Sorted Lists. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF375F; color: #ffffff; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>23. Merge k Sorted Lists</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given an array of <code>k</code> linked-lists <code>lists</code>, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: lists = [[1,4,5],[1,3,4],[2,6]]
+Output: [1,1,2,3,4,4,5,6]
+Explanation: The linked-lists are:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+merging them into one sorted list:
+1->1->2->3->4->4->5->6
+
+Example 2:
+Input: lists = []
+Output: []
+
+Example 3:
+Input: lists = [[]]
+Output: []</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        if not lists:
+            return None
+        
+        def mergeTwoLists(l1, l2):
+            dummy = ListNode(0)
+            current = dummy
+            
+            while l1 and l2:
+                if l1.val <= l2.val:
+                    current.next = l1
+                    l1 = l1.next
+                else:
+                    current.next = l2
+                    l2 = l2.next
+                current = current.next
+            
+            current.next = l1 if l1 else l2
+            return dummy.next
+        
+        # Merge lists in pairs using divide and conquer
+        while len(lists) > 1:
+            merged = []
+            for i in range(0, len(lists), 2):
+                l1 = lists[i]
+                l2 = lists[i + 1] if i + 1 < len(lists) else None
+                merged.append(mergeTwoLists(l1, l2))
+            lists = merged
+        
+        return lists[0]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        
+        return mergeKListsHelper(lists, 0, lists.length - 1);
+    }
+    
+    private ListNode mergeKListsHelper(ListNode[] lists, int start, int end) {
+        if (start == end) {
+            return lists[start];
+        }
+        if (start + 1 == end) {
+            return mergeTwoLists(lists[start], lists[end]);
+        }
+        
+        int mid = start + (end - start) / 2;
+        ListNode left = mergeKListsHelper(lists, start, mid);
+        ListNode right = mergeKListsHelper(lists, mid + 1, end);
+        return mergeTwoLists(left, right);
+    }
+    
+    private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                current.next = l1;
+                l1 = l1.next;
+            } else {
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+        
+        current.next = l1 != null ? l1 : l2;
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if (lists.empty()) {
+            return nullptr;
+        }
+        
+        return mergeKListsHelper(lists, 0, lists.size() - 1);
+    }
+    
+private:
+    ListNode* mergeKListsHelper(vector<ListNode*>& lists, int start, int end) {
+        if (start == end) {
+            return lists[start];
+        }
+        if (start + 1 == end) {
+            return mergeTwoLists(lists[start], lists[end]);
+        }
+        
+        int mid = start + (end - start) / 2;
+        ListNode* left = mergeKListsHelper(lists, start, mid);
+        ListNode* right = mergeKListsHelper(lists, mid + 1, end);
+        return mergeTwoLists(left, right);
+    }
+    
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode* dummy = new ListNode(0);
+        ListNode* current = dummy;
+        
+        while (l1 && l2) {
+            if (l1->val <= l2->val) {
+                current->next = l1;
+                l1 = l1->next;
+            } else {
+                current->next = l2;
+                l2 = l2->next;
+            }
+            current = current->next;
+        }
+        
+        current->next = l1 ? l1 : l2;
+        
+        ListNode* result = dummy->next;
+        delete dummy;
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode[]} lists
+ * @return {ListNode}
+ */
+var mergeKLists = function(lists) {
+    if (!lists.length) return null;
+    
+    function mergeTwoLists(l1, l2) {
+        const dummy = new ListNode(0);
+        let current = dummy;
+        
+        while (l1 && l2) {
+            if (l1.val <= l2.val) {
+                current.next = l1;
+                l1 = l1.next;
+            } else {
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+        
+        current.next = l1 || l2;
+        return dummy.next;
+    }
+    
+    while (lists.length > 1) {
+        const merged = [];
+        for (let i = 0; i < lists.length; i += 2) {
+            const l1 = lists[i];
+            const l2 = i + 1 < lists.length ? lists[i + 1] : null;
+            merged.push(mergeTwoLists(l1, l2));
+        }
+        lists = merged;
+    }
+    
+    return lists[0];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode MergeKLists(ListNode[] lists) {
+        if (lists == null || lists.Length == 0) {
+            return null;
+        }
+        
+        return MergeKListsHelper(lists, 0, lists.Length - 1);
+    }
+    
+    private ListNode MergeKListsHelper(ListNode[] lists, int start, int end) {
+        if (start == end) {
+            return lists[start];
+        }
+        if (start + 1 == end) {
+            return MergeTwoLists(lists[start], lists[end]);
+        }
+        
+        int mid = start + (end - start) / 2;
+        ListNode left = MergeKListsHelper(lists, start, mid);
+        ListNode right = MergeKListsHelper(lists, mid + 1, end);
+        return MergeTwoLists(left, right);
+    }
+    
+    private ListNode MergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                current.next = l1;
+                l1 = l1.next;
+            } else {
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+        
+        current.next = l1 != null ? l1 : l2;
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(N log k) where N is the total number of nodes and k is the number of linked lists</li>
+                <li><strong>Space Complexity:</strong> O(1) for iterative solution, O(log k) for recursive solution due to the recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a divide and conquer approach to merge k sorted lists. Here's how it works:</p>
+            <ul>
+                <li>Divide the lists into pairs</li>
+                <li>Merge each pair using the merge two sorted lists algorithm</li>
+                <li>Continue merging the merged lists until only one list remains</li>
+                <li>The final list will be the result</li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Using divide and conquer reduces time complexity from O(kN) to O(N log k)</li>
+                <li>The merge operation is similar to merging two sorted lists</li>
+                <li>We handle edge cases (empty lists, single list) properly</li>
+                <li>The solution maintains the sorted order of all input lists</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
