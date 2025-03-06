@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valid Parentheses - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 20: Valid Parentheses. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: #ffffff; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>20. Valid Parentheses</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a string <code>s</code> containing just the characters <code>'('</code>, <code>')'</code>, <code>'{'</code>, <code>'}'</code>, <code>'['</code> and <code>']'</code>, determine if the input string is valid. The string is valid if all open brackets are closed in the correct order.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "()"
+Output: true
+
+Example 2:
+Input: s = "()[]{}"
+Output: true
+
+Example 3:
+Input: s = "(]"
+Output: false</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <h3>Python Solution</h3>
+        <pre><code>
+def isValid(s: str) -> bool:
+    stack = []
+    mapping = {")": "(", "}": "{", "]": "["}
+    
+    for char in s:
+        if char in mapping:
+            top_element = stack.pop() if stack else '#'
+            if mapping[char] != top_element:
+                return False
+        else:
+            stack.append(char)
+    
+    return not stack
+    </code></pre>
+
+    <h3>Java Solution</h3>
+    <pre><code>
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> mapping = new HashMap<>();
+        mapping.put(')', '(');
+        mapping.put('}', '{');
+        mapping.put(']', '[');
+        
+        for (char c : s.toCharArray()) {
+            if (mapping.containsKey(c)) {
+                char topElement = stack.empty() ? '#' : stack.pop();
+                if (topElement != mapping.get(c)) {
+                    return false;
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        
+        return stack.isEmpty();
+    }
+}
+    </code></pre>
+
+    <h3>C++ Solution</h3>
+    <pre><code>
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> stack;
+        unordered_map<char, char> mapping = {
+            {')', '('},
+            {'}', '{'},
+            {']', '['}
+        };
+        
+        for (char c : s) {
+            if (mapping.find(c) != mapping.end()) {
+                char topElement = stack.empty() ? '#' : stack.top();
+                stack.pop();
+                if (mapping[c] != topElement) {
+                    return false;
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        
+        return stack.empty();
+    }
+};
+    </code></pre>
+
+    <h3>JavaScript Solution</h3>
+    <pre><code>
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function(s) {
+    const stack = [];
+    const mapping = {
+        ')': '(',
+        '}': '{',
+        ']': '['
+    };
+    
+    for (let char of s) {
+        if (char in mapping) {
+            const topElement = stack.length === 0 ? '#' : stack.pop();
+            if (mapping[char] !== topElement) {
+                return false;
+            }
+        } else {
+            stack.push(char);
+        }
+    }
+    
+    return stack.length === 0;
+};
+    </code></pre>
+
+    <h3>C# Solution</h3>
+    <pre><code>
+public class Solution {
+    public bool IsValid(string s) {
+        Stack<char> stack = new Stack<char>();
+        Dictionary<char, char> mapping = new Dictionary<char, char>() {
+            {')', '('},
+            {'}', '{'},
+            {']', '['}
+        };
+        
+        foreach (char c in s) {
+            if (mapping.ContainsKey(c)) {
+                char topElement = stack.Count == 0 ? '#' : stack.Pop();
+                if (topElement != mapping[c]) {
+                    return false;
+                }
+            } else {
+                stack.Push(c);
+            }
+        }
+        
+        return stack.Count == 0;
+    }
+}
+    </code></pre>
+
+    <div class="complexity">
+        <h3>Complexity Analysis</h3>
+        <ul>
+            <li><strong>Time Complexity:</strong> O(n) where n is the length of the string</li>
+            <li><strong>Space Complexity:</strong> O(n) to store the stack</li>
+        </ul>
+    </div>
+
+    <div class="explanation">
+        <h3>Solution Explanation</h3>
+        <p>This solution uses a stack data structure. Here's how it works:</p>
+        <ul>
+            <li>Create a stack to store opening brackets</li>
+            <li>Create a mapping of closing brackets to their corresponding opening brackets</li>
+            <li>For each character in the string:
+                <ul>
+                    <li>If it's a closing bracket, check if stack's top matches its opening bracket</li>
+                    <li>If it's an opening bracket, push it onto the stack</li>
+                </ul>
+            </li>
+        </ul>
+        <p>Key points:</p>
+        <ul>
+            <li>Stack helps maintain the order of brackets</li>
+            <li>Mapping makes it easy to check matching brackets</li>
+            <li>Empty stack at the end means valid string</li>
+            <li>The solution handles all edge cases properly</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html> 

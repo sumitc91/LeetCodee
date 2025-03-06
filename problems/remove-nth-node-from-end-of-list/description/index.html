@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Nth Node From End of List - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 19: Remove Nth Node From End of List. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>19. Remove Nth Node From End of List</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>head</code> of a linked list, remove the <code>nth</code> node from the end of the list and return its head.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [1,2,3,4,5], n = 2
+Output: [1,2,3,5]
+
+Example 2:
+Input: head = [1], n = 1
+Output: []
+
+Example 3:
+Input: head = [1,2], n = 1
+Output: [1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <h3>Python Solution</h3>
+        <pre><code>
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+def removeNthFromEnd(head: Optional[ListNode], n: int) -> Optional[ListNode]:
+    dummy = ListNode(0)
+    dummy.next = head
+    first = dummy
+    second = dummy
+    
+    # Advance first pointer by n + 1 steps
+    for i in range(n + 1):
+        first = first.next
+    
+    # Move both pointers until first reaches the end
+    while first:
+        first = first.next
+        second = second.next
+    
+    # Remove the nth node
+    second.next = second.next.next
+    
+    return dummy.next
+    </code></pre>
+
+    <h3>Java Solution</h3>
+    <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode first = dummy;
+        ListNode second = dummy;
+        
+        // Advance first pointer by n + 1 steps
+        for (int i = 0; i < n + 1; i++) {
+            first = first.next;
+        }
+        
+        // Move both pointers until first reaches the end
+        while (first != null) {
+            first = first.next;
+            second = second.next;
+        }
+        
+        // Remove the nth node
+        second.next = second.next.next;
+        
+        return dummy.next;
+    }
+}
+    </code></pre>
+
+    <h3>C++ Solution</h3>
+    <pre><code>
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* first = dummy;
+        ListNode* second = dummy;
+        
+        // Advance first pointer by n + 1 steps
+        for (int i = 0; i < n + 1; i++) {
+            first = first->next;
+        }
+        
+        // Move both pointers until first reaches the end
+        while (first != nullptr) {
+            first = first->next;
+            second = second->next;
+        }
+        
+        // Remove the nth node
+        ListNode* temp = second->next;
+        second->next = second->next->next;
+        delete temp;
+        
+        ListNode* result = dummy->next;
+        delete dummy;
+        return result;
+    }
+};
+    </code></pre>
+
+    <h3>JavaScript Solution</h3>
+    <pre><code>
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} n
+ * @return {ListNode}
+ */
+var removeNthFromEnd = function(head, n) {
+    const dummy = new ListNode(0);
+    dummy.next = head;
+    let first = dummy;
+    let second = dummy;
+    
+    // Advance first pointer by n + 1 steps
+    for (let i = 0; i < n + 1; i++) {
+        first = first.next;
+    }
+    
+    // Move both pointers until first reaches the end
+    while (first !== null) {
+        first = first.next;
+        second = second.next;
+    }
+    
+    // Remove the nth node
+    second.next = second.next.next;
+    
+    return dummy.next;
+};
+    </code></pre>
+
+    <h3>C# Solution</h3>
+    <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RemoveNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode first = dummy;
+        ListNode second = dummy;
+        
+        // Advance first pointer by n + 1 steps
+        for (int i = 0; i < n + 1; i++) {
+            first = first.next;
+        }
+        
+        // Move both pointers until first reaches the end
+        while (first != null) {
+            first = first.next;
+            second = second.next;
+        }
+        
+        // Remove the nth node
+        second.next = second.next.next;
+        
+        return dummy.next;
+    }
+}
+    </code></pre>
+
+    <div class="complexity">
+        <h3>Complexity Analysis</h3>
+        <ul>
+            <li><strong>Time Complexity:</strong> O(L) where L is the length of the linked list</li>
+            <li><strong>Space Complexity:</strong> O(1) as we only use two pointers</li>
+        </ul>
+    </div>
+
+    <div class="explanation">
+        <h3>Solution Explanation</h3>
+        <p>This solution uses the two-pointer technique. Here's how it works:</p>
+        <ul>
+            <li>Create a dummy node to handle edge cases</li>
+            <li>Use two pointers: first and second</li>
+            <li>Move first pointer:
+                <ul>
+                    <li>Advance it by n+1 steps ahead</li>
+                    <li>This creates a gap of n nodes between first and second</li>
+                </ul>
+            </li>
+            <li>Move both pointers until first reaches the end</li>
+            <li>Remove the nth node from the end</li>
+        </ul>
+        <p>Key points:</p>
+        <ul>
+            <li>Dummy node helps handle edge cases like removing first node</li>
+            <li>Two-pointer technique avoids counting the length of list</li>
+            <li>The solution handles all edge cases properly</li>
+            <li>Memory is managed properly in languages like C++</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html> 

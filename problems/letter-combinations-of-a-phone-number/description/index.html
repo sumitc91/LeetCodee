@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Combinations of a Phone Number - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 17: Letter Combinations of a Phone Number. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>17. Letter Combinations of a Phone Number</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: digits = "23"
+Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+Example 2:
+Input: digits = ""
+Output: []
+
+Example 3:
+Input: digits = "2"
+Output: ["a","b","c"]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <h3>Python Solution</h3>
+        <pre><code>
+def letterCombinations(digits: str) -> List[str]:
+    if not digits:
+        return []
+    
+    phone_map = {
+        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',
+        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'
+    }
+    
+    def backtrack(index: int, path: str) -> None:
+        if len(path) == len(digits):
+            result.append(path)
+            return
+        
+        for letter in phone_map[digits[index]]:
+            backtrack(index + 1, path + letter)
+    
+    result = []
+    backtrack(0, "")
+    return result
+    </code></pre>
+
+    <h3>Java Solution</h3>
+    <pre><code>
+class Solution {
+    private Map<Character, String> phoneMap = new HashMap<>() {{
+        put('2', "abc"); put('3', "def"); put('4', "ghi"); put('5', "jkl");
+        put('6', "mno"); put('7', "pqrs"); put('8', "tuv"); put('9', "wxyz");
+    }};
+    private List<String> result = new ArrayList<>();
+    
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0) {
+            return result;
+        }
+        
+        backtrack(digits, 0, new StringBuilder());
+        return result;
+    }
+    
+    private void backtrack(String digits, int index, StringBuilder path) {
+        if (path.length() == digits.length()) {
+            result.add(path.toString());
+            return;
+        }
+        
+        String letters = phoneMap.get(digits.charAt(index));
+        for (char letter : letters.toCharArray()) {
+            path.append(letter);
+            backtrack(digits, index + 1, path);
+            path.setLength(path.length() - 1);
+        }
+    }
+}
+    </code></pre>
+
+    <h3>C++ Solution</h3>
+    <pre><code>
+class Solution {
+private:
+    unordered_map<char, string> phoneMap = {
+        {'2', "abc"}, {'3', "def"}, {'4', "ghi"}, {'5', "jkl"},
+        {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}
+    };
+    vector<string> result;
+    
+    void backtrack(const string& digits, int index, string& path) {
+        if (path.length() == digits.length()) {
+            result.push_back(path);
+            return;
+        }
+        
+        for (char letter : phoneMap[digits[index]]) {
+            path.push_back(letter);
+            backtrack(digits, index + 1, path);
+            path.pop_back();
+        }
+    }
+    
+public:
+    vector<string> letterCombinations(string digits) {
+        if (digits.empty()) {
+            return result;
+        }
+        
+        string path;
+        backtrack(digits, 0, path);
+        return result;
+    }
+};
+    </code></pre>
+
+    <h3>JavaScript Solution</h3>
+    <pre><code>
+/**
+ * @param {string} digits
+ * @return {string[]}
+ */
+var letterCombinations = function(digits) {
+    if (!digits) {
+        return [];
+    }
+    
+    const phoneMap = {
+        '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',
+        '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'
+    };
+    
+    const result = [];
+    
+    function backtrack(index, path) {
+        if (path.length === digits.length) {
+            result.push(path);
+            return;
+        }
+        
+        for (const letter of phoneMap[digits[index]]) {
+            backtrack(index + 1, path + letter);
+        }
+    }
+    
+    backtrack(0, "");
+    return result;
+};
+    </code></pre>
+
+    <h3>C# Solution</h3>
+    <pre><code>
+public class Solution {
+    private Dictionary<char, string> phoneMap = new Dictionary<char, string>() {
+        {'2', "abc"}, {'3', "def"}, {'4', "ghi"}, {'5', "jkl"},
+        {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}
+    };
+    private IList<string> result = new List<string>();
+    
+    public IList<string> LetterCombinations(string digits) {
+        if (string.IsNullOrEmpty(digits)) {
+            return result;
+        }
+        
+        Backtrack(digits, 0, new StringBuilder());
+        return result;
+    }
+    
+    private void Backtrack(string digits, int index, StringBuilder path) {
+        if (path.Length == digits.Length) {
+            result.Add(path.ToString());
+            return;
+        }
+        
+        foreach (char letter in phoneMap[digits[index]]) {
+            path.Append(letter);
+            Backtrack(digits, index + 1, path);
+            path.Length--;
+        }
+    }
+}
+    </code></pre>
+
+    <div class="complexity">
+        <h3>Complexity Analysis</h3>
+        <ul>
+            <li><strong>Time Complexity:</strong> O(4^N × N) where N is the length of digits string</li>
+            <li><strong>Space Complexity:</strong> O(N) for the recursion stack</li>
+        </ul>
+    </div>
+
+    <div class="explanation">
+        <h3>Solution Explanation</h3>
+        <p>This solution uses backtracking to generate all possible combinations. Here's how it works:</p>
+        <ul>
+            <li>Create a mapping of digits to their corresponding letters on a phone keypad</li>
+            <li>Use backtracking to:
+                <ul>
+                    <li>Build combinations one character at a time</li>
+                    <li>Try all possible letters for each digit</li>
+                    <li>Add complete combinations to the result</li>
+                </ul>
+            </li>
+        </ul>
+        <p>Key points:</p>
+        <ul>
+            <li>We use a map to store the digit-to-letters mapping</li>
+            <li>Backtracking helps us explore all possible combinations</li>
+            <li>We handle edge cases (empty string) properly</li>
+            <li>The solution maintains the order of digits in input</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html> 

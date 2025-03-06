@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3Sum Closest - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 16: 3Sum Closest. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>16. 3Sum Closest</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer array <code>nums</code> of length n and an integer <code>target</code>, find three integers in nums such that the sum is closest to target. Return the sum of the three integers.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [-1,2,1,-4], target = 1
+Output: 2
+Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+
+Example 2:
+Input: nums = [0,0,0], target = 1
+Output: 0
+Explanation: The sum that is closest to the target is 0. (0 + 0 + 0 = 0).</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <h3>Python Solution</h3>
+        <pre><code>
+def threeSumClosest(nums: List[int], target: int) -> int:
+    nums.sort()
+    n = len(nums)
+    closest_sum = float('inf')
+    
+    for i in range(n - 2):
+        left, right = i + 1, n - 1
+        
+        while left < right:
+            current_sum = nums[i] + nums[left] + nums[right]
+            
+            if current_sum == target:
+                return current_sum
+            
+            if abs(current_sum - target) < abs(closest_sum - target):
+                closest_sum = current_sum
+            
+            if current_sum < target:
+                left += 1
+            else:
+                right -= 1
+    
+    return closest_sum
+    </code></pre>
+
+    <h3>Java Solution</h3>
+    <pre><code>
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int closestSum = Integer.MAX_VALUE;
+        
+        for (int i = 0; i < n - 2; i++) {
+            int left = i + 1;
+            int right = n - 1;
+            
+            while (left < right) {
+                int currentSum = nums[i] + nums[left] + nums[right];
+                
+                if (currentSum == target) {
+                    return currentSum;
+                }
+                
+                if (closestSum == Integer.MAX_VALUE ||
+                    Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
+                    closestSum = currentSum;
+                }
+                
+                if (currentSum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return closestSum;
+    }
+}
+    </code></pre>
+
+    <h3>C++ Solution</h3>
+    <pre><code>
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        int closestSum = INT_MAX;
+        
+        for (int i = 0; i < n - 2; i++) {
+            int left = i + 1;
+            int right = n - 1;
+            
+            while (left < right) {
+                int currentSum = nums[i] + nums[left] + nums[right];
+                
+                if (currentSum == target) {
+                    return currentSum;
+                }
+                
+                if (closestSum == INT_MAX ||
+                    abs(currentSum - target) < abs(closestSum - target)) {
+                    closestSum = currentSum;
+                }
+                
+                if (currentSum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return closestSum;
+    }
+};
+    </code></pre>
+
+    <h3>JavaScript Solution</h3>
+    <pre><code>
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var threeSumClosest = function(nums, target) {
+    nums.sort((a, b) => a - b);
+    const n = nums.length;
+    let closestSum = Infinity;
+    
+    for (let i = 0; i < n - 2; i++) {
+        let left = i + 1;
+        let right = n - 1;
+        
+        while (left < right) {
+            const currentSum = nums[i] + nums[left] + nums[right];
+            
+            if (currentSum === target) {
+                return currentSum;
+            }
+            
+            if (Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
+                closestSum = currentSum;
+            }
+            
+            if (currentSum < target) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+    }
+    
+    return closestSum;
+};
+    </code></pre>
+
+    <h3>C# Solution</h3>
+    <pre><code>
+public class Solution {
+    public int ThreeSumClosest(int[] nums, int target) {
+        Array.Sort(nums);
+        int n = nums.Length;
+        int closestSum = int.MaxValue;
+        
+        for (int i = 0; i < n - 2; i++) {
+            int left = i + 1;
+            int right = n - 1;
+            
+            while (left < right) {
+                int currentSum = nums[i] + nums[left] + nums[right];
+                
+                if (currentSum == target) {
+                    return currentSum;
+                }
+                
+                if (closestSum == int.MaxValue ||
+                    Math.Abs(currentSum - target) < Math.Abs(closestSum - target)) {
+                    closestSum = currentSum;
+                }
+                
+                if (currentSum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return closestSum;
+    }
+}
+    </code></pre>
+
+    <div class="complexity">
+        <h3>Complexity Analysis</h3>
+        <ul>
+            <li><strong>Time Complexity:</strong> O(n²) where n is the length of the input array</li>
+            <li><strong>Space Complexity:</strong> O(1) as we only use constant extra space</li>
+        </ul>
+    </div>
+
+    <div class="explanation">
+        <h3>Solution Explanation</h3>
+        <p>This solution uses the two-pointer technique after sorting the array. Here's how it works:</p>
+        <ul>
+            <li>First, we sort the array to make it easier to use the two-pointer approach</li>
+            <li>For each number (i), we:
+                <ul>
+                    <li>Use two pointers (left and right) to find pairs that give sum closest to target-nums[i]</li>
+                    <li>Keep track of the closest sum found so far</li>
+                    <li>Move pointers based on comparison with target</li>
+                </ul>
+            </li>
+        </ul>
+        <p>Key points:</p>
+        <ul>
+            <li>Sorting helps make the two-pointer approach efficient</li>
+            <li>We update closest sum whenever we find a closer sum to target</li>
+            <li>The two-pointer technique reduces the time complexity from O(n³) to O(n²)</li>
+            <li>We handle edge cases properly</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html> 
