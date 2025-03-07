@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Solver - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 37: Sudoku Solver. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>37. Sudoku Solver</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Write a program to solve a Sudoku puzzle by filling the empty cells.</p>
+        <p>A sudoku solution must satisfy all of the following rules:</p>
+        <ol>
+            <li>Each of the digits 1-9 must occur exactly once in each row.</li>
+            <li>Each of the digits 1-9 must occur exactly once in each column.</li>
+            <li>Each of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.</li>
+        </ol>
+        <p>The '.' character indicates empty cells.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Input: board = 
+[["5","3",".",".","7",".",".",".","."],
+["6",".",".","1","9","5",".",".","."],
+[".","9","8",".",".",".",".","6","."],
+["8",".",".",".","6",".",".",".","3"],
+["4",".",".","8",".","3",".",".","1"],
+["7",".",".",".","2",".",".",".","6"],
+[".","6",".",".",".",".","2","8","."],
+[".",".",".","4","1","9",".",".","5"],
+[".",".",".",".","8",".",".","7","9"]]
+
+Output: 
+[["5","3","4","6","7","8","9","1","2"],
+["6","7","2","1","9","5","3","4","8"],
+["1","9","8","3","4","2","5","6","7"],
+["8","5","9","7","6","1","4","2","3"],
+["4","2","6","8","5","3","7","9","1"],
+["7","1","3","9","2","4","8","5","6"],
+["9","6","1","5","3","7","2","8","4"],
+["2","8","7","4","1","9","6","3","5"],
+["3","4","5","2","8","6","1","7","9"]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def solveSudoku(board: List[List[str]]) -> None:
+    def isValid(num: str, pos: tuple) -> bool:
+        # Check row
+        for x in range(9):
+            if board[pos[0]][x] == num and pos[1] != x:
+                return False
+                
+        # Check column
+        for x in range(9):
+            if board[x][pos[1]] == num and pos[0] != x:
+                return False
+        
+        # Check box
+        box_x = pos[1] // 3
+        box_y = pos[0] // 3
+        for i in range(box_y * 3, box_y * 3 + 3):
+            for j in range(box_x * 3, box_x * 3 + 3):
+                if board[i][j] == num and (i,j) != pos:
+                    return False
+        return True
+
+    def solve() -> bool:
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == ".":
+                    for num in "123456789":
+                        if isValid(num, (i,j)):
+                            board[i][j] = num
+                            if solve():
+                                return True
+                            board[i][j] = "."
+                    return False
+        return True
+    
+    solve()</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public void solveSudoku(char[][] board) {
+        solve(board);
+    }
+    
+    private boolean solve(char[][] board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') {
+                    for (char c = '1'; c <= '9'; c++) {
+                        if (isValid(board, i, j, c)) {
+                            board[i][j] = c;
+                            if (solve(board))
+                                return true;
+                            board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private boolean isValid(char[][] board, int row, int col, char num) {
+        for (int x = 0; x < 9; x++) {
+            if (board[row][x] == num) return false;
+        }
+        
+        for (int x = 0; x < 9; x++) {
+            if (board[x][col] == num) return false;
+        }
+        
+        int startRow = row - row % 3, startCol = col - col % 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i + startRow][j + startCol] == num) return false;
+            }
+        }
+        
+        return true;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        solve(board);
+    }
+    
+private:
+    bool solve(vector<vector<char>>& board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') {
+                    for (char c = '1'; c <= '9'; c++) {
+                        if (isValid(board, i, j, c)) {
+                            board[i][j] = c;
+                            if (solve(board))
+                                return true;
+                            board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    bool isValid(vector<vector<char>>& board, int row, int col, char num) {
+        for (int x = 0; x < 9; x++) {
+            if (board[row][x] == num) return false;
+        }
+        
+        for (int x = 0; x < 9; x++) {
+            if (board[x][col] == num) return false;
+        }
+        
+        int startRow = row - row % 3, startCol = col - col % 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i + startRow][j + startCol] == num) return false;
+            }
+        }
+        
+        return true;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {character[][]} board
+ * @return {void} Do not return anything, modify board in-place instead.
+ */
+var solveSudoku = function(board) {
+    const solve = () => {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (board[i][j] === '.') {
+                    for (let num = 1; num <= 9; num++) {
+                        const char = num.toString();
+                        if (isValid(i, j, char)) {
+                            board[i][j] = char;
+                            if (solve())
+                                return true;
+                            board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+    
+    const isValid = (row, col, num) => {
+        for (let x = 0; x < 9; x++) {
+            if (board[row][x] === num) return false;
+        }
+        
+        for (let x = 0; x < 9; x++) {
+            if (board[x][col] === num) return false;
+        }
+        
+        const startRow = Math.floor(row / 3) * 3;
+        const startCol = Math.floor(col / 3) * 3;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[i + startRow][j + startCol] === num) return false;
+            }
+        }
+        
+        return true;
+    };
+    
+    solve();
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public void SolveSudoku(char[][] board) {
+        Solve(board);
+    }
+    
+    private bool Solve(char[][] board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') {
+                    for (char c = '1'; c <= '9'; c++) {
+                        if (IsValid(board, i, j, c)) {
+                            board[i][j] = c;
+                            if (Solve(board))
+                                return true;
+                            board[i][j] = '.';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private bool IsValid(char[][] board, int row, int col, char num) {
+        for (int x = 0; x < 9; x++) {
+            if (board[row][x] == num) return false;
+        }
+        
+        for (int x = 0; x < 9; x++) {
+            if (board[x][col] == num) return false;
+        }
+        
+        int startRow = row - row % 3, startCol = col - col % 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i + startRow][j + startCol] == num) return false;
+            }
+        }
+        
+        return true;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(9^(n*n)) where n is the board size (9 in this case)</li>
+                <li><strong>Space Complexity:</strong> O(n*n) due to recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking to solve the Sudoku puzzle. Here's how it works:</p>
+            <ul>
+                <li>For each empty cell:
+                    <ul>
+                        <li>Try placing numbers 1-9</li>
+                        <li>Check if the number is valid in current position</li>
+                        <li>If valid, recursively try to solve the rest of the puzzle</li>
+                        <li>If solution is found, we're done</li>
+                        <li>If no solution is found, backtrack by removing the number</li>
+                    </ul>
+                </li>
+                <li>The isValid function checks:
+                    <ul>
+                        <li>Row constraint: number doesn't exist in current row</li>
+                        <li>Column constraint: number doesn't exist in current column</li>
+                        <li>Box constraint: number doesn't exist in current 3x3 box</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Uses depth-first search with backtracking</li>
+                <li>Modifies the board in-place</li>
+                <li>Returns early when a solution is found</li>
+                <li>Handles constraints efficiently</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

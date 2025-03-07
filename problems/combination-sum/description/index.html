@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combination Sum - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 39: Combination Sum. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>39. Combination Sum</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an array of distinct integers <code>candidates</code> and a target integer <code>target</code>, return a list of all unique combinations of <code>candidates</code> where the chosen numbers sum to <code>target</code>. You may return the combinations in any order.</p>
+        <p>The same number may be chosen from <code>candidates</code> an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: candidates = [2,3,6,7], target = 7
+Output: [[2,2,3],[7]]
+Explanation:
+2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+7 is a candidate, and 7 = 7.
+These are the only two combinations.
+
+Example 2:
+Input: candidates = [2,3,5], target = 8
+Output: [[2,2,2,2],[2,3,3],[3,5]]
+
+Example 3:
+Input: candidates = [2], target = 1
+Output: []</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def combinationSum(candidates: List[int], target: int) -> List[List[int]]:
+    def backtrack(remain: int, start: int, path: List[int]):
+        if remain == 0:
+            result.append(path[:])
+            return
+        
+        for i in range(start, len(candidates)):
+            if candidates[i] > remain:
+                continue
+            path.append(candidates[i])
+            backtrack(remain - candidates[i], i, path)
+            path.pop()
+    
+    result = []
+    candidates.sort()  # Sort to optimize
+    backtrack(target, 0, [])
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(candidates);  // Sort to optimize
+        backtrack(candidates, target, 0, new ArrayList<>(), result);
+        return result;
+    }
+    
+    private void backtrack(int[] candidates, int remain, int start, 
+                         List<Integer> path, List<List<Integer>> result) {
+        if (remain == 0) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        
+        for (int i = start; i < candidates.length; i++) {
+            if (candidates[i] > remain) {
+                break;  // Stop if we exceed the target
+            }
+            path.add(candidates[i]);
+            backtrack(candidates, remain - candidates[i], i, path, result);
+            path.remove(path.size() - 1);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> result;
+        vector<int> path;
+        sort(candidates.begin(), candidates.end());  // Sort to optimize
+        backtrack(candidates, target, 0, path, result);
+        return result;
+    }
+    
+private:
+    void backtrack(vector<int>& candidates, int remain, int start,
+                  vector<int>& path, vector<vector<int>>& result) {
+        if (remain == 0) {
+            result.push_back(path);
+            return;
+        }
+        
+        for (int i = start; i < candidates.size(); i++) {
+            if (candidates[i] > remain) {
+                break;  // Stop if we exceed the target
+            }
+            path.push_back(candidates[i]);
+            backtrack(candidates, remain - candidates[i], i, path, result);
+            path.pop_back();
+        }
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} candidates
+ * @param {number} target
+ * @return {number[][]}
+ */
+var combinationSum = function(candidates, target) {
+    const result = [];
+    candidates.sort((a, b) => a - b);  // Sort to optimize
+    
+    const backtrack = (remain, start, path) => {
+        if (remain === 0) {
+            result.push([...path]);
+            return;
+        }
+        
+        for (let i = start; i < candidates.length; i++) {
+            if (candidates[i] > remain) {
+                break;  // Stop if we exceed the target
+            }
+            path.push(candidates[i]);
+            backtrack(remain - candidates[i], i, path);
+            path.pop();
+        }
+    };
+    
+    backtrack(target, 0, []);
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<IList<int>> CombinationSum(int[] candidates, int target) {
+        var result = new List<IList<int>>();
+        Array.Sort(candidates);  // Sort to optimize
+        Backtrack(candidates, target, 0, new List<int>(), result);
+        return result;
+    }
+    
+    private void Backtrack(int[] candidates, int remain, int start,
+                         List<int> path, IList<IList<int>> result) {
+        if (remain == 0) {
+            result.Add(new List<int>(path));
+            return;
+        }
+        
+        for (int i = start; i < candidates.Length; i++) {
+            if (candidates[i] > remain) {
+                break;  // Stop if we exceed the target
+            }
+            path.Add(candidates[i]);
+            Backtrack(candidates, remain - candidates[i], i, path, result);
+            path.RemoveAt(path.Count - 1);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(N^(T/M)) where N is the number of candidates, T is the target value, and M is the minimal value among candidates</li>
+                <li><strong>Space Complexity:</strong> O(T/M) for the recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking to find all possible combinations. Here's how it works:</p>
+            <ul>
+                <li>Sort the candidates array to optimize the solution</li>
+                <li>Use backtracking function with parameters:
+                    <ul>
+                        <li>remain: remaining sum to achieve</li>
+                        <li>start: starting index to avoid duplicates</li>
+                        <li>path: current combination being built</li>
+                    </ul>
+                </li>
+                <li>For each recursive call:
+                    <ul>
+                        <li>If remaining sum is 0, we found a valid combination</li>
+                        <li>Try each candidate from the start index</li>
+                        <li>Skip if candidate is larger than remaining sum</li>
+                        <li>Add candidate to path and recurse</li>
+                        <li>Remove candidate for backtracking</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Sorting helps optimize by breaking early</li>
+                <li>Same number can be used multiple times</li>
+                <li>Start index prevents duplicate combinations</li>
+                <li>Backtracking ensures all possibilities are explored</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

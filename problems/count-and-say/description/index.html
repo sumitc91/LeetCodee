@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Count and Say - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 38: Count and Say. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>38. Count and Say</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>The count-and-say sequence is a sequence of digit strings defined by the recursive formula:</p>
+        <ul>
+            <li><code>countAndSay(1) = "1"</code></li>
+            <li><code>countAndSay(n)</code> is the way you would "say" the digit string from <code>countAndSay(n-1)</code>, which is then converted into a different digit string.</li>
+        </ul>
+        <p>To determine how you "say" a digit string, split it into the minimal number of substrings such that each substring contains exactly one unique digit. Then for each substring, say the number of digits, then say the digit. Finally, concatenate every said digit.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 1
+Output: "1"
+Explanation: This is the base case.
+
+Example 2:
+Input: n = 4
+Output: "1211"
+Explanation:
+countAndSay(1) = "1"
+countAndSay(2) = say "1" = one 1 = "11"
+countAndSay(3) = say "11" = two 1's = "21"
+countAndSay(4) = say "21" = one 2 + one 1 = "1211"</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def countAndSay(n: int) -> str:
+    if n == 1:
+        return "1"
+    
+    prev = countAndSay(n-1)
+    result = ""
+    count = 1
+    current = prev[0]
+    
+    for i in range(1, len(prev)):
+        if prev[i] == current:
+            count += 1
+        else:
+            result += str(count) + current
+            current = prev[i]
+            count = 1
+    
+    result += str(count) + current
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String countAndSay(int n) {
+        if (n == 1) {
+            return "1";
+        }
+        
+        String prev = countAndSay(n-1);
+        StringBuilder result = new StringBuilder();
+        int count = 1;
+        char current = prev.charAt(0);
+        
+        for (int i = 1; i < prev.length(); i++) {
+            if (prev.charAt(i) == current) {
+                count++;
+            } else {
+                result.append(count).append(current);
+                current = prev.charAt(i);
+                count = 1;
+            }
+        }
+        
+        result.append(count).append(current);
+        return result.toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string countAndSay(int n) {
+        if (n == 1) {
+            return "1";
+        }
+        
+        string prev = countAndSay(n-1);
+        string result = "";
+        int count = 1;
+        char current = prev[0];
+        
+        for (int i = 1; i < prev.length(); i++) {
+            if (prev[i] == current) {
+                count++;
+            } else {
+                result += to_string(count) + current;
+                current = prev[i];
+                count = 1;
+            }
+        }
+        
+        result += to_string(count) + current;
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n
+ * @return {string}
+ */
+var countAndSay = function(n) {
+    if (n === 1) {
+        return "1";
+    }
+    
+    const prev = countAndSay(n-1);
+    let result = "";
+    let count = 1;
+    let current = prev[0];
+    
+    for (let i = 1; i < prev.length; i++) {
+        if (prev[i] === current) {
+            count++;
+        } else {
+            result += count + current;
+            current = prev[i];
+            count = 1;
+        }
+    }
+    
+    result += count + current;
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string CountAndSay(int n) {
+        if (n == 1) {
+            return "1";
+        }
+        
+        string prev = CountAndSay(n-1);
+        StringBuilder result = new StringBuilder();
+        int count = 1;
+        char current = prev[0];
+        
+        for (int i = 1; i < prev.Length; i++) {
+            if (prev[i] == current) {
+                count++;
+            } else {
+                result.Append(count).Append(current);
+                current = prev[i];
+                count = 1;
+            }
+        }
+        
+        result.Append(count).Append(current);
+        return result.ToString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(2^n) as the length of the string can double in each step</li>
+                <li><strong>Space Complexity:</strong> O(2^n) to store the result string</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses recursion to build the count-and-say sequence. Here's how it works:</p>
+            <ul>
+                <li>Base case: if n = 1, return "1"</li>
+                <li>For each subsequent n:
+                    <ul>
+                        <li>Get the previous sequence using recursion</li>
+                        <li>Initialize variables to track current digit and its count</li>
+                        <li>Iterate through the previous sequence:
+                            <ul>
+                                <li>If current digit matches previous, increment count</li>
+                                <li>If different, append count and digit to result, reset count</li>
+                            </ul>
+                        </li>
+                        <li>Append final count and digit</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Uses recursion to build sequence</li>
+                <li>Efficiently handles string concatenation</li>
+                <li>Maintains proper counting of consecutive digits</li>
+                <li>Works for any valid input n</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
