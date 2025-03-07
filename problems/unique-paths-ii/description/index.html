@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique Paths II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 63: Unique Paths II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>63. Unique Paths II</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given an <code>m x n</code> integer array grid. There is a robot initially located at the <strong>top-left corner</strong> (i.e., <code>grid[0][0]</code>). The robot tries to move to the <strong>bottom-right corner</strong> (i.e., <code>grid[m-1][n-1]</code>). The robot can only move either down or right at any point in time.</p>
+        <p>An obstacle and space are marked as <code>1</code> or <code>0</code> respectively in grid. A path that the robot takes cannot include any square that is an obstacle.</p>
+        <p>Return <em>the number of possible unique paths that the robot can take to reach the bottom-right corner</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]
+Output: 2
+Explanation: There is one obstacle in the middle of the 3x3 grid above.
+There are two ways to reach the bottom-right corner:
+1. Right -> Right -> Down -> Down
+2. Down -> Down -> Right -> Right
+
+Example 2:
+Input: obstacleGrid = [[0,1],[0,0]]
+Output: 1</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def uniquePathsWithObstacles(obstacleGrid: List[List[int]]) -> int:
+    if not obstacleGrid or obstacleGrid[0][0] == 1:
+        return 0
+        
+    m, n = len(obstacleGrid), len(obstacleGrid[0])
+    dp = [[0] * n for _ in range(m)]
+    
+    # Initialize first row and column
+    dp[0][0] = 1
+    for i in range(1, m):
+        dp[i][0] = dp[i-1][0] if obstacleGrid[i][0] == 0 else 0
+    for j in range(1, n):
+        dp[0][j] = dp[0][j-1] if obstacleGrid[0][j] == 0 else 0
+    
+    # Fill dp array
+    for i in range(1, m):
+        for j in range(1, n):
+            if obstacleGrid[i][j] == 0:
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+    
+    return dp[m-1][n-1]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid == null || obstacleGrid.length == 0 || obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+        
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] dp = new int[m][n];
+        
+        // Initialize first row and column
+        dp[0][0] = 1;
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = obstacleGrid[i][0] == 0 ? dp[i-1][0] : 0;
+        }
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = obstacleGrid[0][j] == 0 ? dp[0][j-1] : 0;
+        }
+        
+        // Fill dp array
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 0) {
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1];
+                }
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        if (obstacleGrid.empty() || obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+        
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        vector<vector<long>> dp(m, vector<long>(n, 0));
+        
+        // Initialize first row and column
+        dp[0][0] = 1;
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = obstacleGrid[i][0] == 0 ? dp[i-1][0] : 0;
+        }
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = obstacleGrid[0][j] == 0 ? dp[0][j-1] : 0;
+        }
+        
+        // Fill dp array
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 0) {
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1];
+                }
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[][]} obstacleGrid
+ * @return {number}
+ */
+var uniquePathsWithObstacles = function(obstacleGrid) {
+    if (!obstacleGrid.length || obstacleGrid[0][0] === 1) {
+        return 0;
+    }
+    
+    const m = obstacleGrid.length;
+    const n = obstacleGrid[0].length;
+    const dp = Array(m).fill().map(() => Array(n).fill(0));
+    
+    // Initialize first row and column
+    dp[0][0] = 1;
+    for (let i = 1; i < m; i++) {
+        dp[i][0] = obstacleGrid[i][0] === 0 ? dp[i-1][0] : 0;
+    }
+    for (let j = 1; j < n; j++) {
+        dp[0][j] = obstacleGrid[0][j] === 0 ? dp[0][j-1] : 0;
+    }
+    
+    // Fill dp array
+    for (let i = 1; i < m; i++) {
+        for (let j = 1; j < n; j++) {
+            if (obstacleGrid[i][j] === 0) {
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+    }
+    
+    return dp[m-1][n-1];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int UniquePathsWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid == null || obstacleGrid.Length == 0 || obstacleGrid[0][0] == 1) {
+            return 0;
+        }
+        
+        int m = obstacleGrid.Length;
+        int n = obstacleGrid[0].Length;
+        int[,] dp = new int[m,n];
+        
+        // Initialize first row and column
+        dp[0,0] = 1;
+        for (int i = 1; i < m; i++) {
+            dp[i,0] = obstacleGrid[i][0] == 0 ? dp[i-1,0] : 0;
+        }
+        for (int j = 1; j < n; j++) {
+            dp[0,j] = obstacleGrid[0][j] == 0 ? dp[0,j-1] : 0;
+        }
+        
+        // Fill dp array
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 0) {
+                    dp[i,j] = dp[i-1,j] + dp[i,j-1];
+                }
+            }
+        }
+        
+        return dp[m-1,n-1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(m × n) to fill the dp array</li>
+                <li><strong>Space Complexity:</strong> O(m × n) to store the dp array</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution extends the Unique Paths problem to handle obstacles:</p>
+            <ul>
+                <li>Key differences:
+                    <ul>
+                        <li>Check for obstacles before calculating paths</li>
+                        <li>Initialize carefully considering obstacles</li>
+                        <li>Skip cells with obstacles (value = 1)</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize dp array with zeros</li>
+                        <li>Handle first row and column specially</li>
+                        <li>For each cell (i,j):
+                            <ul>
+                                <li>If no obstacle: dp[i][j] = dp[i-1][j] + dp[i][j-1]</li>
+                                <li>If obstacle: leave as 0</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle edge cases (empty grid, obstacle at start)</li>
+                <li>Careful initialization of boundaries</li>
+                <li>Similar to original unique paths</li>
+                <li>Obstacles block all paths through them</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

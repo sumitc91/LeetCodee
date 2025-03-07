@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Path Sum - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 64: Minimum Path Sum. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>64. Minimum Path Sum</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a <code>m x n</code> <code>grid</code> filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.</p>
+        <p><strong>Note:</strong> You can only move either down or right at any point in time.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: grid = [[1,3,1],[1,5,1],[4,2,1]]
+Output: 7
+Explanation: Because the path 1 → 3 → 1 → 1 → 1 minimizes the sum.
+
+Example 2:
+Input: grid = [[1,2,3],[4,5,6]]
+Output: 12</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def minPathSum(grid: List[List[int]]) -> int:
+    if not grid:
+        return 0
+        
+    m, n = len(grid), len(grid[0])
+    dp = [[0] * n for _ in range(m)]
+    
+    # Initialize first cell
+    dp[0][0] = grid[0][0]
+    
+    # Initialize first row
+    for j in range(1, n):
+        dp[0][j] = dp[0][j-1] + grid[0][j]
+    
+    # Initialize first column
+    for i in range(1, m):
+        dp[i][0] = dp[i-1][0] + grid[i][0]
+    
+    # Fill dp array
+    for i in range(1, m):
+        for j in range(1, n):
+            dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j]
+    
+    return dp[m-1][n-1]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int minPathSum(int[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+        
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+        
+        // Initialize first cell
+        dp[0][0] = grid[0][0];
+        
+        // Initialize first row
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = dp[0][j-1] + grid[0][j];
+        }
+        
+        // Initialize first column
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = dp[i-1][0] + grid[i][0];
+        }
+        
+        // Fill dp array
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = Math.min(dp[i-1][j], dp[i][j-1]) + grid[i][j];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+        if (grid.empty()) {
+            return 0;
+        }
+        
+        int m = grid.size();
+        int n = grid[0].size();
+        vector<vector<int>> dp(m, vector<int>(n));
+        
+        // Initialize first cell
+        dp[0][0] = grid[0][0];
+        
+        // Initialize first row
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = dp[0][j-1] + grid[0][j];
+        }
+        
+        // Initialize first column
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = dp[i-1][0] + grid[i][0];
+        }
+        
+        // Fill dp array
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + grid[i][j];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var minPathSum = function(grid) {
+    if (!grid.length) {
+        return 0;
+    }
+    
+    const m = grid.length;
+    const n = grid[0].length;
+    const dp = Array(m).fill().map(() => Array(n).fill(0));
+    
+    // Initialize first cell
+    dp[0][0] = grid[0][0];
+    
+    // Initialize first row
+    for (let j = 1; j < n; j++) {
+        dp[0][j] = dp[0][j-1] + grid[0][j];
+    }
+    
+    // Initialize first column
+    for (let i = 1; i < m; i++) {
+        dp[i][0] = dp[i-1][0] + grid[i][0];
+    }
+    
+    // Fill dp array
+    for (let i = 1; i < m; i++) {
+        for (let j = 1; j < n; j++) {
+            dp[i][j] = Math.min(dp[i-1][j], dp[i][j-1]) + grid[i][j];
+        }
+    }
+    
+    return dp[m-1][n-1];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MinPathSum(int[][] grid) {
+        if (grid == null || grid.Length == 0) {
+            return 0;
+        }
+        
+        int m = grid.Length;
+        int n = grid[0].Length;
+        int[,] dp = new int[m,n];
+        
+        // Initialize first cell
+        dp[0,0] = grid[0][0];
+        
+        // Initialize first row
+        for (int j = 1; j < n; j++) {
+            dp[0,j] = dp[0,j-1] + grid[0][j];
+        }
+        
+        // Initialize first column
+        for (int i = 1; i < m; i++) {
+            dp[i,0] = dp[i-1,0] + grid[i][0];
+        }
+        
+        // Fill dp array
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i,j] = Math.Min(dp[i-1,j], dp[i,j-1]) + grid[i][j];
+            }
+        }
+        
+        return dp[m-1,n-1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(m × n) to fill the dp array</li>
+                <li><strong>Space Complexity:</strong> O(m × n) to store the dp array</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses dynamic programming to find the minimum path sum:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Each cell stores minimum path sum to reach it</li>
+                        <li>Path sum = min(from above, from left) + current value</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize first cell with its value</li>
+                        <li>Fill first row and column (only one way to reach)</li>
+                        <li>For each cell (i,j):
+                            <ul>
+                                <li>Take minimum of paths from above and left</li>
+                                <li>Add current cell's value</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Similar to unique paths problems</li>
+                <li>Consider path sums instead of counts</li>
+                <li>Can be optimized to use O(n) space</li>
+                <li>Always has a solution (no obstacles)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
