@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permutation Sequence - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 60: Permutation Sequence. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>60. Permutation Sequence</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>The set <code>[1, 2, 3, ..., n]</code> contains a total of <code>n!</code> unique permutations.</p>
+        <p>Given <code>n</code> and <code>k</code>, return the <code>k<sup>th</sup></code> permutation sequence.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 3, k = 3
+Output: "213"
+
+Example 2:
+Input: n = 4, k = 9
+Output: "2314"
+
+Example 3:
+Input: n = 3, k = 1
+Output: "123"</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def getPermutation(n: int, k: int) -> str:
+    numbers = list(range(1, n + 1))
+    result = []
+    k = k - 1  # Convert to 0-based index
+    
+    # Calculate factorials
+    factorial = [1]
+    for i in range(1, n):
+        factorial.append(factorial[-1] * i)
+    
+    # Build the permutation
+    for i in range(n - 1, -1, -1):
+        index = k // factorial[i]
+        k = k % factorial[i]
+        
+        result.append(str(numbers[index]))
+        numbers.pop(index)
+    
+    return ''.join(result)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String getPermutation(int n, int k) {
+        List<Integer> numbers = new ArrayList<>();
+        int[] factorial = new int[n];
+        StringBuilder result = new StringBuilder();
+        
+        // Initialize numbers and factorial array
+        factorial[0] = 1;
+        for (int i = 1; i < n; i++) {
+            factorial[i] = factorial[i-1] * i;
+        }
+        for (int i = 1; i <= n; i++) {
+            numbers.add(i);
+        }
+        
+        k = k - 1; // Convert to 0-based index
+        
+        // Build the permutation
+        for (int i = n - 1; i >= 0; i--) {
+            int index = k / factorial[i];
+            k = k % factorial[i];
+            
+            result.append(numbers.get(index));
+            numbers.remove(index);
+        }
+        
+        return result.toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        vector<int> numbers;
+        vector<int> factorial(n);
+        string result;
+        
+        // Initialize numbers and factorial array
+        factorial[0] = 1;
+        for (int i = 1; i < n; i++) {
+            factorial[i] = factorial[i-1] * i;
+        }
+        for (int i = 1; i <= n; i++) {
+            numbers.push_back(i);
+        }
+        
+        k = k - 1; // Convert to 0-based index
+        
+        // Build the permutation
+        for (int i = n - 1; i >= 0; i--) {
+            int index = k / factorial[i];
+            k = k % factorial[i];
+            
+            result += to_string(numbers[index]);
+            numbers.erase(numbers.begin() + index);
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n
+ * @param {number} k
+ * @return {string}
+ */
+var getPermutation = function(n, k) {
+    const numbers = [];
+    const factorial = [1];
+    let result = '';
+    
+    // Initialize numbers and factorial array
+    for (let i = 1; i < n; i++) {
+        factorial[i] = factorial[i-1] * i;
+    }
+    for (let i = 1; i <= n; i++) {
+        numbers.push(i);
+    }
+    
+    k = k - 1; // Convert to 0-based index
+    
+    // Build the permutation
+    for (let i = n - 1; i >= 0; i--) {
+        const index = Math.floor(k / factorial[i]);
+        k = k % factorial[i];
+        
+        result += numbers[index];
+        numbers.splice(index, 1);
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string GetPermutation(int n, int k) {
+        List<int> numbers = new List<int>();
+        int[] factorial = new int[n];
+        StringBuilder result = new StringBuilder();
+        
+        // Initialize numbers and factorial array
+        factorial[0] = 1;
+        for (int i = 1; i < n; i++) {
+            factorial[i] = factorial[i-1] * i;
+        }
+        for (int i = 1; i <= n; i++) {
+            numbers.Add(i);
+        }
+        
+        k = k - 1; // Convert to 0-based index
+        
+        // Build the permutation
+        for (int i = n - 1; i >= 0; i--) {
+            int index = k / factorial[i];
+            k = k % factorial[i];
+            
+            result.Append(numbers[index]);
+            numbers.RemoveAt(index);
+        }
+        
+        return result.ToString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the input number</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the numbers and factorials</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a mathematical approach to find the k<sup>th</sup> permutation:</p>
+            <ul>
+                <li>Key concepts:
+                    <ul>
+                        <li>Use factorial numbers to determine position</li>
+                        <li>Calculate index for each position</li>
+                        <li>Remove used numbers from available set</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Calculate factorials up to n-1</li>
+                        <li>Convert k to 0-based index</li>
+                        <li>For each position:
+                            <ul>
+                                <li>Calculate index using division</li>
+                                <li>Update k using modulo</li>
+                                <li>Add number at index to result</li>
+                                <li>Remove used number</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>No need to generate all permutations</li>
+                <li>Efficient mathematical solution</li>
+                <li>Handles all valid inputs</li>
+                <li>Linear time complexity</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-Queens II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 52: N-Queens II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>52. N-Queens II</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.</p>
+        <p>Given an integer n, return the number of distinct solutions to the n-queens puzzle.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 4
+Output: 2
+Explanation: There are two distinct solutions to the 4-queens puzzle.
+
+Example 2:
+Input: n = 1
+Output: 1</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def totalNQueens(n: int) -> int:
+    def backtrack(row: int, diagonals: set, anti_diagonals: set, cols: set) -> int:
+        if row == n:
+            return 1
+        
+        solutions = 0
+        for col in range(n):
+            curr_diagonal = row - col
+            curr_anti_diagonal = row + col
+            
+            if (col in cols or 
+                curr_diagonal in diagonals or 
+                curr_anti_diagonal in anti_diagonals):
+                continue
+                
+            cols.add(col)
+            diagonals.add(curr_diagonal)
+            anti_diagonals.add(curr_anti_diagonal)
+            
+            solutions += backtrack(row + 1, diagonals, anti_diagonals, cols)
+            
+            cols.remove(col)
+            diagonals.remove(curr_diagonal)
+            anti_diagonals.remove(curr_anti_diagonal)
+        
+        return solutions
+    
+    return backtrack(0, set(), set(), set())</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int totalNQueens(int n) {
+        return backtrack(0, new HashSet<>(), new HashSet<>(), new HashSet<>(), n);
+    }
+    
+    private int backtrack(int row, Set<Integer> diagonals, 
+                        Set<Integer> antiDiagonals, Set<Integer> cols, int n) {
+        if (row == n) {
+            return 1;
+        }
+        
+        int solutions = 0;
+        for (int col = 0; col < n; col++) {
+            int currDiagonal = row - col;
+            int currAntiDiagonal = row + col;
+            
+            if (cols.contains(col) || 
+                diagonals.contains(currDiagonal) || 
+                antiDiagonals.contains(currAntiDiagonal)) {
+                continue;
+            }
+            
+            cols.add(col);
+            diagonals.add(currDiagonal);
+            antiDiagonals.add(currAntiDiagonal);
+            
+            solutions += backtrack(row + 1, diagonals, antiDiagonals, cols, n);
+            
+            cols.remove(col);
+            diagonals.remove(currDiagonal);
+            antiDiagonals.remove(currAntiDiagonal);
+        }
+        
+        return solutions;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int totalNQueens(int n) {
+        return backtrack(0, unordered_set<int>(), unordered_set<int>(), 
+                        unordered_set<int>(), n);
+    }
+    
+private:
+    int backtrack(int row, unordered_set<int> diagonals, 
+                 unordered_set<int> antiDiagonals, unordered_set<int> cols, 
+                 int n) {
+        if (row == n) {
+            return 1;
+        }
+        
+        int solutions = 0;
+        for (int col = 0; col < n; col++) {
+            int currDiagonal = row - col;
+            int currAntiDiagonal = row + col;
+            
+            if (cols.count(col) || 
+                diagonals.count(currDiagonal) || 
+                antiDiagonals.count(currAntiDiagonal)) {
+                continue;
+            }
+            
+            cols.insert(col);
+            diagonals.insert(currDiagonal);
+            antiDiagonals.insert(currAntiDiagonal);
+            
+            solutions += backtrack(row + 1, diagonals, antiDiagonals, cols, n);
+            
+            cols.erase(col);
+            diagonals.erase(currDiagonal);
+            antiDiagonals.erase(currAntiDiagonal);
+        }
+        
+        return solutions;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var totalNQueens = function(n) {
+    const backtrack = (row, diagonals, antiDiagonals, cols) => {
+        if (row === n) {
+            return 1;
+        }
+        
+        let solutions = 0;
+        for (let col = 0; col < n; col++) {
+            const currDiagonal = row - col;
+            const currAntiDiagonal = row + col;
+            
+            if (cols.has(col) || 
+                diagonals.has(currDiagonal) || 
+                antiDiagonals.has(currAntiDiagonal)) {
+                continue;
+            }
+            
+            cols.add(col);
+            diagonals.add(currDiagonal);
+            antiDiagonals.add(currAntiDiagonal);
+            
+            solutions += backtrack(row + 1, diagonals, antiDiagonals, cols);
+            
+            cols.delete(col);
+            diagonals.delete(currDiagonal);
+            antiDiagonals.delete(currAntiDiagonal);
+        }
+        
+        return solutions;
+    };
+    
+    return backtrack(0, new Set(), new Set(), new Set());
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int TotalNQueens(int n) {
+        return Backtrack(0, new HashSet<int>(), new HashSet<int>(), 
+                        new HashSet<int>(), n);
+    }
+    
+    private int Backtrack(int row, HashSet<int> diagonals, 
+                         HashSet<int> antiDiagonals, HashSet<int> cols, int n) {
+        if (row == n) {
+            return 1;
+        }
+        
+        int solutions = 0;
+        for (int col = 0; col < n; col++) {
+            int currDiagonal = row - col;
+            int currAntiDiagonal = row + col;
+            
+            if (cols.Contains(col) || 
+                diagonals.Contains(currDiagonal) || 
+                antiDiagonals.Contains(currAntiDiagonal)) {
+                continue;
+            }
+            
+            cols.Add(col);
+            diagonals.Add(currDiagonal);
+            antiDiagonals.Add(currAntiDiagonal);
+            
+            solutions += Backtrack(row + 1, diagonals, antiDiagonals, cols, n);
+            
+            cols.Remove(col);
+            diagonals.Remove(currDiagonal);
+            antiDiagonals.Remove(currAntiDiagonal);
+        }
+        
+        return solutions;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(N!) where N is the size of the board</li>
+                <li><strong>Space Complexity:</strong> O(N) for the recursion stack and sets to track positions</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking to count all valid N-Queens configurations. Here's how it works:</p>
+            <ul>
+                <li>Track valid positions:
+                    <ul>
+                        <li>Use sets for columns, diagonals, and anti-diagonals</li>
+                        <li>Diagonal: row - col remains constant</li>
+                        <li>Anti-diagonal: row + col remains constant</li>
+                    </ul>
+                </li>
+                <li>Backtracking process:
+                    <ul>
+                        <li>Try placing queen in each column of current row</li>
+                        <li>Check if position is valid using sets</li>
+                        <li>If valid, place queen and recurse to next row</li>
+                        <li>Add solutions from recursive calls</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Similar to N-Queens I but only counts solutions</li>
+                <li>No need to maintain board state</li>
+                <li>Uses efficient position tracking</li>
+                <li>Returns total number of valid configurations</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

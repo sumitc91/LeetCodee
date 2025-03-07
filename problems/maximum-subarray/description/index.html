@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximum Subarray - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 53: Maximum Subarray. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>53. Maximum Subarray</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.</p>
+        <p>A subarray is a contiguous part of an array.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+Output: 6
+Explanation: [4,-1,2,1] has the largest sum = 6.
+
+Example 2:
+Input: nums = [1]
+Output: 1
+
+Example 3:
+Input: nums = [5,4,-1,7,8]
+Output: 23</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def maxSubArray(nums: List[int]) -> int:
+    curr_sum = max_sum = nums[0]
+    
+    for num in nums[1:]:
+        curr_sum = max(num, curr_sum + num)
+        max_sum = max(max_sum, curr_sum)
+    
+    return max_sum</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int currSum = nums[0];
+        int maxSum = nums[0];
+        
+        for (int i = 1; i < nums.length; i++) {
+            currSum = Math.max(nums[i], currSum + nums[i]);
+            maxSum = Math.max(maxSum, currSum);
+        }
+        
+        return maxSum;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int currSum = nums[0];
+        int maxSum = nums[0];
+        
+        for (int i = 1; i < nums.size(); i++) {
+            currSum = max(nums[i], currSum + nums[i]);
+            maxSum = max(maxSum, currSum);
+        }
+        
+        return maxSum;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxSubArray = function(nums) {
+    let currSum = nums[0];
+    let maxSum = nums[0];
+    
+    for (let i = 1; i < nums.length; i++) {
+        currSum = Math.max(nums[i], currSum + nums[i]);
+        maxSum = Math.max(maxSum, currSum);
+    }
+    
+    return maxSum;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MaxSubArray(int[] nums) {
+        int currSum = nums[0];
+        int maxSum = nums[0];
+        
+        for (int i = 1; i < nums.Length; i++) {
+            currSum = Math.Max(nums[i], currSum + nums[i]);
+            maxSum = Math.Max(maxSum, currSum);
+        }
+        
+        return maxSum;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the array</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use two variables</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses Kadane's Algorithm to find the maximum subarray sum. Here's how it works:</p>
+            <ul>
+                <li>Initialize variables:
+                    <ul>
+                        <li>currSum: tracks current subarray sum</li>
+                        <li>maxSum: tracks maximum sum found</li>
+                    </ul>
+                </li>
+                <li>For each number:
+                    <ul>
+                        <li>Choose between starting new subarray or extending current one</li>
+                        <li>Update maxSum if current sum is larger</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Uses Kadane's Algorithm</li>
+                <li>Handles negative numbers</li>
+                <li>Single pass through array</li>
+                <li>Constant space complexity</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
