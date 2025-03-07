@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotate List - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 61: Rotate List. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>61. Rotate List</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>head</code> of a linked list, rotate the list to the right by <code>k</code> places.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [1,2,3,4,5], k = 2
+Output: [4,5,1,2,3]
+
+Example 2:
+Input: head = [0,1,2], k = 4
+Output: [2,0,1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def rotateRight(head: Optional[ListNode], k: int) -> Optional[ListNode]:
+    if not head or not head.next or k == 0:
+        return head
+    
+    # Calculate length and get the last node
+    curr = head
+    length = 1
+    while curr.next:
+        curr = curr.next
+        length += 1
+    
+    # Make the list circular
+    curr.next = head
+    
+    # Calculate actual rotation needed
+    k = k % length
+    
+    # Find new tail and head
+    steps = length - k
+    curr = head
+    for _ in range(steps - 1):
+        curr = curr.next
+    
+    # Break the circular list
+    new_head = curr.next
+    curr.next = None
+    
+    return new_head</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || head.next == null || k == 0) {
+            return head;
+        }
+        
+        // Calculate length and get the last node
+        ListNode curr = head;
+        int length = 1;
+        while (curr.next != null) {
+            curr = curr.next;
+            length++;
+        }
+        
+        // Make the list circular
+        curr.next = head;
+        
+        // Calculate actual rotation needed
+        k = k % length;
+        
+        // Find new tail and head
+        int steps = length - k;
+        curr = head;
+        for (int i = 0; i < steps - 1; i++) {
+            curr = curr.next;
+        }
+        
+        // Break the circular list
+        ListNode newHead = curr.next;
+        curr.next = null;
+        
+        return newHead;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (!head || !head->next || k == 0) {
+            return head;
+        }
+        
+        // Calculate length and get the last node
+        ListNode* curr = head;
+        int length = 1;
+        while (curr->next) {
+            curr = curr->next;
+            length++;
+        }
+        
+        // Make the list circular
+        curr->next = head;
+        
+        // Calculate actual rotation needed
+        k = k % length;
+        
+        // Find new tail and head
+        int steps = length - k;
+        curr = head;
+        for (int i = 0; i < steps - 1; i++) {
+            curr = curr->next;
+        }
+        
+        // Break the circular list
+        ListNode* newHead = curr->next;
+        curr->next = nullptr;
+        
+        return newHead;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+var rotateRight = function(head, k) {
+    if (!head || !head.next || k === 0) {
+        return head;
+    }
+    
+    // Calculate length and get the last node
+    let curr = head;
+    let length = 1;
+    while (curr.next) {
+        curr = curr.next;
+        length++;
+    }
+    
+    // Make the list circular
+    curr.next = head;
+    
+    // Calculate actual rotation needed
+    k = k % length;
+    
+    // Find new tail and head
+    let steps = length - k;
+    curr = head;
+    for (let i = 0; i < steps - 1; i++) {
+        curr = curr.next;
+    }
+    
+    // Break the circular list
+    const newHead = curr.next;
+    curr.next = null;
+    
+    return newHead;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public ListNode RotateRight(ListNode head, int k) {
+        if (head == null || head.next == null || k == 0) {
+            return head;
+        }
+        
+        // Calculate length and get the last node
+        ListNode curr = head;
+        int length = 1;
+        while (curr.next != null) {
+            curr = curr.next;
+            length++;
+        }
+        
+        // Make the list circular
+        curr.next = head;
+        
+        // Calculate actual rotation needed
+        k = k % length;
+        
+        // Find new tail and head
+        int steps = length - k;
+        curr = head;
+        for (int i = 0; i < steps - 1; i++) {
+            curr = curr.next;
+        }
+        
+        // Break the circular list
+        ListNode newHead = curr.next;
+        curr.next = null;
+        
+        return newHead;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the linked list</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a few pointers</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a three-step approach to rotate the linked list:</p>
+            <ul>
+                <li>Step 1: Calculate length
+                    <ul>
+                        <li>Traverse list to find length</li>
+                        <li>Keep track of last node</li>
+                    </ul>
+                </li>
+                <li>Step 2: Make list circular
+                    <ul>
+                        <li>Connect last node to head</li>
+                        <li>Calculate actual rotation needed</li>
+                    </ul>
+                </li>
+                <li>Step 3: Break at new position
+                    <ul>
+                        <li>Find new tail position</li>
+                        <li>Break circular connection</li>
+                        <li>Return new head</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle edge cases first</li>
+                <li>Use modulo for large k</li>
+                <li>Efficient single pass</li>
+                <li>Constant extra space</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
