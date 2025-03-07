@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pow(x, n) - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 50: Pow(x, n). Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>50. Pow(x, n)</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Implement <code>pow(x, n)</code>, which calculates <code>x</code> raised to the power <code>n</code> (i.e., <code>x^n</code>).</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: x = 2.00000, n = 10
+Output: 1024.00000
+
+Example 2:
+Input: x = 2.10000, n = 3
+Output: 9.26100
+
+Example 3:
+Input: x = 2.00000, n = -2
+Output: 0.25000
+Explanation: 2^-2 = 1/2^2 = 1/4 = 0.25</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def myPow(x: float, n: int) -> float:
+    def fastPow(x: float, n: int) -> float:
+        if n == 0:
+            return 1.0
+        
+        half = fastPow(x, n // 2)
+        if n % 2 == 0:
+            return half * half
+        else:
+            return half * half * x
+    
+    if n < 0:
+        x = 1 / x
+        n = -n
+    return fastPow(x, n)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public double myPow(double x, int n) {
+        if (n == Integer.MIN_VALUE) {
+            x = x * x;
+            n = n/2;
+        }
+        
+        if (n < 0) {
+            x = 1/x;
+            n = -n;
+        }
+        
+        return fastPow(x, n);
+    }
+    
+    private double fastPow(double x, int n) {
+        if (n == 0) {
+            return 1.0;
+        }
+        
+        double half = fastPow(x, n/2);
+        if (n % 2 == 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    double myPow(double x, int n) {
+        if (n == INT_MIN) {
+            x = x * x;
+            n = n/2;
+        }
+        
+        if (n < 0) {
+            x = 1/x;
+            n = -n;
+        }
+        
+        return fastPow(x, n);
+    }
+    
+private:
+    double fastPow(double x, int n) {
+        if (n == 0) {
+            return 1.0;
+        }
+        
+        double half = fastPow(x, n/2);
+        if (n % 2 == 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} x
+ * @param {number} n
+ * @return {number}
+ */
+var myPow = function(x, n) {
+    const fastPow = (x, n) => {
+        if (n === 0) {
+            return 1.0;
+        }
+        
+        const half = fastPow(x, Math.floor(n/2));
+        if (n % 2 === 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    };
+    
+    if (n < 0) {
+        x = 1/x;
+        n = -n;
+    }
+    
+    return fastPow(x, n);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public double MyPow(double x, int n) {
+        if (n == int.MinValue) {
+            x = x * x;
+            n = n/2;
+        }
+        
+        if (n < 0) {
+            x = 1/x;
+            n = -n;
+        }
+        
+        return FastPow(x, n);
+    }
+    
+    private double FastPow(double x, int n) {
+        if (n == 0) {
+            return 1.0;
+        }
+        
+        double half = FastPow(x, n/2);
+        if (n % 2 == 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(log n) using fast power algorithm</li>
+                <li><strong>Space Complexity:</strong> O(log n) for recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the fast power algorithm to efficiently calculate power. Here's how it works:</p>
+            <ul>
+                <li>Handle edge cases:
+                    <ul>
+                        <li>Negative exponents: convert to positive</li>
+                        <li>Integer minimum value: special handling</li>
+                    </ul>
+                </li>
+                <li>Fast power algorithm:
+                    <ul>
+                        <li>Base case: n = 0, return 1</li>
+                        <li>Recursively calculate half power</li>
+                        <li>Even power: multiply half by itself</li>
+                        <li>Odd power: multiply by x once more</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Uses divide and conquer approach</li>
+                <li>Handles negative exponents</li>
+                <li>Avoids overflow with large exponents</li>
+                <li>Maintains precision with floating point</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

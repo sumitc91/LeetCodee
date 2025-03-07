@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permutations II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 47: Permutations II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>47. Permutations II</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a collection of numbers, <code>nums</code>, that might contain duplicates, return all possible unique permutations in any order.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [1,1,2]
+Output: [[1,1,2],[1,2,1],[2,1,1]]
+
+Example 2:
+Input: nums = [1,2,3]
+Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def permuteUnique(nums: List[int]) -> List[List[int]]:
+    def backtrack(counter, path):
+        if len(path) == len(nums):
+            result.append(path[:])
+            return
+        
+        for num in counter:
+            if counter[num] > 0:
+                counter[num] -= 1
+                path.append(num)
+                backtrack(counter, path)
+                path.pop()
+                counter[num] += 1
+    
+    result = []
+    counter = Counter(nums)
+    backtrack(counter, [])
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    private List<List<Integer>> result = new ArrayList<>();
+    
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Map<Integer, Integer> counter = new HashMap<>();
+        for (int num : nums) {
+            counter.put(num, counter.getOrDefault(num, 0) + 1);
+        }
+        
+        backtrack(counter, new ArrayList<>(), nums.length);
+        return result;
+    }
+    
+    private void backtrack(Map<Integer, Integer> counter, List<Integer> path, int n) {
+        if (path.size() == n) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        
+        for (Map.Entry<Integer, Integer> entry : counter.entrySet()) {
+            int num = entry.getKey();
+            int count = entry.getValue();
+            
+            if (count > 0) {
+                counter.put(num, count - 1);
+                path.add(num);
+                backtrack(counter, path, n);
+                path.remove(path.size() - 1);
+                counter.put(num, count);
+            }
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> result;
+        unordered_map<int, int> counter;
+        for (int num : nums) {
+            counter[num]++;
+        }
+        
+        vector<int> path;
+        backtrack(counter, path, nums.size(), result);
+        return result;
+    }
+    
+private:
+    void backtrack(unordered_map<int, int>& counter, vector<int>& path, 
+                  int n, vector<vector<int>>& result) {
+        if (path.size() == n) {
+            result.push_back(path);
+            return;
+        }
+        
+        for (auto& [num, count] : counter) {
+            if (count > 0) {
+                counter[num]--;
+                path.push_back(num);
+                backtrack(counter, path, n, result);
+                path.pop_back();
+                counter[num]++;
+            }
+        }
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var permuteUnique = function(nums) {
+    const result = [];
+    const counter = new Map();
+    
+    // Count frequency of each number
+    for (const num of nums) {
+        counter.set(num, (counter.get(num) || 0) + 1);
+    }
+    
+    const backtrack = (path) => {
+        if (path.length === nums.length) {
+            result.push([...path]);
+            return;
+        }
+        
+        for (const [num, count] of counter) {
+            if (count > 0) {
+                counter.set(num, count - 1);
+                path.push(num);
+                backtrack(path);
+                path.pop();
+                counter.set(num, count);
+            }
+        }
+    };
+    
+    backtrack([]);
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    private IList<IList<int>> result = new List<IList<int>>();
+    
+    public IList<IList<int>> PermuteUnique(int[] nums) {
+        Dictionary<int, int> counter = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            if (!counter.ContainsKey(num)) {
+                counter[num] = 0;
+            }
+            counter[num]++;
+        }
+        
+        Backtrack(counter, new List<int>(), nums.Length);
+        return result;
+    }
+    
+    private void Backtrack(Dictionary<int, int> counter, List<int> path, int n) {
+        if (path.Count == n) {
+            result.Add(new List<int>(path));
+            return;
+        }
+        
+        foreach (var pair in counter.ToList()) {
+            int num = pair.Key;
+            int count = pair.Value;
+            
+            if (count > 0) {
+                counter[num]--;
+                path.Add(num);
+                Backtrack(counter, path, n);
+                path.RemoveAt(path.Count - 1);
+                counter[num]++;
+            }
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n!) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(n) for the recursion stack and counter map</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking with a frequency counter to handle duplicates. Here's how it works:</p>
+            <ul>
+                <li>Initialize:
+                    <ul>
+                        <li>Create counter map for number frequencies</li>
+                        <li>Use path array to build permutations</li>
+                    </ul>
+                </li>
+                <li>Backtracking process:
+                    <ul>
+                        <li>For each unique number in counter</li>
+                        <li>If count > 0, include number in path</li>
+                        <li>Decrease count and recurse</li>
+                        <li>Backtrack by removing number and restoring count</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Uses counter to handle duplicates</li>
+                <li>Avoids generating duplicate permutations</li>
+                <li>Only uses numbers with remaining count</li>
+                <li>Maintains original frequencies</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
