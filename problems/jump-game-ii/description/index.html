@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jump Game II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 45: Jump Game II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>45. Jump Game II</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given a 0-indexed array of integers <code>nums</code> of length <code>n</code>. You are initially positioned at <code>nums[0]</code>.</p>
+        <p>Each element <code>nums[i]</code> represents the maximum length of a forward jump from index <code>i</code>. In other words, if you are at <code>nums[i]</code>, you can jump to any <code>nums[i + j]</code> where:</p>
+        <ul>
+            <li><code>0 <= j <= nums[i]</code> and</li>
+            <li><code>i + j < n</code></li>
+        </ul>
+        <p>Return the minimum number of jumps to reach <code>nums[n - 1]</code>. The test cases are generated such that you can reach <code>nums[n - 1]</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2. 
+Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+Example 2:
+Input: nums = [2,3,0,1,4]
+Output: 2</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def jump(nums: List[int]) -> int:
+    if len(nums) <= 1:
+        return 0
+    
+    jumps = curr_max = next_max = 0
+    
+    for i in range(len(nums) - 1):
+        next_max = max(next_max, i + nums[i])
+        
+        if i == curr_max:
+            jumps += 1
+            curr_max = next_max
+            
+            if curr_max >= len(nums) - 1:
+                break
+    
+    return jumps</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int jump(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+        
+        int jumps = 0;
+        int currMax = 0;
+        int nextMax = 0;
+        
+        for (int i = 0; i < nums.length - 1; i++) {
+            nextMax = Math.max(nextMax, i + nums[i]);
+            
+            if (i == currMax) {
+                jumps++;
+                currMax = nextMax;
+                
+                if (currMax >= nums.length - 1) {
+                    break;
+                }
+            }
+        }
+        
+        return jumps;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        if (nums.size() <= 1) {
+            return 0;
+        }
+        
+        int jumps = 0;
+        int currMax = 0;
+        int nextMax = 0;
+        
+        for (int i = 0; i < nums.size() - 1; i++) {
+            nextMax = max(nextMax, i + nums[i]);
+            
+            if (i == currMax) {
+                jumps++;
+                currMax = nextMax;
+                
+                if (currMax >= nums.size() - 1) {
+                    break;
+                }
+            }
+        }
+        
+        return jumps;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var jump = function(nums) {
+    if (nums.length <= 1) {
+        return 0;
+    }
+    
+    let jumps = 0;
+    let currMax = 0;
+    let nextMax = 0;
+    
+    for (let i = 0; i < nums.length - 1; i++) {
+        nextMax = Math.max(nextMax, i + nums[i]);
+        
+        if (i === currMax) {
+            jumps++;
+            currMax = nextMax;
+            
+            if (currMax >= nums.length - 1) {
+                break;
+            }
+        }
+    }
+    
+    return jumps;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int Jump(int[] nums) {
+        if (nums.Length <= 1) {
+            return 0;
+        }
+        
+        int jumps = 0;
+        int currMax = 0;
+        int nextMax = 0;
+        
+        for (int i = 0; i < nums.Length - 1; i++) {
+            nextMax = Math.Max(nextMax, i + nums[i]);
+            
+            if (i == currMax) {
+                jumps++;
+                currMax = nextMax;
+                
+                if (currMax >= nums.Length - 1) {
+                    break;
+                }
+            }
+        }
+        
+        return jumps;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the array</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use constant extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a greedy approach to find the minimum number of jumps. Here's how it works:</p>
+            <ul>
+                <li>Track two boundaries:
+                    <ul>
+                        <li>currMax: farthest position reachable in current jump</li>
+                        <li>nextMax: farthest position reachable in next jump</li>
+                    </ul>
+                </li>
+                <li>For each position:
+                    <ul>
+                        <li>Update nextMax with maximum reachable position</li>
+                        <li>When current position reaches currMax:
+                            <ul>
+                                <li>Increment jump count</li>
+                                <li>Update currMax to nextMax</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Uses greedy approach</li>
+                <li>Maintains two boundaries</li>
+                <li>Only jumps when necessary</li>
+                <li>Guarantees minimum jumps</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

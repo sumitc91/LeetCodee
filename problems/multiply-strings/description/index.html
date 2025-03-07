@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiply Strings - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 43: Multiply Strings. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>43. Multiply Strings</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two non-negative integers <code>num1</code> and <code>num2</code> represented as strings, return the product of <code>num1</code> and <code>num2</code>, also represented as a string.</p>
+        <p>Note: You must not use any built-in BigInteger library or convert the inputs to integer directly.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: num1 = "2", num2 = "3"
+Output: "6"
+
+Example 2:
+Input: num1 = "123", num2 = "456"
+Output: "56088"</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def multiply(num1: str, num2: str) -> str:
+    if num1 == "0" or num2 == "0":
+        return "0"
+    
+    # Initialize result array
+    result = [0] * (len(num1) + len(num2))
+    
+    # Multiply each digit
+    for i in range(len(num1)-1, -1, -1):
+        for j in range(len(num2)-1, -1, -1):
+            digit1 = ord(num1[i]) - ord('0')
+            digit2 = ord(num2[j]) - ord('0')
+            product = digit1 * digit2
+            
+            # Add to position
+            pos1 = i + j
+            pos2 = i + j + 1
+            total = result[pos2] + product
+            
+            result[pos2] = total % 10
+            result[pos1] += total // 10
+    
+    # Convert to string
+    result_str = ""
+    start = 0
+    while start < len(result) and result[start] == 0:
+        start += 1
+    
+    return "".join(map(str, result[start:])) if start < len(result) else "0"</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String multiply(String num1, String num2) {
+        if (num1.equals("0") || num2.equals("0")) {
+            return "0";
+        }
+        
+        int[] result = new int[num1.length() + num2.length()];
+        
+        // Multiply each digit
+        for (int i = num1.length() - 1; i >= 0; i--) {
+            for (int j = num2.length() - 1; j >= 0; j--) {
+                int digit1 = num1.charAt(i) - '0';
+                int digit2 = num2.charAt(j) - '0';
+                int product = digit1 * digit2;
+                
+                int pos1 = i + j;
+                int pos2 = i + j + 1;
+                int total = result[pos2] + product;
+                
+                result[pos2] = total % 10;
+                result[pos1] += total / 10;
+            }
+        }
+        
+        // Convert to string
+        StringBuilder sb = new StringBuilder();
+        boolean leadingZero = true;
+        for (int digit : result) {
+            if (digit != 0 || !leadingZero) {
+                leadingZero = false;
+                sb.append(digit);
+            }
+        }
+        
+        return sb.length() == 0 ? "0" : sb.toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        if (num1 == "0" || num2 == "0") {
+            return "0";
+        }
+        
+        vector<int> result(num1.length() + num2.length(), 0);
+        
+        // Multiply each digit
+        for (int i = num1.length() - 1; i >= 0; i--) {
+            for (int j = num2.length() - 1; j >= 0; j--) {
+                int digit1 = num1[i] - '0';
+                int digit2 = num2[j] - '0';
+                int product = digit1 * digit2;
+                
+                int pos1 = i + j;
+                int pos2 = i + j + 1;
+                int total = result[pos2] + product;
+                
+                result[pos2] = total % 10;
+                result[pos1] += total / 10;
+            }
+        }
+        
+        // Convert to string
+        string output = "";
+        bool leadingZero = true;
+        for (int digit : result) {
+            if (digit != 0 || !leadingZero) {
+                leadingZero = false;
+                output += to_string(digit);
+            }
+        }
+        
+        return output.empty() ? "0" : output;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} num1
+ * @param {string} num2
+ * @return {string}
+ */
+var multiply = function(num1, num2) {
+    if (num1 === "0" || num2 === "0") {
+        return "0";
+    }
+    
+    const result = new Array(num1.length + num2.length).fill(0);
+    
+    // Multiply each digit
+    for (let i = num1.length - 1; i >= 0; i--) {
+        for (let j = num2.length - 1; j >= 0; j--) {
+            const digit1 = num1.charCodeAt(i) - '0'.charCodeAt(0);
+            const digit2 = num2.charCodeAt(j) - '0'.charCodeAt(0);
+            const product = digit1 * digit2;
+            
+            const pos1 = i + j;
+            const pos2 = i + j + 1;
+            const total = result[pos2] + product;
+            
+            result[pos2] = total % 10;
+            result[pos1] += Math.floor(total / 10);
+        }
+    }
+    
+    // Convert to string
+    while (result[0] === 0) {
+        result.shift();
+    }
+    
+    return result.length ? result.join('') : "0";
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string Multiply(string num1, string num2) {
+        if (num1 == "0" || num2 == "0") {
+            return "0";
+        }
+        
+        int[] result = new int[num1.Length + num2.Length];
+        
+        // Multiply each digit
+        for (int i = num1.Length - 1; i >= 0; i--) {
+            for (int j = num2.Length - 1; j >= 0; j--) {
+                int digit1 = num1[i] - '0';
+                int digit2 = num2[j] - '0';
+                int product = digit1 * digit2;
+                
+                int pos1 = i + j;
+                int pos2 = i + j + 1;
+                int total = result[pos2] + product;
+                
+                result[pos2] = total % 10;
+                result[pos1] += total / 10;
+            }
+        }
+        
+        // Convert to string
+        StringBuilder sb = new StringBuilder();
+        bool leadingZero = true;
+        foreach (int digit in result) {
+            if (digit != 0 || !leadingZero) {
+                leadingZero = false;
+                sb.Append(digit);
+            }
+        }
+        
+        return sb.Length == 0 ? "0" : sb.ToString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(m * n) where m and n are the lengths of the input strings</li>
+                <li><strong>Space Complexity:</strong> O(m + n) to store the result</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution implements multiplication of large numbers using the elementary school multiplication method. Here's how it works:</p>
+            <ul>
+                <li>Initialize result array:
+                    <ul>
+                        <li>Size is sum of lengths of both numbers</li>
+                        <li>Each position represents a digit in result</li>
+                    </ul>
+                </li>
+                <li>Multiply each digit:
+                    <ul>
+                        <li>Process from right to left</li>
+                        <li>Calculate product of each digit pair</li>
+                        <li>Add to appropriate positions in result</li>
+                        <li>Handle carry-over</li>
+                    </ul>
+                </li>
+                <li>Convert to string:
+                    <ul>
+                        <li>Skip leading zeros</li>
+                        <li>Join remaining digits</li>
+                        <li>Handle special case of zero result</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handles large numbers without built-in BigInteger</li>
+                <li>Uses elementary school multiplication method</li>
+                <li>Processes digits right to left</li>
+                <li>Properly handles carry-over in multiplication</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
