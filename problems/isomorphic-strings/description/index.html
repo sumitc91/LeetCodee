@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isomorphic Strings - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 205: Isomorphic Strings. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>205. Isomorphic Strings</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two strings <code>s</code> and <code>t</code>, determine if they are isomorphic.</p>
+        <p>Two strings <code>s</code> and <code>t</code> are isomorphic if the characters in <code>s</code> can be replaced to get <code>t</code>.</p>
+        <p>All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "egg", t = "add"
+Output: true
+
+Example 2:
+Input: s = "foo", t = "bar"
+Output: false
+
+Example 3:
+Input: s = "paper", t = "title"
+Output: true</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def isIsomorphic(s: str, t: str) -> bool:
+    if len(s) != len(t):
+        return False
+    
+    s_to_t = {}
+    t_to_s = {}
+    
+    for c1, c2 in zip(s, t):
+        if c1 not in s_to_t and c2 not in t_to_s:
+            s_to_t[c1] = c2
+            t_to_s[c2] = c1
+        elif s_to_t.get(c1) != c2 or t_to_s.get(c2) != c1:
+            return False
+    
+    return True</code></pre>
+
+            <p>Alternative Solution using character positions:</p>
+            <pre><code>
+def isIsomorphic(s: str, t: str) -> bool:
+    return len(set(zip(s, t))) == len(set(s)) == len(set(t))</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        
+        Map<Character, Character> sToT = new HashMap<>();
+        Map<Character, Character> tToS = new HashMap<>();
+        
+        for (int i = 0; i < s.length(); i++) {
+            char c1 = s.charAt(i);
+            char c2 = t.charAt(i);
+            
+            if (!sToT.containsKey(c1) && !tToS.containsKey(c2)) {
+                sToT.put(c1, c2);
+                tToS.put(c2, c1);
+            } else if (sToT.getOrDefault(c1, '\0') != c2 || 
+                      tToS.getOrDefault(c2, '\0') != c1) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        
+        unordered_map<char, char> sToT;
+        unordered_map<char, char> tToS;
+        
+        for (int i = 0; i < s.length(); i++) {
+            char c1 = s[i];
+            char c2 = t[i];
+            
+            if (sToT.find(c1) == sToT.end() && tToS.find(c2) == tToS.end()) {
+                sToT[c1] = c2;
+                tToS[c2] = c1;
+            } else if (sToT[c1] != c2 || tToS[c2] != c1) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isIsomorphic = function(s, t) {
+    if (s.length !== t.length) {
+        return false;
+    }
+    
+    const sToT = new Map();
+    const tToS = new Map();
+    
+    for (let i = 0; i < s.length; i++) {
+        const c1 = s[i];
+        const c2 = t[i];
+        
+        if (!sToT.has(c1) && !tToS.has(c2)) {
+            sToT.set(c1, c2);
+            tToS.set(c2, c1);
+        } else if (sToT.get(c1) !== c2 || tToS.get(c2) !== c1) {
+            return false;
+        }
+    }
+    
+    return true;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public bool IsIsomorphic(string s, string t) {
+        if (s.Length != t.Length) {
+            return false;
+        }
+        
+        Dictionary<char, char> sToT = new Dictionary<char, char>();
+        Dictionary<char, char> tToS = new Dictionary<char, char>();
+        
+        for (int i = 0; i < s.Length; i++) {
+            char c1 = s[i];
+            char c2 = t[i];
+            
+            if (!sToT.ContainsKey(c1) && !tToS.ContainsKey(c2)) {
+                sToT[c1] = c2;
+                tToS[c2] = c1;
+            } else if (!sToT.ContainsKey(c1) || !tToS.ContainsKey(c2) ||
+                      sToT[c1] != c2 || tToS[c2] != c1) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the strings</li>
+                <li><strong>Space Complexity:</strong> O(1) since we only store at most 256 characters</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>Using Two Maps:
+                    <ul>
+                        <li>Track character mappings in both directions</li>
+                        <li>Ensure one-to-one mapping</li>
+                        <li>Check consistency of mappings</li>
+                        <li>More intuitive solution</li>
+                    </ul>
+                </li>
+                <li>Using Character Positions:
+                    <ul>
+                        <li>Compare pattern of character occurrences</li>
+                        <li>Use set to check uniqueness</li>
+                        <li>More concise solution</li>
+                        <li>Less intuitive but efficient</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Bidirectional mapping</li>
+                <li>Character tracking</li>
+                <li>Pattern matching</li>
+                <li>Edge cases</li>
+            </ul>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>One-way mapping only</li>
+                <li>Missing edge cases</li>
+                <li>Length mismatch</li>
+                <li>Character reuse</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty strings</li>
+                <li>Single character</li>
+                <li>Same characters</li>
+                <li>Different lengths</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

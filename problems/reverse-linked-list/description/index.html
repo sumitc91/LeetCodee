@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Linked List - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 206: Reverse Linked List. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>206. Reverse Linked List</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>head</code> of a singly linked list, reverse the list, and return <em>the reversed list</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [1,2,3,4,5]
+Output: [5,4,3,2,1]
+
+Example 2:
+Input: head = [1,2]
+Output: [2,1]
+
+Example 3:
+Input: head = []
+Output: []</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        curr = head
+        
+        while curr:
+            next_temp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = next_temp
+        
+        return prev</code></pre>
+
+            <p>Recursive Solution:</p>
+            <pre><code>
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return head
+        
+        # Reverse the rest of the list
+        rest = self.reverseList(head.next)
+        
+        # Put first element at the end
+        head.next.next = head
+        head.next = None
+        
+        return rest</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        
+        while (curr != null) {
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        
+        return prev;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+        
+        while (curr != nullptr) {
+            ListNode* nextTemp = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        
+        return prev;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var reverseList = function(head) {
+    let prev = null;
+    let curr = head;
+    
+    while (curr !== null) {
+        const nextTemp = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = nextTemp;
+    }
+    
+    return prev;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode ReverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        
+        while (curr != null) {
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        
+        return prev;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the linked list</li>
+                <li><strong>Space Complexity:</strong> O(1) for iterative solution, O(n) for recursive solution due to call stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>Iterative Approach:
+                    <ul>
+                        <li>Use three pointers: prev, curr, next</li>
+                        <li>Reverse links one by one</li>
+                        <li>Move pointers forward</li>
+                        <li>More space efficient</li>
+                    </ul>
+                </li>
+                <li>Recursive Approach:
+                    <ul>
+                        <li>Reverse rest of the list first</li>
+                        <li>Fix the head pointer</li>
+                        <li>More elegant solution</li>
+                        <li>Uses call stack space</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Pointer manipulation</li>
+                <li>Link reversal</li>
+                <li>Memory management</li>
+                <li>Edge cases</li>
+            </ul>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>Lost references</li>
+                <li>Infinite loops</li>
+                <li>Memory leaks</li>
+                <li>Null handling</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty list</li>
+                <li>Single node</li>
+                <li>Two nodes</li>
+                <li>Circular list</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

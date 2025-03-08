@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Schedule - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 207: Course Schedule. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>207. Course Schedule</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>There are a total of <code>numCourses</code> courses you have to take, labeled from <code>0</code> to <code>numCourses - 1</code>. You are given an array <code>prerequisites</code> where <code>prerequisites[i] = [ai, bi]</code> indicates that you <strong>must</strong> take course <code>bi</code> first if you want to take course <code>ai</code>.</p>
+        <p>For example, the pair <code>[0, 1]</code>, indicates that to take course <code>0</code> you have to first take course <code>1</code>.</p>
+        <p>Return <code>true</code> if you can finish all courses. Otherwise, return <code>false</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0. So it is possible.
+
+Example 2:
+Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
+    # Create adjacency list
+    graph = [[] for _ in range(numCourses)]
+    for course, prereq in prerequisites:
+        graph[course].append(prereq)
+    
+    # 0 = unvisited, 1 = visiting, 2 = visited
+    visited = [0] * numCourses
+    
+    def hasCycle(course: int) -> bool:
+        if visited[course] == 1:  # Found cycle
+            return True
+        if visited[course] == 2:  # Already visited
+            return False
+        
+        visited[course] = 1  # Mark as visiting
+        
+        # Check all prerequisites
+        for prereq in graph[course]:
+            if hasCycle(prereq):
+                return True
+        
+        visited[course] = 2  # Mark as visited
+        return False
+    
+    # Check each course
+    for course in range(numCourses):
+        if hasCycle(course):
+            return False
+    
+    return True</code></pre>
+
+            <p>Topological Sort Solution:</p>
+            <pre><code>
+def canFinish(numCourses: int, prerequisites: List[List[int]]) -> bool:
+    # Create adjacency list and indegree count
+    graph = [[] for _ in range(numCourses)]
+    indegree = [0] * numCourses
+    
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+        indegree[course] += 1
+    
+    # Add all courses with no prerequisites to queue
+    queue = deque([i for i in range(numCourses) if indegree[i] == 0])
+    count = 0
+    
+    while queue:
+        course = queue.popleft()
+        count += 1
+        
+        # Reduce indegree for all dependent courses
+        for next_course in graph[course]:
+            indegree[next_course] -= 1
+            if indegree[next_course] == 0:
+                queue.append(next_course)
+    
+    return count == numCourses</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // Create adjacency list
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        for (int[] prereq : prerequisites) {
+            graph.get(prereq[0]).add(prereq[1]);
+        }
+        
+        // 0 = unvisited, 1 = visiting, 2 = visited
+        int[] visited = new int[numCourses];
+        
+        // Check each course
+        for (int course = 0; course < numCourses; course++) {
+            if (hasCycle(course, graph, visited)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean hasCycle(int course, List<List<Integer>> graph, int[] visited) {
+        if (visited[course] == 1) return true;   // Found cycle
+        if (visited[course] == 2) return false;  // Already visited
+        
+        visited[course] = 1;  // Mark as visiting
+        
+        // Check all prerequisites
+        for (int prereq : graph.get(course)) {
+            if (hasCycle(prereq, graph, visited)) {
+                return true;
+            }
+        }
+        
+        visited[course] = 2;  // Mark as visited
+        return false;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // Create adjacency list
+        vector<vector<int>> graph(numCourses);
+        for (const auto& prereq : prerequisites) {
+            graph[prereq[0]].push_back(prereq[1]);
+        }
+        
+        // 0 = unvisited, 1 = visiting, 2 = visited
+        vector<int> visited(numCourses, 0);
+        
+        // Check each course
+        for (int course = 0; course < numCourses; course++) {
+            if (hasCycle(course, graph, visited)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+private:
+    bool hasCycle(int course, const vector<vector<int>>& graph, vector<int>& visited) {
+        if (visited[course] == 1) return true;   // Found cycle
+        if (visited[course] == 2) return false;  // Already visited
+        
+        visited[course] = 1;  // Mark as visiting
+        
+        // Check all prerequisites
+        for (int prereq : graph[course]) {
+            if (hasCycle(prereq, graph, visited)) {
+                return true;
+            }
+        }
+        
+        visited[course] = 2;  // Mark as visited
+        return false;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} numCourses
+ * @param {number[][]} prerequisites
+ * @return {boolean}
+ */
+var canFinish = function(numCourses, prerequisites) {
+    // Create adjacency list
+    const graph = Array.from({ length: numCourses }, () => []);
+    for (const [course, prereq] of prerequisites) {
+        graph[course].push(prereq);
+    }
+    
+    // 0 = unvisited, 1 = visiting, 2 = visited
+    const visited = new Array(numCourses).fill(0);
+    
+    const hasCycle = (course) => {
+        if (visited[course] === 1) return true;   // Found cycle
+        if (visited[course] === 2) return false;  // Already visited
+        
+        visited[course] = 1;  // Mark as visiting
+        
+        // Check all prerequisites
+        for (const prereq of graph[course]) {
+            if (hasCycle(prereq)) {
+                return true;
+            }
+        }
+        
+        visited[course] = 2;  // Mark as visited
+        return false;
+    };
+    
+    // Check each course
+    for (let course = 0; course < numCourses; course++) {
+        if (hasCycle(course)) {
+            return false;
+        }
+    }
+    
+    return true;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public bool CanFinish(int numCourses, int[][] prerequisites) {
+        // Create adjacency list
+        List<List<int>> graph = new List<List<int>>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.Add(new List<int>());
+        }
+        
+        foreach (var prereq in prerequisites) {
+            graph[prereq[0]].Add(prereq[1]);
+        }
+        
+        // 0 = unvisited, 1 = visiting, 2 = visited
+        int[] visited = new int[numCourses];
+        
+        // Check each course
+        for (int course = 0; course < numCourses; course++) {
+            if (HasCycle(course, graph, visited)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private bool HasCycle(int course, List<List<int>> graph, int[] visited) {
+        if (visited[course] == 1) return true;   // Found cycle
+        if (visited[course] == 2) return false;  // Already visited
+        
+        visited[course] = 1;  // Mark as visiting
+        
+        // Check all prerequisites
+        foreach (int prereq in graph[course]) {
+            if (HasCycle(prereq, graph, visited)) {
+                return true;
+            }
+        }
+        
+        visited[course] = 2;  // Mark as visited
+        return false;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(V + E) where V is the number of courses and E is the number of prerequisites</li>
+                <li><strong>Space Complexity:</strong> O(V + E) for the adjacency list and visited array</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>DFS with Cycle Detection:
+                    <ul>
+                        <li>Build adjacency list</li>
+                        <li>Use visited array to track states</li>
+                        <li>Detect cycles using DFS</li>
+                        <li>More intuitive solution</li>
+                    </ul>
+                </li>
+                <li>Topological Sort (Kahn's Algorithm):
+                    <ul>
+                        <li>Build adjacency list and indegree count</li>
+                        <li>Start with courses having no prerequisites</li>
+                        <li>Remove dependencies as courses are completed</li>
+                        <li>Check if all courses can be taken</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Graph representation</li>
+                <li>Cycle detection</li>
+                <li>State tracking</li>
+                <li>Dependency resolution</li>
+            </ul>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>Incorrect graph building</li>
+                <li>Missing cycle detection</li>
+                <li>State management</li>
+                <li>Edge cases</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>No prerequisites</li>
+                <li>Single course</li>
+                <li>Self loops</li>
+                <li>Disconnected components</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

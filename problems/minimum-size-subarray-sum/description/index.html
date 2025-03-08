@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Size Subarray Sum - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 209: Minimum Size Subarray Sum. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>209. Minimum Size Subarray Sum</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an array of positive integers <code>nums</code> and a positive integer <code>target</code>, return <em>the minimal length of a subarray whose sum is greater than or equal to</em> <code>target</code>. If there is no such subarray, return <code>0</code> instead.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: target = 7, nums = [2,3,1,2,4,3]
+Output: 2
+Explanation: The subarray [4,3] has the minimal length under the problem constraint.
+
+Example 2:
+Input: target = 4, nums = [1,4,4]
+Output: 1
+
+Example 3:
+Input: target = 11, nums = [1,1,1,1,1,1,1,1]
+Output: 0</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def minSubArrayLen(target: int, nums: List[int]) -> int:
+    if not nums:
+        return 0
+    
+    min_length = float('inf')
+    current_sum = 0
+    left = 0
+    
+    for right in range(len(nums)):
+        current_sum += nums[right]
+        
+        while current_sum >= target:
+            min_length = min(min_length, right - left + 1)
+            current_sum -= nums[left]
+            left += 1
+    
+    return min_length if min_length != float('inf') else 0</code></pre>
+
+            <p>Binary Search Solution:</p>
+            <pre><code>
+def minSubArrayLen(target: int, nums: List[int]) -> int:
+    if not nums:
+        return 0
+    
+    # Calculate prefix sums
+    prefix_sums = [0]
+    for num in nums:
+        prefix_sums.append(prefix_sums[-1] + num)
+    
+    min_length = float('inf')
+    
+    # For each starting point
+    for i in range(len(nums)):
+        # Binary search for end point
+        left, right = i + 1, len(nums)
+        while left <= right:
+            mid = (left + right) // 2
+            current_sum = prefix_sums[mid] - prefix_sums[i]
+            if current_sum >= target:
+                min_length = min(min_length, mid - i)
+                right = mid - 1
+            else:
+                left = mid + 1
+    
+    return min_length if min_length != float('inf') else 0</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        
+        int minLength = Integer.MAX_VALUE;
+        int currentSum = 0;
+        int left = 0;
+        
+        for (int right = 0; right < nums.length; right++) {
+            currentSum += nums[right];
+            
+            while (currentSum >= target) {
+                minLength = Math.min(minLength, right - left + 1);
+                currentSum -= nums[left];
+                left++;
+            }
+        }
+        
+        return minLength == Integer.MAX_VALUE ? 0 : minLength;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+        
+        int minLength = INT_MAX;
+        int currentSum = 0;
+        int left = 0;
+        
+        for (int right = 0; right < nums.size(); right++) {
+            currentSum += nums[right];
+            
+            while (currentSum >= target) {
+                minLength = min(minLength, right - left + 1);
+                currentSum -= nums[left];
+                left++;
+            }
+        }
+        
+        return minLength == INT_MAX ? 0 : minLength;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} target
+ * @param {number[]} nums
+ * @return {number}
+ */
+var minSubArrayLen = function(target, nums) {
+    if (!nums.length) {
+        return 0;
+    }
+    
+    let minLength = Infinity;
+    let currentSum = 0;
+    let left = 0;
+    
+    for (let right = 0; right < nums.length; right++) {
+        currentSum += nums[right];
+        
+        while (currentSum >= target) {
+            minLength = Math.min(minLength, right - left + 1);
+            currentSum -= nums[left];
+            left++;
+        }
+    }
+    
+    return minLength === Infinity ? 0 : minLength;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MinSubArrayLen(int target, int[] nums) {
+        if (nums == null || nums.Length == 0) {
+            return 0;
+        }
+        
+        int minLength = int.MaxValue;
+        int currentSum = 0;
+        int left = 0;
+        
+        for (int right = 0; right < nums.Length; right++) {
+            currentSum += nums[right];
+            
+            while (currentSum >= target) {
+                minLength = Math.Min(minLength, right - left + 1);
+                currentSum -= nums[left];
+                left++;
+            }
+        }
+        
+        return minLength == int.MaxValue ? 0 : minLength;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong>
+                    <ul>
+                        <li>Sliding Window: O(n) where n is the length of nums</li>
+                        <li>Binary Search: O(n log n)</li>
+                    </ul>
+                </li>
+                <li><strong>Space Complexity:</strong>
+                    <ul>
+                        <li>Sliding Window: O(1)</li>
+                        <li>Binary Search: O(n) for prefix sums</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>Sliding Window:
+                    <ul>
+                        <li>Maintain a window with sum ≥ target</li>
+                        <li>Shrink window from left when possible</li>
+                        <li>Track minimum length</li>
+                        <li>More efficient solution</li>
+                    </ul>
+                </li>
+                <li>Binary Search:
+                    <ul>
+                        <li>Use prefix sums</li>
+                        <li>Binary search for each starting point</li>
+                        <li>Find minimum window size</li>
+                        <li>Alternative approach</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Two-pointer technique</li>
+                <li>Window management</li>
+                <li>Sum tracking</li>
+                <li>Minimum length update</li>
+            </ul>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>Integer overflow</li>
+                <li>Edge cases</li>
+                <li>Window boundaries</li>
+                <li>Sum comparison</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty array</li>
+                <li>Single element</li>
+                <li>No solution exists</li>
+                <li>All elements equal</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
