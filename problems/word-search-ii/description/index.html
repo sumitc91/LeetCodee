@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Search II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 212: Word Search II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>212. Word Search II</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an <code>m x n</code> <code>board</code> of characters and a list of strings <code>words</code>, return <em>all words on the board</em>.</p>
+        <p>Each word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
+Output: ["eat","oath"]
+
+Example 2:
+Input: board = [["a","b"],["c","d"]], words = ["abcb"]
+Output: []</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+        self.word = ''
+
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        # Build Trie
+        root = TrieNode()
+        for word in words:
+            node = root
+            for char in word:
+                if char not in node.children:
+                    node.children[char] = TrieNode()
+                node = node.children[char]
+            node.is_end = True
+            node.word = word
+        
+        rows, cols = len(board), len(board[0])
+        result = set()
+        
+        def dfs(row: int, col: int, node: TrieNode) -> None:
+            # Check boundaries and if character exists in trie
+            if (row < 0 or row >= rows or col < 0 or col >= cols or
+                board[row][col] not in node.children):
+                return
+            
+            char = board[row][col]
+            next_node = node.children[char]
+            
+            # Found a word
+            if next_node.is_end:
+                result.add(next_node.word)
+            
+            # Mark as visited
+            board[row][col] = '#'
+            
+            # Check all 4 directions
+            for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                dfs(row + dx, col + dy, next_node)
+            
+            # Restore the cell
+            board[row][col] = char
+        
+        # Start DFS from each cell
+        for i in range(rows):
+            for j in range(cols):
+                dfs(i, j, root)
+        
+        return list(result)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class TrieNode {
+    Map<Character, TrieNode> children = new HashMap<>();
+    boolean isEnd = false;
+    String word = "";
+}
+
+class Solution {
+    public List<String> findWords(char[][] board, String[] words) {
+        // Build Trie
+        TrieNode root = new TrieNode();
+        for (String word : words) {
+            TrieNode node = root;
+            for (char c : word.toCharArray()) {
+                node.children.putIfAbsent(c, new TrieNode());
+                node = node.children.get(c);
+            }
+            node.isEnd = true;
+            node.word = word;
+        }
+        
+        Set<String> result = new HashSet<>();
+        int rows = board.length, cols = board[0].length;
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                dfs(board, i, j, root, result);
+            }
+        }
+        
+        return new ArrayList<>(result);
+    }
+    
+    private void dfs(char[][] board, int row, int col, TrieNode node, Set<String> result) {
+        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length ||
+            !node.children.containsKey(board[row][col])) {
+            return;
+        }
+        
+        char char = board[row][col];
+        TrieNode nextNode = node.children.get(char);
+        
+        if (nextNode.isEnd) {
+            result.add(nextNode.word);
+        }
+        
+        board[row][col] = '#';
+        
+        int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        for (int[] dir : dirs) {
+            dfs(board, row + dir[0], col + dir[1], nextNode, result);
+        }
+        
+        board[row][col] = char;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class TrieNode {
+public:
+    unordered_map<char, TrieNode*> children;
+    bool isEnd;
+    string word;
+    
+    TrieNode() {
+        isEnd = false;
+    }
+    
+    ~TrieNode() {
+        for (auto& pair : children) {
+            delete pair.second;
+        }
+    }
+};
+
+class Solution {
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        // Build Trie
+        TrieNode* root = new TrieNode();
+        for (const string& word : words) {
+            TrieNode* node = root;
+            for (char c : word) {
+                if (!node->children[c]) {
+                    node->children[c] = new TrieNode();
+                }
+                node = node->children[c];
+            }
+            node->isEnd = true;
+            node->word = word;
+        }
+        
+        unordered_set<string> result;
+        int rows = board.size(), cols = board[0].size();
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                dfs(board, i, j, root, result);
+            }
+        }
+        
+        delete root;
+        return vector<string>(result.begin(), result.end());
+    }
+    
+private:
+    void dfs(vector<vector<char>>& board, int row, int col, TrieNode* node,
+             unordered_set<string>& result) {
+        if (row < 0 || row >= board.size() || col < 0 || col >= board[0].size() ||
+            !node->children.count(board[row][col])) {
+            return;
+        }
+        
+        char char = board[row][col];
+        TrieNode* nextNode = node->children[char];
+        
+        if (nextNode->isEnd) {
+            result.insert(nextNode->word);
+        }
+        
+        board[row][col] = '#';
+        
+        vector<pair<int, int>> dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        for (const auto& dir : dirs) {
+            dfs(board, row + dir.first, col + dir.second, nextNode, result);
+        }
+        
+        board[row][col] = char;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+class TrieNode {
+    constructor() {
+        this.children = new Map();
+        this.isEnd = false;
+        this.word = '';
+    }
+}
+
+/**
+ * @param {character[][]} board
+ * @param {string[]} words
+ * @return {string[]}
+ */
+var findWords = function(board, words) {
+    // Build Trie
+    const root = new TrieNode();
+    for (const word of words) {
+        let node = root;
+        for (const char of word) {
+            if (!node.children.has(char)) {
+                node.children.set(char, new TrieNode());
+            }
+            node = node.children.get(char);
+        }
+        node.isEnd = true;
+        node.word = word;
+    }
+    
+    const result = new Set();
+    const rows = board.length;
+    const cols = board[0].length;
+    
+    const dfs = (row, col, node) => {
+        if (row < 0 || row >= rows || col < 0 || col >= cols ||
+            !node.children.has(board[row][col])) {
+            return;
+        }
+        
+        const char = board[row][col];
+        const nextNode = node.children.get(char);
+        
+        if (nextNode.isEnd) {
+            result.add(nextNode.word);
+        }
+        
+        board[row][col] = '#';
+        
+        const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+        for (const [dx, dy] of dirs) {
+            dfs(row + dx, col + dy, nextNode);
+        }
+        
+        board[row][col] = char;
+    };
+    
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            dfs(i, j, root);
+        }
+    }
+    
+    return Array.from(result);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class TrieNode {
+    public Dictionary<char, TrieNode> children = new Dictionary<char, TrieNode>();
+    public bool isEnd = false;
+    public string word = "";
+}
+
+public class Solution {
+    public IList<string> FindWords(char[][] board, string[] words) {
+        // Build Trie
+        var root = new TrieNode();
+        foreach (var word in words) {
+            var node = root;
+            foreach (var c in word) {
+                if (!node.children.ContainsKey(c)) {
+                    node.children[c] = new TrieNode();
+                }
+                node = node.children[c];
+            }
+            node.isEnd = true;
+            node.word = word;
+        }
+        
+        var result = new HashSet<string>();
+        int rows = board.Length, cols = board[0].Length;
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                DFS(board, i, j, root, result);
+            }
+        }
+        
+        return result.ToList();
+    }
+    
+    private void DFS(char[][] board, int row, int col, TrieNode node, HashSet<string> result) {
+        if (row < 0 || row >= board.Length || col < 0 || col >= board[0].Length ||
+            !node.children.ContainsKey(board[row][col])) {
+            return;
+        }
+        
+        char char = board[row][col];
+        var nextNode = node.children[char];
+        
+        if (nextNode.isEnd) {
+            result.Add(nextNode.word);
+        }
+        
+        board[row][col] = '#';
+        
+        var dirs = new[] { new[] {0, 1}, new[] {1, 0}, new[] {0, -1}, new[] {-1, 0} };
+        foreach (var dir in dirs) {
+            DFS(board, row + dir[0], col + dir[1], nextNode, result);
+        }
+        
+        board[row][col] = char;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(M × N × 4^L) where:
+                    <ul>
+                        <li>M × N is the size of the board</li>
+                        <li>L is the maximum length of words</li>
+                        <li>4 is the number of possible directions</li>
+                    </ul>
+                </li>
+                <li><strong>Space Complexity:</strong> O(K) where K is the total number of characters in all words (for the Trie)</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution combines Trie and DFS:</p>
+            <ul>
+                <li>Trie Construction:
+                    <ul>
+                        <li>Build Trie from words</li>
+                        <li>Store complete words at leaf nodes</li>
+                        <li>Optimize search process</li>
+                    </ul>
+                </li>
+                <li>Board Search:
+                    <ul>
+                        <li>DFS from each cell</li>
+                        <li>Match characters with Trie</li>
+                        <li>Track visited cells</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Trie optimization</li>
+                <li>DFS implementation</li>
+                <li>Visited cell marking</li>
+                <li>Result collection</li>
+            </ul>
+
+            <h4>Optimization Tips</h4>
+            <ul>
+                <li>Early termination</li>
+                <li>Memory management</li>
+                <li>Path pruning</li>
+                <li>Word storage</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty board</li>
+                <li>Empty words list</li>
+                <li>No matches</li>
+                <li>Single cell board</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

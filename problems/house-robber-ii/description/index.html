@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Robber II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 213: House Robber II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>213. House Robber II</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are <strong>arranged in a circle</strong>. That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and <strong>it will automatically contact the police if two adjacent houses were broken into on the same night</strong>.</p>
+        <p>Given an integer array <code>nums</code> representing the amount of money of each house, return <em>the maximum amount of money you can rob tonight <strong>without alerting the police</strong></em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [2,3,2]
+Output: 3
+Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses.
+
+Example 2:
+Input: nums = [1,2,3,1]
+Output: 4
+Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+Total amount you can rob = 1 + 3 = 4.
+
+Example 3:
+Input: nums = [1,2,3]
+Output: 3</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def rob(nums: List[int]) -> int:
+    if not nums:
+        return 0
+    if len(nums) == 1:
+        return nums[0]
+    
+    def rob_line(arr: List[int]) -> int:
+        if not arr:
+            return 0
+        if len(arr) == 1:
+            return arr[0]
+        
+        dp = [0] * len(arr)
+        dp[0] = arr[0]
+        dp[1] = max(arr[0], arr[1])
+        
+        for i in range(2, len(arr)):
+            dp[i] = max(dp[i-1], dp[i-2] + arr[i])
+        
+        return dp[-1]
+    
+    # Rob houses 0 to n-2 or houses 1 to n-1
+    return max(rob_line(nums[:-1]), rob_line(nums[1:]))</code></pre>
+
+            <p>Space-Optimized Solution:</p>
+            <pre><code>
+def rob(nums: List[int]) -> int:
+    if not nums:
+        return 0
+    if len(nums) == 1:
+        return nums[0]
+    
+    def rob_line(arr: List[int]) -> int:
+        rob1, rob2 = 0, 0
+        
+        for num in arr:
+            temp = max(rob1 + num, rob2)
+            rob1 = rob2
+            rob2 = temp
+        
+        return rob2
+    
+    return max(rob_line(nums[:-1]), rob_line(nums[1:]))</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        
+        return Math.max(robLine(nums, 0, nums.length - 2),
+                       robLine(nums, 1, nums.length - 1));
+    }
+    
+    private int robLine(int[] nums, int start, int end) {
+        int rob1 = 0, rob2 = 0;
+        
+        for (int i = start; i <= end; i++) {
+            int temp = Math.max(rob1 + nums[i], rob2);
+            rob1 = rob2;
+            rob2 = temp;
+        }
+        
+        return rob2;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+        if (nums.size() == 1) {
+            return nums[0];
+        }
+        
+        return max(robLine(nums, 0, nums.size() - 2),
+                  robLine(nums, 1, nums.size() - 1));
+    }
+    
+private:
+    int robLine(const vector<int>& nums, int start, int end) {
+        int rob1 = 0, rob2 = 0;
+        
+        for (int i = start; i <= end; i++) {
+            int temp = max(rob1 + nums[i], rob2);
+            rob1 = rob2;
+            rob2 = temp;
+        }
+        
+        return rob2;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var rob = function(nums) {
+    if (!nums.length) {
+        return 0;
+    }
+    if (nums.length === 1) {
+        return nums[0];
+    }
+    
+    const robLine = (start, end) => {
+        let rob1 = 0, rob2 = 0;
+        
+        for (let i = start; i <= end; i++) {
+            const temp = Math.max(rob1 + nums[i], rob2);
+            rob1 = rob2;
+            rob2 = temp;
+        }
+        
+        return rob2;
+    };
+    
+    return Math.max(robLine(0, nums.length - 2),
+                   robLine(1, nums.length - 1));
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int Rob(int[] nums) {
+        if (nums == null || nums.Length == 0) {
+            return 0;
+        }
+        if (nums.Length == 1) {
+            return nums[0];
+        }
+        
+        return Math.Max(RobLine(nums, 0, nums.Length - 2),
+                       RobLine(nums, 1, nums.Length - 1));
+    }
+    
+    private int RobLine(int[] nums, int start, int end) {
+        int rob1 = 0, rob2 = 0;
+        
+        for (int i = start; i <= end; i++) {
+            int temp = Math.Max(rob1 + nums[i], rob2);
+            rob1 = rob2;
+            rob2 = temp;
+        }
+        
+        return rob2;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of nums</li>
+                <li><strong>Space Complexity:</strong> O(1) for optimized solution</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This problem is a variation of House Robber I with a circular arrangement:</p>
+            <ul>
+                <li>Key Insight:
+                    <ul>
+                        <li>Cannot rob first and last house together</li>
+                        <li>Split into two subproblems</li>
+                        <li>Rob houses 0 to n-2 or 1 to n-1</li>
+                        <li>Take maximum of both cases</li>
+                    </ul>
+                </li>
+                <li>Dynamic Programming:
+                    <ul>
+                        <li>Use same logic as House Robber I</li>
+                        <li>Apply to two different ranges</li>
+                        <li>Space optimization possible</li>
+                        <li>Handle edge cases</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Circular arrangement</li>
+                <li>Range handling</li>
+                <li>State transition</li>
+                <li>Space optimization</li>
+            </ul>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>First-last connection</li>
+                <li>Array bounds</li>
+                <li>Edge cases</li>
+                <li>Range selection</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty array</li>
+                <li>Single house</li>
+                <li>Two houses</li>
+                <li>All same values</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
