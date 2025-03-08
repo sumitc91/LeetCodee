@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Count Primes - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 204: Count Primes. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>204. Count Primes</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer <code>n</code>, return <em>the number of prime numbers that are strictly less than</em> <code>n</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 10
+Output: 4
+Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+
+Example 2:
+Input: n = 0
+Output: 0
+
+Example 3:
+Input: n = 1
+Output: 0</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def countPrimes(n: int) -> int:
+    if n <= 2:
+        return 0
+    
+    # Initialize array with True values
+    is_prime = [True] * n
+    is_prime[0] = is_prime[1] = False
+    
+    # Use Sieve of Eratosthenes
+    for i in range(2, int(n ** 0.5) + 1):
+        if is_prime[i]:
+            # Mark multiples as non-prime
+            is_prime[i * i:n:i] = [False] * len(is_prime[i * i:n:i])
+    
+    return sum(is_prime)</code></pre>
+
+            <p>Memory-Optimized Solution:</p>
+            <pre><code>
+def countPrimes(n: int) -> int:
+    if n <= 2:
+        return 0
+    
+    # Use bit array for memory optimization
+    is_prime = bytearray([1]) * ((n + 7) // 8)
+    count = n - 2  # Start with count of all numbers except 0 and 1
+    
+    def get_bit(num):
+        return bool(is_prime[num // 8] & (1 << (num % 8)))
+    
+    def clear_bit(num):
+        is_prime[num // 8] &= ~(1 << (num % 8))
+    
+    for i in range(2, int(n ** 0.5) + 1):
+        if get_bit(i):
+            for j in range(i * i, n, i):
+                if get_bit(j):
+                    clear_bit(j)
+                    count -= 1
+    
+    return count</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int countPrimes(int n) {
+        if (n <= 2) {
+            return 0;
+        }
+        
+        // Initialize array with true values
+        boolean[] isPrime = new boolean[n];
+        Arrays.fill(isPrime, true);
+        isPrime[0] = isPrime[1] = false;
+        
+        // Use Sieve of Eratosthenes
+        for (int i = 2; i * i < n; i++) {
+            if (isPrime[i]) {
+                // Mark multiples as non-prime
+                for (int j = i * i; j < n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        
+        // Count prime numbers
+        int count = 0;
+        for (boolean prime : isPrime) {
+            if (prime) {
+                count++;
+            }
+        }
+        return count;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int countPrimes(int n) {
+        if (n <= 2) {
+            return 0;
+        }
+        
+        // Use vector<bool> for memory optimization
+        vector<bool> isPrime(n, true);
+        isPrime[0] = isPrime[1] = false;
+        
+        // Use Sieve of Eratosthenes
+        for (int i = 2; i * i < n; i++) {
+            if (isPrime[i]) {
+                // Mark multiples as non-prime
+                for (int j = i * i; j < n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        
+        return count(isPrime.begin(), isPrime.end(), true);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var countPrimes = function(n) {
+    if (n <= 2) {
+        return 0;
+    }
+    
+    // Initialize array with true values
+    const isPrime = new Array(n).fill(true);
+    isPrime[0] = isPrime[1] = false;
+    
+    // Use Sieve of Eratosthenes
+    for (let i = 2; i * i < n; i++) {
+        if (isPrime[i]) {
+            // Mark multiples as non-prime
+            for (let j = i * i; j < n; j += i) {
+                isPrime[j] = false;
+            }
+        }
+    }
+    
+    return isPrime.filter(Boolean).length;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int CountPrimes(int n) {
+        if (n <= 2) {
+            return 0;
+        }
+        
+        // Initialize array with true values
+        bool[] isPrime = new bool[n];
+        Array.Fill(isPrime, true);
+        isPrime[0] = isPrime[1] = false;
+        
+        // Use Sieve of Eratosthenes
+        for (int i = 2; i * i < n; i++) {
+            if (isPrime[i]) {
+                // Mark multiples as non-prime
+                for (int j = i * i; j < n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        
+        return isPrime.Count(x => x);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n log log n) using Sieve of Eratosthenes</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the sieve array</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>The solution uses the Sieve of Eratosthenes algorithm:</p>
+            <ul>
+                <li>Algorithm Steps:
+                    <ul>
+                        <li>Create boolean array for numbers up to n</li>
+                        <li>Mark all numbers as potential primes</li>
+                        <li>Iterate through numbers up to sqrt(n)</li>
+                        <li>Mark multiples of primes as non-prime</li>
+                        <li>Count remaining prime numbers</li>
+                    </ul>
+                </li>
+                <li>Optimizations:
+                    <ul>
+                        <li>Start marking from i * i</li>
+                        <li>Only check up to sqrt(n)</li>
+                        <li>Use bit array for memory</li>
+                        <li>Early termination checks</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Sieve algorithm</li>
+                <li>Memory optimization</li>
+                <li>Array operations</li>
+                <li>Prime number properties</li>
+            </ul>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>Memory limit exceeded</li>
+                <li>Integer overflow</li>
+                <li>Boundary conditions</li>
+                <li>Inefficient marking</li>
+            </ul>
+
+            <h4>Further Optimizations</h4>
+            <ul>
+                <li>Wheel factorization</li>
+                <li>Segmented sieve</li>
+                <li>Bit manipulation</li>
+                <li>Cache optimization</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

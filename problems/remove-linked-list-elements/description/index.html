@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Linked List Elements - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 203: Remove Linked List Elements. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>203. Remove Linked List Elements</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>head</code> of a linked list and an integer <code>val</code>, remove all the nodes of the linked list that has <code>Node.val == val</code>, and return <em>the new head</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [1,2,6,3,4,5,6], val = 6
+Output: [1,2,3,4,5]
+
+Example 2:
+Input: head = [], val = 1
+Output: []
+
+Example 3:
+Input: head = [7,7,7,7], val = 7
+Output: []</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+        # Handle empty list
+        if not head:
+            return None
+        
+        # Create dummy node
+        dummy = ListNode(0)
+        dummy.next = head
+        current = dummy
+        
+        while current.next:
+            if current.next.val == val:
+                current.next = current.next.next
+            else:
+                current = current.next
+        
+        return dummy.next</code></pre>
+
+            <p>Recursive Solution:</p>
+            <pre><code>
+class Solution:
+    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+        if not head:
+            return None
+        
+        head.next = self.removeElements(head.next, val)
+        return head.next if head.val == val else head</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        // Handle empty list
+        if (head == null) {
+            return null;
+        }
+        
+        // Create dummy node
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode current = dummy;
+        
+        while (current.next != null) {
+            if (current.next.val == val) {
+                current.next = current.next.next;
+            } else {
+                current = current.next;
+            }
+        }
+        
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        // Handle empty list
+        if (!head) {
+            return nullptr;
+        }
+        
+        // Create dummy node
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* current = dummy;
+        
+        while (current->next) {
+            if (current->next->val == val) {
+                ListNode* temp = current->next;
+                current->next = current->next->next;
+                delete temp;  // Free memory
+            } else {
+                current = current->next;
+            }
+        }
+        
+        head = dummy->next;
+        delete dummy;  // Free dummy node
+        return head;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} val
+ * @return {ListNode}
+ */
+var removeElements = function(head, val) {
+    // Handle empty list
+    if (!head) {
+        return null;
+    }
+    
+    // Create dummy node
+    const dummy = new ListNode(0);
+    dummy.next = head;
+    let current = dummy;
+    
+    while (current.next) {
+        if (current.next.val === val) {
+            current.next = current.next.next;
+        } else {
+            current = current.next;
+        }
+    }
+    
+    return dummy.next;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RemoveElements(ListNode head, int val) {
+        // Handle empty list
+        if (head == null) {
+            return null;
+        }
+        
+        // Create dummy node
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode current = dummy;
+        
+        while (current.next != null) {
+            if (current.next.val == val) {
+                current.next = current.next.next;
+            } else {
+                current = current.next;
+            }
+        }
+        
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the linked list</li>
+                <li><strong>Space Complexity:</strong> O(1) for iterative solution, O(n) for recursive solution due to call stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>Iterative Approach:
+                    <ul>
+                        <li>Use dummy node for easier head handling</li>
+                        <li>Traverse list once</li>
+                        <li>Skip nodes with matching value</li>
+                        <li>More space efficient</li>
+                    </ul>
+                </li>
+                <li>Recursive Approach:
+                    <ul>
+                        <li>Recursively process next nodes</li>
+                        <li>Build result from bottom up</li>
+                        <li>More elegant solution</li>
+                        <li>Uses call stack space</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Dummy node usage</li>
+                <li>Pointer manipulation</li>
+                <li>Memory management (C++)</li>
+                <li>Edge cases</li>
+            </ul>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>Head node removal</li>
+                <li>Memory leaks</li>
+                <li>Null pointer handling</li>
+                <li>List traversal</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty list</li>
+                <li>Single node</li>
+                <li>All nodes match</li>
+                <li>No matches</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

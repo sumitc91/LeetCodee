@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitwise AND of Numbers Range - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 201: Bitwise AND of Numbers Range. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>201. Bitwise AND of Numbers Range</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two integers <code>left</code> and <code>right</code> that represent the range <code>[left, right]</code>, return <em>the bitwise AND of all numbers in this range, inclusive</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: left = 5, right = 7
+Output: 4
+Explanation:
+5 -> 101
+6 -> 110
+7 -> 111
+The bitwise AND of all numbers is 4 -> 100
+
+Example 2:
+Input: left = 0, right = 0
+Output: 0
+
+Example 3:
+Input: left = 1, right = 2147483647
+Output: 0</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def rangeBitwiseAnd(left: int, right: int) -> int:
+    shift = 0
+    # Find the common prefix
+    while left != right:
+        left >>= 1
+        right >>= 1
+        shift += 1
+    return left << shift</code></pre>
+
+            <p>Alternative Solution:</p>
+            <pre><code>
+def rangeBitwiseAnd(left: int, right: int) -> int:
+    # Brian Kernighan's Algorithm
+    while right > left:
+        right = right & (right - 1)
+    return right</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int rangeBitwiseAnd(int left, int right) {
+        int shift = 0;
+        // Find the common prefix
+        while (left != right) {
+            left >>= 1;
+            right >>= 1;
+            shift++;
+        }
+        return left << shift;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int rangeBitwiseAnd(int left, int right) {
+        int shift = 0;
+        // Find the common prefix
+        while (left != right) {
+            left >>= 1;
+            right >>= 1;
+            shift++;
+        }
+        return left << shift;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} left
+ * @param {number} right
+ * @return {number}
+ */
+var rangeBitwiseAnd = function(left, right) {
+    let shift = 0;
+    // Find the common prefix
+    while (left !== right) {
+        left >>>= 1;
+        right >>>= 1;
+        shift++;
+    }
+    return left << shift;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int RangeBitwiseAnd(int left, int right) {
+        int shift = 0;
+        // Find the common prefix
+        while (left != right) {
+            left >>= 1;
+            right >>= 1;
+            shift++;
+        }
+        return left << shift;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(log n) where n is the maximum number of bits needed to represent the numbers</li>
+                <li><strong>Space Complexity:</strong> O(1)</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>Common Prefix Approach:
+                    <ul>
+                        <li>Find the common prefix of both numbers</li>
+                        <li>Right shift until numbers are equal</li>
+                        <li>Left shift by the same amount</li>
+                        <li>More intuitive solution</li>
+                    </ul>
+                </li>
+                <li>Brian Kernighan's Algorithm:
+                    <ul>
+                        <li>Use property of n & (n-1)</li>
+                        <li>Removes rightmost set bit</li>
+                        <li>Continue until right ≤ left</li>
+                        <li>More efficient for some cases</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Insights</h4>
+            <p>The key observation is that:</p>
+            <ul>
+                <li>Only common prefix bits remain after AND</li>
+                <li>Any bit that differs becomes 0</li>
+                <li>All trailing bits become 0</li>
+                <li>Result is always ≤ smaller number</li>
+            </ul>
+
+            <h4>Example Walkthrough</h4>
+            <p>For left = 5, right = 7:</p>
+            <pre>
+5 = 101
+6 = 110
+7 = 111
+Result = 100 (4)</pre>
+
+            <h4>Common Pitfalls</h4>
+            <ul>
+                <li>Integer overflow</li>
+                <li>Negative numbers</li>
+                <li>Large ranges</li>
+                <li>Bit shift direction</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
