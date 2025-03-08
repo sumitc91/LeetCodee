@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Tree Postorder Traversal - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 145: Binary Tree Postorder Traversal. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>145. Binary Tree Postorder Traversal</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>root</code> of a binary tree, return <em>the postorder traversal of its nodes' values</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: root = [1,null,2,3]
+Output: [3,2,1]
+
+Example 2:
+Input: root = []
+Output: []
+
+Example 3:
+Input: root = [1]
+Output: [1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def postorderTraversal(root: Optional[TreeNode]) -> List[int]:
+    if not root:
+        return []
+    
+    result = []
+    stack = [(root, False)]
+    
+    while stack:
+        node, visited = stack.pop()
+        if visited:
+            result.append(node.val)
+        else:
+            stack.append((node, True))
+            if node.right:
+                stack.append((node.right, False))
+            if node.left:
+                stack.append((node.left, False))
+    
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        
+        Stack<Pair<TreeNode, Boolean>> stack = new Stack<>();
+        stack.push(new Pair<>(root, false));
+        
+        while (!stack.isEmpty()) {
+            Pair<TreeNode, Boolean> pair = stack.pop();
+            TreeNode node = pair.getKey();
+            boolean visited = pair.getValue();
+            
+            if (visited) {
+                result.add(node.val);
+            } else {
+                stack.push(new Pair<>(node, true));
+                if (node.right != null) {
+                    stack.push(new Pair<>(node.right, false));
+                }
+                if (node.left != null) {
+                    stack.push(new Pair<>(node.left, false));
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> result;
+        if (!root) {
+            return result;
+        }
+        
+        stack<pair<TreeNode*, bool>> stack;
+        stack.push({root, false});
+        
+        while (!stack.empty()) {
+            auto [node, visited] = stack.top();
+            stack.pop();
+            
+            if (visited) {
+                result.push_back(node->val);
+            } else {
+                stack.push({node, true});
+                if (node->right) {
+                    stack.push({node->right, false});
+                }
+                if (node->left) {
+                    stack.push({node->left, false});
+                }
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var postorderTraversal = function(root) {
+    if (!root) {
+        return [];
+    }
+    
+    const result = [];
+    const stack = [[root, false]];
+    
+    while (stack.length > 0) {
+        const [node, visited] = stack.pop();
+        
+        if (visited) {
+            result.push(node.val);
+        } else {
+            stack.push([node, true]);
+            if (node.right) {
+                stack.push([node.right, false]);
+            }
+            if (node.left) {
+                stack.push([node.left, false]);
+            }
+        }
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<int> PostorderTraversal(TreeNode root) {
+        IList<int> result = new List<int>();
+        if (root == null) {
+            return result;
+        }
+        
+        Stack<(TreeNode node, bool visited)> stack = new Stack<(TreeNode, bool)>();
+        stack.Push((root, false));
+        
+        while (stack.Count > 0) {
+            var (node, visited) = stack.Pop();
+            
+            if (visited) {
+                result.Add(node.val);
+            } else {
+                stack.Push((node, true));
+                if (node.right != null) {
+                    stack.Push((node.right, false));
+                }
+                if (node.left != null) {
+                    stack.Push((node.left, false));
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the binary tree</li>
+                <li><strong>Space Complexity:</strong> O(h) where h is the height of the tree (worst case O(n) for a skewed tree)</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses an iterative approach with a stack and visited flag:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Stack with state</li>
+                        <li>Node ordering</li>
+                        <li>DFS pattern</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Push root</li>
+                        <li>Track visited</li>
+                        <li>Process children</li>
+                        <li>Add to result</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Left-Right-Root order</li>
+                <li>Stack with state tracking</li>
+                <li>Visited flag usage</li>
+                <li>Linear time</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
