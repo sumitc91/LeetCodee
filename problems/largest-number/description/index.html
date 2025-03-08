@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Largest Number - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 179: Largest Number. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>179. Largest Number</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a list of non-negative integers <code>nums</code>, arrange them such that they form the largest number and return it.</p>
+        <p>Since the result may be very large, so you need to return a string instead of an integer.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [10,2]
+Output: "210"
+
+Example 2:
+Input: nums = [3,30,34,5,9]
+Output: "9534330"</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+class Solution:
+    def largestNumber(self, nums: List[int]) -> str:
+        # Convert to strings for comparison
+        nums = [str(num) for num in nums]
+        
+        # Custom comparison
+        def compare(n1: str, n2: str) -> int:
+            if n1 + n2 > n2 + n1:
+                return -1
+            return 1
+        
+        # Sort using custom comparison
+        nums.sort(key=functools.cmp_to_key(compare))
+        
+        # Handle case with all zeros
+        if nums[0] == '0':
+            return '0'
+        
+        return ''.join(nums)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String largestNumber(int[] nums) {
+        // Convert to strings
+        String[] asStrs = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            asStrs[i] = String.valueOf(nums[i]);
+        }
+        
+        // Sort using custom comparator
+        Arrays.sort(asStrs, (a, b) -> (b + a).compareTo(a + b));
+        
+        // Handle case with all zeros
+        if (asStrs[0].equals("0")) {
+            return "0";
+        }
+        
+        // Join the strings
+        StringBuilder result = new StringBuilder();
+        for (String str : asStrs) {
+            result.append(str);
+        }
+        
+        return result.toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        // Convert to strings
+        vector<string> asStrs;
+        for (int num : nums) {
+            asStrs.push_back(to_string(num));
+        }
+        
+        // Sort using custom comparator
+        sort(asStrs.begin(), asStrs.end(), [](string& a, string& b) {
+            return a + b > b + a;
+        });
+        
+        // Handle case with all zeros
+        if (asStrs[0] == "0") {
+            return "0";
+        }
+        
+        // Join the strings
+        string result;
+        for (string& str : asStrs) {
+            result += str;
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {string}
+ */
+var largestNumber = function(nums) {
+    // Convert to strings
+    nums = nums.map(String);
+    
+    // Sort using custom comparison
+    nums.sort((a, b) => (b + a).localeCompare(a + b));
+    
+    // Handle case with all zeros
+    if (nums[0] === '0') {
+        return '0';
+    }
+    
+    return nums.join('');
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string LargestNumber(int[] nums) {
+        // Convert to strings
+        string[] asStrs = nums.Select(n => n.ToString()).ToArray();
+        
+        // Sort using custom comparison
+        Array.Sort(asStrs, (a, b) => (b + a).CompareTo(a + b));
+        
+        // Handle case with all zeros
+        if (asStrs[0] == "0") {
+            return "0";
+        }
+        
+        return string.Concat(asStrs);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n log n) where n is the length of nums (dominated by sorting)</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the string array</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses custom string comparison:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>String comparison</li>
+                        <li>Custom sorting</li>
+                        <li>Concatenation comparison</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Convert to strings</li>
+                        <li>Define comparison</li>
+                        <li>Sort numbers</li>
+                        <li>Handle edge cases</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>String concatenation</li>
+                <li>Handle leading zeros</li>
+                <li>Custom comparator</li>
+                <li>Edge cases</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

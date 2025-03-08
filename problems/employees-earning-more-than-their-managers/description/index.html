@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees Earning More Than Their Managers - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 181: Employees Earning More Than Their Managers. SQL solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>181. Employees Earning More Than Their Managers</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Table: <code>Employee</code></p>
+        <pre>
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| name        | varchar |
+| salary      | int     |
+| managerId   | int     |
++-------------+---------+
+id is the primary key column for this table.
+Each row of this table indicates the ID of an employee, their name, salary, and the ID of their manager.</pre>
+
+        <p>Write an SQL query to find the employees who earn more than their managers.</p>
+        <p>Return the result table in <strong>any order</strong>.</p>
+
+        <h3>Examples</h3>
+        <p>Example 1:</p>
+        <pre>
+Input: 
+Employee table:
++----+-------+--------+-----------+
+| id | name  | salary | managerId |
++----+-------+--------+-----------+
+| 1  | Joe   | 70000  | 3        |
+| 2  | Henry | 80000  | 4        |
+| 3  | Sam   | 60000  | NULL     |
+| 4  | Max   | 90000  | NULL     |
++----+-------+--------+-----------+
+Output: 
++----------+
+| Employee |
++----------+
+| Joe      |
++----------+
+Explanation: Joe is the only employee who earns more than his manager.</pre>
+
+        <div class="solution">
+            <h3>SQL Solution</h3>
+            <pre><code>
+SELECT e1.name AS Employee
+FROM Employee e1
+JOIN Employee e2 ON e1.managerId = e2.id
+WHERE e1.salary > e2.salary;</code></pre>
+
+            <p>Alternative Solution (using subquery):</p>
+            <pre><code>
+SELECT name AS Employee
+FROM Employee e1
+WHERE salary > (
+    SELECT salary 
+    FROM Employee e2 
+    WHERE e2.id = e1.managerId
+);</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This problem can be solved in two ways:</p>
+            <ul>
+                <li>Using JOIN:
+                    <ul>
+                        <li>Self join on managerId</li>
+                        <li>Compare salaries</li>
+                        <li>Simple and readable</li>
+                    </ul>
+                </li>
+                <li>Using Subquery:
+                    <ul>
+                        <li>Correlated subquery</li>
+                        <li>Find manager's salary</li>
+                        <li>Compare with employee</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle NULL managers</li>
+                <li>Self-referential table</li>
+                <li>Salary comparison</li>
+                <li>Employee-manager relationship</li>
+            </ul>
+            <p>Important considerations:</p>
+            <ul>
+                <li>JOIN vs Subquery</li>
+                <li>Performance impact</li>
+                <li>NULL handling</li>
+                <li>Result formatting</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
