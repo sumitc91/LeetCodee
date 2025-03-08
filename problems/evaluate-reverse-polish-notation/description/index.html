@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluate Reverse Polish Notation - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 150: Evaluate Reverse Polish Notation. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>150. Evaluate Reverse Polish Notation</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given an array of strings <code>tokens</code> that represents an arithmetic expression in a <a href="http://en.wikipedia.org/wiki/Reverse_Polish_notation">Reverse Polish Notation</a>.</p>
+        <p>Evaluate the expression. Return <em>an integer that represents the value of the expression</em>.</p>
+        <p><strong>Note</strong> that:</p>
+        <ul>
+            <li>The valid operators are <code>'+'</code>, <code>'-'</code>, <code>'*'</code>, and <code>'/'</code>.</li>
+            <li>Each operand may be an integer or another expression.</li>
+            <li>The division between two integers always <strong>truncates toward zero</strong>.</li>
+            <li>There will not be any division by zero.</li>
+            <li>The input represents a valid arithmetic expression in a reverse polish notation.</li>
+            <li>The answer and all the intermediate calculations can be represented in a <strong>32-bit</strong> integer.</li>
+        </ul>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: tokens = ["2","1","+","3","*"]
+Output: 9
+Explanation: ((2 + 1) * 3) = 9
+
+Example 2:
+Input: tokens = ["4","13","5","/","+"]
+Output: 6
+Explanation: (4 + (13 / 5)) = 6
+
+Example 3:
+Input: tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
+Output: 22
+Explanation: ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+= ((10 * (6 / (12 * -11))) + 17) + 5
+= ((10 * (6 / -132)) + 17) + 5
+= ((10 * 0) + 17) + 5
+= (0 + 17) + 5
+= 17 + 5
+= 22</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def evalRPN(tokens: List[str]) -> int:
+    stack = []
+    operators = {
+        '+': lambda x, y: x + y,
+        '-': lambda x, y: x - y,
+        '*': lambda x, y: x * y,
+        '/': lambda x, y: int(x / y)  # truncate toward zero
+    }
+    
+    for token in tokens:
+        if token in operators:
+            b = stack.pop()
+            a = stack.pop()
+            stack.append(operators[token](a, b))
+        else:
+            stack.append(int(token))
+    
+    return stack[0]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        
+        for (String token : tokens) {
+            if (token.equals("+")) {
+                stack.push(stack.pop() + stack.pop());
+            } else if (token.equals("-")) {
+                int b = stack.pop();
+                int a = stack.pop();
+                stack.push(a - b);
+            } else if (token.equals("*")) {
+                stack.push(stack.pop() * stack.pop());
+            } else if (token.equals("/")) {
+                int b = stack.pop();
+                int a = stack.pop();
+                stack.push(a / b);
+            } else {
+                stack.push(Integer.parseInt(token));
+            }
+        }
+        
+        return stack.pop();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<int> stack;
+        
+        for (const string& token : tokens) {
+            if (token == "+" || token == "-" || token == "*" || token == "/") {
+                int b = stack.top(); stack.pop();
+                int a = stack.top(); stack.pop();
+                
+                if (token == "+") stack.push(a + b);
+                else if (token == "-") stack.push(a - b);
+                else if (token == "*") stack.push(a * b);
+                else if (token == "/") stack.push(a / b);
+            } else {
+                stack.push(stoi(token));
+            }
+        }
+        
+        return stack.top();
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string[]} tokens
+ * @return {number}
+ */
+var evalRPN = function(tokens) {
+    const stack = [];
+    const operators = {
+        '+': (a, b) => a + b,
+        '-': (a, b) => a - b,
+        '*': (a, b) => a * b,
+        '/': (a, b) => Math.trunc(a / b)  // truncate toward zero
+    };
+    
+    for (const token of tokens) {
+        if (token in operators) {
+            const b = stack.pop();
+            const a = stack.pop();
+            stack.push(operators[token](a, b));
+        } else {
+            stack.push(Number(token));
+        }
+    }
+    
+    return stack[0];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int EvalRPN(string[] tokens) {
+        Stack<int> stack = new Stack<int>();
+        
+        foreach (string token in tokens) {
+            if (token == "+") {
+                stack.Push(stack.Pop() + stack.Pop());
+            } else if (token == "-") {
+                int b = stack.Pop();
+                int a = stack.Pop();
+                stack.Push(a - b);
+            } else if (token == "*") {
+                stack.Push(stack.Pop() * stack.Pop());
+            } else if (token == "/") {
+                int b = stack.Pop();
+                int a = stack.Pop();
+                stack.Push(a / b);
+            } else {
+                stack.Push(int.Parse(token));
+            }
+        }
+        
+        return stack.Pop();
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the operands in the stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a stack to evaluate RPN expression:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Stack operations</li>
+                        <li>Operator handling</li>
+                        <li>Postfix evaluation</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Push operands</li>
+                        <li>Process operators</li>
+                        <li>Evaluate expressions</li>
+                        <li>Return result</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Stack usage</li>
+                <li>Operator precedence</li>
+                <li>Division handling</li>
+                <li>Integer overflow</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

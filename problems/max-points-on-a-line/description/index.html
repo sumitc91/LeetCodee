@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Max Points on a Line - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 149: Max Points on a Line. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>149. Max Points on a Line</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an array of <code>points</code> where <code>points[i] = [xi, yi]</code> represents a point on the <strong>X-Y</strong> plane, return <em>the maximum number of points that lie on the same straight line</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: points = [[1,1],[2,2],[3,3]]
+Output: 3
+
+Example 2:
+Input: points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+Output: 4</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def maxPoints(points: List[List[int]]) -> int:
+    n = len(points)
+    if n <= 2:
+        return n
+    
+    def slope(p1, p2):
+        x1, y1 = p1
+        x2, y2 = p2
+        if x1 == x2:
+            return float('inf')
+        return (y2 - y1) / (x2 - x1)
+    
+    max_points = 0
+    for i in range(n):
+        slopes = {}
+        for j in range(n):
+            if i != j:
+                s = slope(points[i], points[j])
+                slopes[s] = slopes.get(s, 1) + 1
+        if slopes:
+            max_points = max(max_points, max(slopes.values()))
+    
+    return max_points</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int maxPoints(int[][] points) {
+        int n = points.length;
+        if (n <= 2) {
+            return n;
+        }
+        
+        int maxPoints = 0;
+        for (int i = 0; i < n; i++) {
+            Map<Double, Integer> slopes = new HashMap<>();
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    double slope = getSlope(points[i], points[j]);
+                    slopes.put(slope, slopes.getOrDefault(slope, 1) + 1);
+                }
+            }
+            if (!slopes.isEmpty()) {
+                maxPoints = Math.max(maxPoints, Collections.max(slopes.values()));
+            }
+        }
+        
+        return maxPoints;
+    }
+    
+    private double getSlope(int[] p1, int[] p2) {
+        int x1 = p1[0], y1 = p1[1];
+        int x2 = p2[0], y2 = p2[1];
+        if (x1 == x2) {
+            return Double.POSITIVE_INFINITY;
+        }
+        return (double)(y2 - y1) / (x2 - x1);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int maxPoints(vector<vector<int>>& points) {
+        int n = points.size();
+        if (n <= 2) {
+            return n;
+        }
+        
+        int maxPoints = 0;
+        for (int i = 0; i < n; i++) {
+            unordered_map<double, int> slopes;
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    double slope = getSlope(points[i], points[j]);
+                    slopes[slope] = slopes.count(slope) ? slopes[slope] + 1 : 2;
+                }
+            }
+            for (const auto& pair : slopes) {
+                maxPoints = max(maxPoints, pair.second);
+            }
+        }
+        
+        return maxPoints;
+    }
+    
+private:
+    double getSlope(const vector<int>& p1, const vector<int>& p2) {
+        int x1 = p1[0], y1 = p1[1];
+        int x2 = p2[0], y2 = p2[1];
+        if (x1 == x2) {
+            return numeric_limits<double>::infinity();
+        }
+        return static_cast<double>(y2 - y1) / (x2 - x1);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[][]} points
+ * @return {number}
+ */
+var maxPoints = function(points) {
+    const n = points.length;
+    if (n <= 2) {
+        return n;
+    }
+    
+    const getSlope = (p1, p2) => {
+        const [x1, y1] = p1;
+        const [x2, y2] = p2;
+        if (x1 === x2) {
+            return Infinity;
+        }
+        return (y2 - y1) / (x2 - x1);
+    };
+    
+    let maxPoints = 0;
+    for (let i = 0; i < n; i++) {
+        const slopes = new Map();
+        for (let j = 0; j < n; j++) {
+            if (i !== j) {
+                const slope = getSlope(points[i], points[j]);
+                slopes.set(slope, (slopes.get(slope) || 1) + 1);
+            }
+        }
+        if (slopes.size > 0) {
+            maxPoints = Math.max(maxPoints, Math.max(...slopes.values()));
+        }
+    }
+    
+    return maxPoints;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MaxPoints(int[][] points) {
+        int n = points.Length;
+        if (n <= 2) {
+            return n;
+        }
+        
+        int maxPoints = 0;
+        for (int i = 0; i < n; i++) {
+            Dictionary<double, int> slopes = new Dictionary<double, int>();
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    double slope = GetSlope(points[i], points[j]);
+                    slopes[slope] = slopes.ContainsKey(slope) ? slopes[slope] + 1 : 2;
+                }
+            }
+            if (slopes.Count > 0) {
+                maxPoints = Math.Max(maxPoints, slopes.Values.Max());
+            }
+        }
+        
+        return maxPoints;
+    }
+    
+    private double GetSlope(int[] p1, int[] p2) {
+        int x1 = p1[0], y1 = p1[1];
+        int x2 = p2[0], y2 = p2[1];
+        if (x1 == x2) {
+            return double.PositiveInfinity;
+        }
+        return (double)(y2 - y1) / (x2 - x1);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n²) where n is the number of points</li>
+                <li><strong>Space Complexity:</strong> O(n) to store slopes for each point</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses slope calculation and hash map:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Slope calculation</li>
+                        <li>Hash map usage</li>
+                        <li>Point comparison</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Calculate slopes</li>
+                        <li>Count points</li>
+                        <li>Handle edge cases</li>
+                        <li>Find maximum</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Slope formula</li>
+                <li>Vertical line handling</li>
+                <li>Duplicate points</li>
+                <li>Precision issues</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
