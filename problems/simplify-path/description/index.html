@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplify Path - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 71: Simplify Path. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>71. Simplify Path</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a string <code>path</code>, which is an <strong>absolute path</strong> (starting with a slash <code>'/'</code>) to a file or directory in a Unix-style file system, convert it to the simplified <strong>canonical path</strong>.</p>
+        <p>In a Unix-style file system, a period <code>'.'</code> refers to the current directory, a double period <code>'..'</code> refers to the directory up a level, and any multiple consecutive slashes (i.e. <code>'//'</code>) are treated as a single slash <code>'/'</code>. For this problem, any other format of periods such as <code>'...'</code> are treated as file/directory names.</p>
+        <p>The <strong>canonical path</strong> should have the following format:</p>
+        <ul>
+            <li>The path starts with a single slash <code>'/'</code>.</li>
+            <li>Any two directories are separated by a single slash <code>'/'</code>.</li>
+            <li>The path does not end with a trailing <code>'/'</code>.</li>
+            <li>The path only contains the directories on the path from the root directory to the target file or directory (i.e., no period <code>'.'</code> or double period <code>'..'</code>)</li>
+        </ul>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: path = "/home/"
+Output: "/home"
+Explanation: Note that there is no trailing slash after the last directory name.
+
+Example 2:
+Input: path = "/../"
+Output: "/"
+Explanation: Going one level up from the root directory is a no-op, as the root level is the highest level you can go.
+
+Example 3:
+Input: path = "/home//foo/"
+Output: "/home/foo"
+Explanation: In the canonical path, multiple consecutive slashes are replaced by a single one.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def simplifyPath(path: str) -> str:
+    # Split path by '/' and filter out empty strings
+    components = [x for x in path.split('/') if x and x != '.']
+    stack = []
+    
+    # Process each component
+    for comp in components:
+        if comp == '..':
+            if stack:
+                stack.pop()
+        else:
+            stack.append(comp)
+    
+    # Build canonical path
+    return '/' + '/'.join(stack)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String simplifyPath(String path) {
+        Stack<String> stack = new Stack<>();
+        String[] components = path.split("/");
+        
+        for (String comp : components) {
+            if (comp.equals("") || comp.equals(".")) {
+                continue;
+            }
+            if (comp.equals("..")) {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            } else {
+                stack.push(comp);
+            }
+        }
+        
+        if (stack.isEmpty()) {
+            return "/";
+        }
+        
+        StringBuilder result = new StringBuilder();
+        for (String dir : stack) {
+            result.append("/").append(dir);
+        }
+        
+        return result.toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string simplifyPath(string path) {
+        vector<string> stack;
+        stringstream ss(path);
+        string component;
+        
+        // Split path by '/' and process each component
+        while (getline(ss, component, '/')) {
+            if (component == "" || component == ".") {
+                continue;
+            }
+            if (component == "..") {
+                if (!stack.empty()) {
+                    stack.pop_back();
+                }
+            } else {
+                stack.push_back(component);
+            }
+        }
+        
+        // Build canonical path
+        if (stack.empty()) {
+            return "/";
+        }
+        
+        string result;
+        for (const string& dir : stack) {
+            result += "/" + dir;
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} path
+ * @return {string}
+ */
+var simplifyPath = function(path) {
+    const stack = [];
+    const components = path.split('/').filter(x => x && x !== '.');
+    
+    for (const comp of components) {
+        if (comp === '..') {
+            if (stack.length) {
+                stack.pop();
+            }
+        } else {
+            stack.push(comp);
+        }
+    }
+    
+    return '/' + stack.join('/');
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string SimplifyPath(string path) {
+        Stack<string> stack = new Stack<string>();
+        string[] components = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (string comp in components) {
+            if (comp == ".") {
+                continue;
+            }
+            if (comp == "..") {
+                if (stack.Count > 0) {
+                    stack.Pop();
+                }
+            } else {
+                stack.Push(comp);
+            }
+        }
+        
+        if (stack.Count == 0) {
+            return "/";
+        }
+        
+        return "/" + string.Join("/", stack.Reverse());
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the path</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the components</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a stack to process path components:</p>
+            <ul>
+                <li>Key steps:
+                    <ul>
+                        <li>Split path by '/'</li>
+                        <li>Filter out empty and '.' components</li>
+                        <li>Process '..' by popping stack</li>
+                        <li>Build canonical path from stack</li>
+                    </ul>
+                </li>
+                <li>Special cases:
+                    <ul>
+                        <li>Empty path → "/"</li>
+                        <li>Multiple slashes → single slash</li>
+                        <li>'..' at root → no-op</li>
+                        <li>Trailing slash → removed</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Stack-based approach</li>
+                <li>Handles all edge cases</li>
+                <li>Efficient string processing</li>
+                <li>Follows Unix path rules</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

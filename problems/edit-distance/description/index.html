@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Distance - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 72: Edit Distance. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>72. Edit Distance</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two strings <code>word1</code> and <code>word2</code>, return <em>the minimum number of operations required to convert <code>word1</code> to <code>word2</code></em>.</p>
+        <p>You have the following three operations permitted on a word:</p>
+        <ul>
+            <li>Insert a character</li>
+            <li>Delete a character</li>
+            <li>Replace a character</li>
+        </ul>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+
+Example 2:
+Input: word1 = "intention", word2 = "execution"
+Output: 5
+Explanation: 
+intention -> inention (remove 't')
+inention -> enention (replace 'i' with 'e')
+enention -> exention (replace 'n' with 'x')
+exention -> exection (replace 'n' with 'c')
+exection -> execution (insert 'u')</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def minDistance(word1: str, word2: str) -> int:
+    m, n = len(word1), len(word2)
+    
+    # Create DP table
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    # Initialize first row and column
+    for i in range(m + 1):
+        dp[i][0] = i
+    for j in range(n + 1):
+        dp[0][j] = j
+    
+    # Fill DP table
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = min(dp[i-1][j],      # Delete
+                             dp[i][j-1],        # Insert
+                             dp[i-1][j-1]) + 1  # Replace
+    
+    return dp[m][n]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+        
+        // Create DP table
+        int[][] dp = new int[m + 1][n + 1];
+        
+        // Initialize first row and column
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j <= n; j++) {
+            dp[0][j] = j;
+        }
+        
+        // Fill DP table
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (word1.charAt(i-1) == word2.charAt(j-1)) {
+                    dp[i][j] = dp[i-1][j-1];
+                } else {
+                    dp[i][j] = Math.min(dp[i-1][j],     // Delete
+                              Math.min(dp[i][j-1],      // Insert
+                                     dp[i-1][j-1])) + 1;// Replace
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        int m = word1.length();
+        int n = word2.length();
+        
+        // Create DP table
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1));
+        
+        // Initialize first row and column
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j <= n; j++) {
+            dp[0][j] = j;
+        }
+        
+        // Fill DP table
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (word1[i-1] == word2[j-1]) {
+                    dp[i][j] = dp[i-1][j-1];
+                } else {
+                    dp[i][j] = min({dp[i-1][j],    // Delete
+                                  dp[i][j-1],       // Insert
+                                  dp[i-1][j-1]}) + 1;// Replace
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} word1
+ * @param {string} word2
+ * @return {number}
+ */
+var minDistance = function(word1, word2) {
+    const m = word1.length;
+    const n = word2.length;
+    
+    // Create DP table
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+    
+    // Initialize first row and column
+    for (let i = 0; i <= m; i++) {
+        dp[i][0] = i;
+    }
+    for (let j = 0; j <= n; j++) {
+        dp[0][j] = j;
+    }
+    
+    // Fill DP table
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (word1[i-1] === word2[j-1]) {
+                dp[i][j] = dp[i-1][j-1];
+            } else {
+                dp[i][j] = Math.min(dp[i-1][j],    // Delete
+                                  dp[i][j-1],       // Insert
+                                  dp[i-1][j-1]) + 1;// Replace
+            }
+        }
+    }
+    
+    return dp[m][n];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MinDistance(string word1, string word2) {
+        int m = word1.Length;
+        int n = word2.Length;
+        
+        // Create DP table
+        int[,] dp = new int[m + 1, n + 1];
+        
+        // Initialize first row and column
+        for (int i = 0; i <= m; i++) {
+            dp[i,0] = i;
+        }
+        for (int j = 0; j <= n; j++) {
+            dp[0,j] = j;
+        }
+        
+        // Fill DP table
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (word1[i-1] == word2[j-1]) {
+                    dp[i,j] = dp[i-1,j-1];
+                } else {
+                    dp[i,j] = Math.Min(dp[i-1,j],    // Delete
+                             Math.Min(dp[i,j-1],      // Insert
+                                    dp[i-1,j-1])) + 1;// Replace
+                }
+            }
+        }
+        
+        return dp[m,n];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(mn) where m and n are the lengths of the input strings</li>
+                <li><strong>Space Complexity:</strong> O(mn) to store the DP table</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses dynamic programming to find the minimum edit distance:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>DP[i][j] represents minimum operations needed to convert word1[0..i] to word2[0..j]</li>
+                        <li>Consider all possible operations at each step</li>
+                        <li>Choose minimum cost operation</li>
+                    </ul>
+                </li>
+                <li>State transitions:
+                    <ul>
+                        <li>If characters match: dp[i][j] = dp[i-1][j-1]</li>
+                        <li>If characters differ: min of:
+                            <ul>
+                                <li>Delete: dp[i-1][j] + 1</li>
+                                <li>Insert: dp[i][j-1] + 1</li>
+                                <li>Replace: dp[i-1][j-1] + 1</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Classic DP problem</li>
+                <li>Base cases handled by initialization</li>
+                <li>Consider all operations</li>
+                <li>Optimal substructure property</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
