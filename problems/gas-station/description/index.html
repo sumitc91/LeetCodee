@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Station - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 134: Gas Station. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>134. Gas Station</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>There are <code>n</code> gas stations along a circular route, where the amount of gas at the <code>i<sup>th</sup></code> station is <code>gas[i]</code>.</p>
+        <p>You have a car with an unlimited gas tank and it costs <code>cost[i]</code> of gas to travel from the <code>i<sup>th</sup></code> station to its next <code>(i + 1)<sup>th</sup></code> station. You begin the journey with an empty tank at one of the gas stations.</p>
+        <p>Given two integer arrays <code>gas</code> and <code>cost</code>, return <em>the starting gas station's index if you can travel around the circuit once in the clockwise direction, otherwise return</em> <code>-1</code>. If there exists a solution, it is <strong>guaranteed</strong> to be <strong>unique</strong>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: gas = [1,2,3,4,5], cost = [3,4,5,1,2]
+Output: 3
+Explanation:
+Start at station 3 (index 3) and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+Travel to station 4. Your tank = 4 - 1 + 5 = 8
+Travel to station 0. Your tank = 8 - 2 + 1 = 7
+Travel to station 1. Your tank = 7 - 3 + 2 = 6
+Travel to station 2. Your tank = 6 - 4 + 3 = 5
+Travel to station 3. The cost is 5. Your gas is just enough to travel back to station 3.
+Therefore, return 3 as the starting index.
+
+Example 2:
+Input: gas = [2,3,4], cost = [3,4,3]
+Output: -1
+Explanation:
+You can't start at station 0 or 1, as there is not enough gas to travel to the next station.
+Let's start at station 2 and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+Travel to station 0. Your tank = 4 - 3 + 2 = 3
+Travel to station 1. Your tank = 3 - 3 + 3 = 3
+You cannot travel back to station 2, as it requires 4 unit of gas but you only have 3.
+Therefore, you can't travel around the circuit once no matter where you start.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def canCompleteCircuit(gas: List[int], cost: List[int]) -> int:
+    if sum(gas) < sum(cost):
+        return -1
+    
+    start = 0
+    tank = 0
+    
+    for i in range(len(gas)):
+        tank += gas[i] - cost[i]
+        if tank < 0:
+            start = i + 1
+            tank = 0
+    
+    return start</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int totalGas = 0;
+        int totalCost = 0;
+        for (int i = 0; i < gas.length; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+        }
+        
+        if (totalGas < totalCost) {
+            return -1;
+        }
+        
+        int start = 0;
+        int tank = 0;
+        
+        for (int i = 0; i < gas.length; i++) {
+            tank += gas[i] - cost[i];
+            if (tank < 0) {
+                start = i + 1;
+                tank = 0;
+            }
+        }
+        
+        return start;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int totalGas = 0;
+        int totalCost = 0;
+        for (int i = 0; i < gas.size(); i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+        }
+        
+        if (totalGas < totalCost) {
+            return -1;
+        }
+        
+        int start = 0;
+        int tank = 0;
+        
+        for (int i = 0; i < gas.size(); i++) {
+            tank += gas[i] - cost[i];
+            if (tank < 0) {
+                start = i + 1;
+                tank = 0;
+            }
+        }
+        
+        return start;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} gas
+ * @param {number[]} cost
+ * @return {number}
+ */
+var canCompleteCircuit = function(gas, cost) {
+    const totalGas = gas.reduce((a, b) => a + b, 0);
+    const totalCost = cost.reduce((a, b) => a + b, 0);
+    
+    if (totalGas < totalCost) {
+        return -1;
+    }
+    
+    let start = 0;
+    let tank = 0;
+    
+    for (let i = 0; i < gas.length; i++) {
+        tank += gas[i] - cost[i];
+        if (tank < 0) {
+            start = i + 1;
+            tank = 0;
+        }
+    }
+    
+    return start;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int CanCompleteCircuit(int[] gas, int[] cost) {
+        int totalGas = 0;
+        int totalCost = 0;
+        for (int i = 0; i < gas.Length; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+        }
+        
+        if (totalGas < totalCost) {
+            return -1;
+        }
+        
+        int start = 0;
+        int tank = 0;
+        
+        for (int i = 0; i < gas.Length; i++) {
+            tank += gas[i] - cost[i];
+            if (tank < 0) {
+                start = i + 1;
+                tank = 0;
+            }
+        }
+        
+        return start;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of gas stations</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use constant extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a greedy approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Total gas check</li>
+                        <li>Running sum</li>
+                        <li>Starting point</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Check feasibility</li>
+                        <li>Track gas tank</li>
+                        <li>Update start point</li>
+                        <li>Find solution</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Early validation</li>
+                <li>Greedy choice</li>
+                <li>Optimal substructure</li>
+                <li>Single pass</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

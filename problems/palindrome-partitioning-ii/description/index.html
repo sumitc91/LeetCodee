@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palindrome Partitioning II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 132: Palindrome Partitioning II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>132. Palindrome Partitioning II</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a string <code>s</code>, partition <code>s</code> such that every substring of the partition is a palindrome.</p>
+        <p>Return <em>the minimum cuts needed</em> for a palindrome partitioning of <code>s</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "aab"
+Output: 1
+Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+
+Example 2:
+Input: s = "a"
+Output: 0
+
+Example 3:
+Input: s = "ab"
+Output: 1</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def minCut(s: str) -> int:
+    n = len(s)
+    # dp[i] represents the minimum cuts needed for s[0:i+1]
+    dp = [0] * n
+    # is_palindrome[i][j] represents whether s[i:j+1] is palindrome
+    is_palindrome = [[False] * n for _ in range(n)]
+    
+    # Initialize palindrome table
+    for i in range(n):
+        is_palindrome[i][i] = True
+    
+    # Fill palindrome table
+    for length in range(2, n + 1):
+        for start in range(n - length + 1):
+            end = start + length - 1
+            if length == 2:
+                is_palindrome[start][end] = s[start] == s[end]
+            else:
+                is_palindrome[start][end] = s[start] == s[end] and is_palindrome[start + 1][end - 1]
+    
+    # Fill dp table
+    for i in range(n):
+        if is_palindrome[0][i]:
+            dp[i] = 0
+        else:
+            dp[i] = i
+            for j in range(i):
+                if is_palindrome[j + 1][i]:
+                    dp[i] = min(dp[i], dp[j] + 1)
+    
+    return dp[n - 1]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int minCut(String s) {
+        int n = s.length();
+        // dp[i] represents the minimum cuts needed for s[0:i+1]
+        int[] dp = new int[n];
+        // isPalindrome[i][j] represents whether s[i:j+1] is palindrome
+        boolean[][] isPalindrome = new boolean[n][n];
+        
+        // Initialize palindrome table
+        for (int i = 0; i < n; i++) {
+            isPalindrome[i][i] = true;
+        }
+        
+        // Fill palindrome table
+        for (int length = 2; length <= n; length++) {
+            for (int start = 0; start <= n - length; start++) {
+                int end = start + length - 1;
+                if (length == 2) {
+                    isPalindrome[start][end] = s.charAt(start) == s.charAt(end);
+                } else {
+                    isPalindrome[start][end] = s.charAt(start) == s.charAt(end) && 
+                                             isPalindrome[start + 1][end - 1];
+                }
+            }
+        }
+        
+        // Fill dp table
+        for (int i = 0; i < n; i++) {
+            if (isPalindrome[0][i]) {
+                dp[i] = 0;
+            } else {
+                dp[i] = i;
+                for (int j = 0; j < i; j++) {
+                    if (isPalindrome[j + 1][i]) {
+                        dp[i] = Math.min(dp[i], dp[j] + 1);
+                    }
+                }
+            }
+        }
+        
+        return dp[n - 1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int minCut(string s) {
+        int n = s.length();
+        // dp[i] represents the minimum cuts needed for s[0:i+1]
+        vector<int> dp(n);
+        // isPalindrome[i][j] represents whether s[i:j+1] is palindrome
+        vector<vector<bool>> isPalindrome(n, vector<bool>(n, false));
+        
+        // Initialize palindrome table
+        for (int i = 0; i < n; i++) {
+            isPalindrome[i][i] = true;
+        }
+        
+        // Fill palindrome table
+        for (int length = 2; length <= n; length++) {
+            for (int start = 0; start <= n - length; start++) {
+                int end = start + length - 1;
+                if (length == 2) {
+                    isPalindrome[start][end] = s[start] == s[end];
+                } else {
+                    isPalindrome[start][end] = s[start] == s[end] && 
+                                             isPalindrome[start + 1][end - 1];
+                }
+            }
+        }
+        
+        // Fill dp table
+        for (int i = 0; i < n; i++) {
+            if (isPalindrome[0][i]) {
+                dp[i] = 0;
+            } else {
+                dp[i] = i;
+                for (int j = 0; j < i; j++) {
+                    if (isPalindrome[j + 1][i]) {
+                        dp[i] = min(dp[i], dp[j] + 1);
+                    }
+                }
+            }
+        }
+        
+        return dp[n - 1];
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var minCut = function(s) {
+    const n = s.length;
+    // dp[i] represents the minimum cuts needed for s[0:i+1]
+    const dp = new Array(n).fill(0);
+    // isPalindrome[i][j] represents whether s[i:j+1] is palindrome
+    const isPalindrome = Array.from({length: n}, () => new Array(n).fill(false));
+    
+    // Initialize palindrome table
+    for (let i = 0; i < n; i++) {
+        isPalindrome[i][i] = true;
+    }
+    
+    // Fill palindrome table
+    for (let length = 2; length <= n; length++) {
+        for (let start = 0; start <= n - length; start++) {
+            const end = start + length - 1;
+            if (length === 2) {
+                isPalindrome[start][end] = s[start] === s[end];
+            } else {
+                isPalindrome[start][end] = s[start] === s[end] && 
+                                         isPalindrome[start + 1][end - 1];
+            }
+        }
+    }
+    
+    // Fill dp table
+    for (let i = 0; i < n; i++) {
+        if (isPalindrome[0][i]) {
+            dp[i] = 0;
+        } else {
+            dp[i] = i;
+            for (let j = 0; j < i; j++) {
+                if (isPalindrome[j + 1][i]) {
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
+                }
+            }
+        }
+    }
+    
+    return dp[n - 1];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MinCut(string s) {
+        int n = s.Length;
+        // dp[i] represents the minimum cuts needed for s[0:i+1]
+        int[] dp = new int[n];
+        // isPalindrome[i][j] represents whether s[i:j+1] is palindrome
+        bool[,] isPalindrome = new bool[n,n];
+        
+        // Initialize palindrome table
+        for (int i = 0; i < n; i++) {
+            isPalindrome[i,i] = true;
+        }
+        
+        // Fill palindrome table
+        for (int length = 2; length <= n; length++) {
+            for (int start = 0; start <= n - length; start++) {
+                int end = start + length - 1;
+                if (length == 2) {
+                    isPalindrome[start,end] = s[start] == s[end];
+                } else {
+                    isPalindrome[start,end] = s[start] == s[end] && 
+                                            isPalindrome[start + 1,end - 1];
+                }
+            }
+        }
+        
+        // Fill dp table
+        for (int i = 0; i < n; i++) {
+            if (isPalindrome[0,i]) {
+                dp[i] = 0;
+            } else {
+                dp[i] = i;
+                for (int j = 0; j < i; j++) {
+                    if (isPalindrome[j + 1,i]) {
+                        dp[i] = Math.Min(dp[i], dp[j] + 1);
+                    }
+                }
+            }
+        }
+        
+        return dp[n - 1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n²) where n is the length of the string</li>
+                <li><strong>Space Complexity:</strong> O(n²) for the palindrome table</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses dynamic programming:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Palindrome checking</li>
+                        <li>DP state transition</li>
+                        <li>Minimum cuts</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Build palindrome table</li>
+                        <li>Calculate min cuts</li>
+                        <li>State transition</li>
+                        <li>Optimize subproblems</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient palindrome check</li>
+                <li>DP optimization</li>
+                <li>State management</li>
+                <li>Minimum calculation</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

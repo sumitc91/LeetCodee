@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palindrome Partitioning - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 131: Palindrome Partitioning. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>131. Palindrome Partitioning</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a string <code>s</code>, partition <code>s</code> such that every substring of the partition is a <strong>palindrome</strong>. Return <em>all possible palindrome partitioning of</em> <code>s</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "aab"
+Output: [["a","a","b"],["aa","b"]]
+
+Example 2:
+Input: s = "a"
+Output: [["a"]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def partition(s: str) -> List[List[str]]:
+    def is_palindrome(start: int, end: int) -> bool:
+        while start < end:
+            if s[start] != s[end]:
+                return False
+            start += 1
+            end -= 1
+        return True
+    
+    def backtrack(start: int, path: List[str], result: List[List[str]]) -> None:
+        if start >= len(s):
+            result.append(path[:])
+            return
+        
+        for end in range(start, len(s)):
+            if is_palindrome(start, end):
+                path.append(s[start:end + 1])
+                backtrack(end + 1, path, result)
+                path.pop()
+    
+    result = []
+    backtrack(0, [], result)
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new ArrayList<>();
+        backtrack(s, 0, new ArrayList<>(), result);
+        return result;
+    }
+    
+    private void backtrack(String s, int start, List<String> path, List<List<String>> result) {
+        if (start >= s.length()) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        
+        for (int end = start; end < s.length(); end++) {
+            if (isPalindrome(s, start, end)) {
+                path.add(s.substring(start, end + 1));
+                backtrack(s, end + 1, path, result);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+    
+    private boolean isPalindrome(String s, int start, int end) {
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+private:
+    bool isPalindrome(const string& s, int start, int end) {
+        while (start < end) {
+            if (s[start] != s[end]) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+    
+    void backtrack(const string& s, int start, vector<string>& path, vector<vector<string>>& result) {
+        if (start >= s.length()) {
+            result.push_back(path);
+            return;
+        }
+        
+        for (int end = start; end < s.length(); end++) {
+            if (isPalindrome(s, start, end)) {
+                path.push_back(s.substr(start, end - start + 1));
+                backtrack(s, end + 1, path, result);
+                path.pop_back();
+            }
+        }
+    }
+    
+public:
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> result;
+        vector<string> path;
+        backtrack(s, 0, path, result);
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @return {string[][]}
+ */
+var partition = function(s) {
+    const isPalindrome = (start, end) => {
+        while (start < end) {
+            if (s[start] !== s[end]) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    };
+    
+    const backtrack = (start, path, result) => {
+        if (start >= s.length) {
+            result.push([...path]);
+            return;
+        }
+        
+        for (let end = start; end < s.length; end++) {
+            if (isPalindrome(start, end)) {
+                path.push(s.substring(start, end + 1));
+                backtrack(end + 1, path, result);
+                path.pop();
+            }
+        }
+    };
+    
+    const result = [];
+    backtrack(0, [], result);
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<IList<string>> Partition(string s) {
+        IList<IList<string>> result = new List<IList<string>>();
+        Backtrack(s, 0, new List<string>(), result);
+        return result;
+    }
+    
+    private void Backtrack(string s, int start, List<string> path, IList<IList<string>> result) {
+        if (start >= s.Length) {
+            result.Add(new List<string>(path));
+            return;
+        }
+        
+        for (int end = start; end < s.Length; end++) {
+            if (IsPalindrome(s, start, end)) {
+                path.Add(s.Substring(start, end - start + 1));
+                Backtrack(s, end + 1, path, result);
+                path.RemoveAt(path.Count - 1);
+            }
+        }
+    }
+    
+    private bool IsPalindrome(string s, int start, int end) {
+        while (start < end) {
+            if (s[start] != s[end]) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(N × 2^N) where N is the length of the string</li>
+                <li><strong>Space Complexity:</strong> O(N) for the recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a backtracking approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Palindrome checking</li>
+                        <li>Backtracking</li>
+                        <li>Path tracking</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Check palindromes</li>
+                        <li>Build partitions</li>
+                        <li>Track valid paths</li>
+                        <li>Backtrack choices</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient palindrome check</li>
+                <li>Path management</li>
+                <li>State restoration</li>
+                <li>Complete exploration</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clone Graph - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 133: Clone Graph. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>133. Clone Graph</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a reference of a node in a <strong>connected</strong> undirected graph.</p>
+        <p>Return a <strong>deep copy</strong> (clone) of the graph.</p>
+        <p>Each node in the graph contains a value (<code>int</code>) and a list (<code>List[Node]</code>) of its neighbors.</p>
+        <pre>
+class Node {
+    public int val;
+    public List<Node> neighbors;
+}</pre>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: adjList = [[2,4],[1,3],[2,4],[1,3]]
+Output: [[2,4],[1,3],[2,4],[1,3]]
+Explanation: There are 4 nodes in the graph.
+1st node (val = 1)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+2nd node (val = 2)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
+3rd node (val = 3)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+4th node (val = 4)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
+
+Example 2:
+Input: adjList = [[]]
+Output: [[]]
+Explanation: Note that the input contains one empty list. The graph has only one node with val = 1 and it has no neighbors.
+
+Example 3:
+Input: adjList = []
+Output: []
+Explanation: This an empty graph, it does not have any nodes.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+"""
+def cloneGraph(node: 'Node') -> 'Node':
+    if not node:
+        return None
+    
+    # Dictionary to store the cloned nodes
+    cloned = {}
+    
+    def dfs(node: 'Node') -> 'Node':
+        if node in cloned:
+            return cloned[node]
+        
+        # Create a new node
+        clone = Node(node.val)
+        cloned[node] = clone
+        
+        # Clone all neighbors
+        for neighbor in node.neighbors:
+            clone.neighbors.append(dfs(neighbor))
+        
+        return clone
+    
+    return dfs(node)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val, ArrayList<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+class Solution {
+    private Map<Node, Node> cloned = new HashMap<>();
+    
+    public Node cloneGraph(Node node) {
+        if (node == null) {
+            return null;
+        }
+        
+        if (cloned.containsKey(node)) {
+            return cloned.get(node);
+        }
+        
+        // Create a new node
+        Node clone = new Node(node.val);
+        cloned.put(node, clone);
+        
+        // Clone all neighbors
+        for (Node neighbor : node.neighbors) {
+            clone.neighbors.add(cloneGraph(neighbor));
+        }
+        
+        return clone;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    vector<Node*> neighbors;
+    Node() {
+        val = 0;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val) {
+        val = _val;
+        neighbors = vector<Node*>();
+    }
+    Node(int _val, vector<Node*> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+};
+*/
+class Solution {
+private:
+    unordered_map<Node*, Node*> cloned;
+    
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) {
+            return nullptr;
+        }
+        
+        if (cloned.count(node)) {
+            return cloned[node];
+        }
+        
+        // Create a new node
+        Node* clone = new Node(node->val);
+        cloned[node] = clone;
+        
+        // Clone all neighbors
+        for (Node* neighbor : node->neighbors) {
+            clone->neighbors.push_back(cloneGraph(neighbor));
+        }
+        
+        return clone;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * // Definition for a Node.
+ * function Node(val, neighbors) {
+ *    this.val = val === undefined ? 0 : val;
+ *    this.neighbors = neighbors === undefined ? [] : neighbors;
+ * };
+ */
+/**
+ * @param {Node} node
+ * @return {Node}
+ */
+var cloneGraph = function(node) {
+    if (!node) {
+        return null;
+    }
+    
+    const cloned = new Map();
+    
+    const dfs = (node) => {
+        if (cloned.has(node)) {
+            return cloned.get(node);
+        }
+        
+        // Create a new node
+        const clone = new Node(node.val);
+        cloned.set(node, clone);
+        
+        // Clone all neighbors
+        for (const neighbor of node.neighbors) {
+            clone.neighbors.push(dfs(neighbor));
+        }
+        
+        return clone;
+    };
+    
+    return dfs(node);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public IList<Node> neighbors;
+    
+    public Node() {
+        val = 0;
+        neighbors = new List<Node>();
+    }
+
+    public Node(int _val) {
+        val = _val;
+        neighbors = new List<Node>();
+    }
+    
+    public Node(int _val, List<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+public class Solution {
+    private Dictionary<Node, Node> cloned = new Dictionary<Node, Node>();
+    
+    public Node CloneGraph(Node node) {
+        if (node == null) {
+            return null;
+        }
+        
+        if (cloned.ContainsKey(node)) {
+            return cloned[node];
+        }
+        
+        // Create a new node
+        Node clone = new Node(node.val);
+        cloned[node] = clone;
+        
+        // Clone all neighbors
+        foreach (Node neighbor in node.neighbors) {
+            clone.neighbors.Add(CloneGraph(neighbor));
+        }
+        
+        return clone;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(N + E) where N is the number of nodes and E is the number of edges</li>
+                <li><strong>Space Complexity:</strong> O(N) for the hash map and recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a DFS approach with a hash map:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Graph traversal</li>
+                        <li>Node cloning</li>
+                        <li>Reference tracking</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Create new nodes</li>
+                        <li>Track cloned nodes</li>
+                        <li>Clone neighbors</li>
+                        <li>Handle cycles</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Cycle detection</li>
+                <li>Deep copy</li>
+                <li>Reference mapping</li>
+                <li>Complete traversal</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
