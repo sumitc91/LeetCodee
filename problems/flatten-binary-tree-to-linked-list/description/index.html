@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flatten Binary Tree to Linked List - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 114: Flatten Binary Tree to Linked List. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>114. Flatten Binary Tree to Linked List</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>root</code> of a binary tree, flatten the tree into a "linked list":</p>
+        <ul>
+            <li>The "linked list" should use the same <code>TreeNode</code> class where the <code>right</code> pointer points to the next node in the list and the <code>left</code> pointer is always <code>null</code>.</li>
+            <li>The "linked list" should be in the same order as a <strong>pre-order traversal</strong> of the binary tree.</li>
+        </ul>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: root = [1,2,5,3,4,null,6]
+Output: [1,null,2,null,3,null,4,null,5,null,6]
+
+Example 2:
+Input: root = []
+Output: []
+
+Example 3:
+Input: root = [0]
+Output: [0]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+def flatten(root: Optional[TreeNode]) -> None:
+    """
+    Do not return anything, modify root in-place instead.
+    """
+    # Base case
+    if not root:
+        return
+    
+    # Store right subtree
+    right = root.right
+    
+    # Make left subtree the right subtree
+    root.right = root.left
+    root.left = None
+    
+    # Move to the end of the new right subtree
+    current = root
+    while current.right:
+        current = current.right
+    
+    # Attach the original right subtree
+    current.right = right
+    
+    # Recursively flatten the right subtree
+    flatten(root.right)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public void flatten(TreeNode root) {
+        // Base case
+        if (root == null) {
+            return;
+        }
+        
+        // Store right subtree
+        TreeNode right = root.right;
+        
+        // Make left subtree the right subtree
+        root.right = root.left;
+        root.left = null;
+        
+        // Move to the end of the new right subtree
+        TreeNode current = root;
+        while (current.right != null) {
+            current = current.right;
+        }
+        
+        // Attach the original right subtree
+        current.right = right;
+        
+        // Recursively flatten the right subtree
+        flatten(root.right);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        // Base case
+        if (!root) {
+            return;
+        }
+        
+        // Store right subtree
+        TreeNode* right = root->right;
+        
+        // Make left subtree the right subtree
+        root->right = root->left;
+        root->left = nullptr;
+        
+        // Move to the end of the new right subtree
+        TreeNode* current = root;
+        while (current->right) {
+            current = current->right;
+        }
+        
+        // Attach the original right subtree
+        current->right = right;
+        
+        // Recursively flatten the right subtree
+        flatten(root->right);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {void} Do not return anything, modify root in-place instead.
+ */
+var flatten = function(root) {
+    // Base case
+    if (!root) {
+        return;
+    }
+    
+    // Store right subtree
+    const right = root.right;
+    
+    // Make left subtree the right subtree
+    root.right = root.left;
+    root.left = null;
+    
+    // Move to the end of the new right subtree
+    let current = root;
+    while (current.right) {
+        current = current.right;
+    }
+    
+    // Attach the original right subtree
+    current.right = right;
+    
+    // Recursively flatten the right subtree
+    flatten(root.right);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public void Flatten(TreeNode root) {
+        // Base case
+        if (root == null) {
+            return;
+        }
+        
+        // Store right subtree
+        TreeNode right = root.right;
+        
+        // Make left subtree the right subtree
+        root.right = root.left;
+        root.left = null;
+        
+        // Move to the end of the new right subtree
+        TreeNode current = root;
+        while (current.right != null) {
+            current = current.right;
+        }
+        
+        // Attach the original right subtree
+        current.right = right;
+        
+        // Recursively flatten the right subtree
+        Flatten(root.right);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the tree</li>
+                <li><strong>Space Complexity:</strong> O(h) where h is the height of the tree</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a recursive approach to flatten the tree:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Pre-order traversal</li>
+                        <li>In-place modification</li>
+                        <li>Right pointer usage</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Store right subtree</li>
+                        <li>Move left to right</li>
+                        <li>Find tail node</li>
+                        <li>Attach stored right</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>No extra space</li>
+                <li>Maintain order</li>
+                <li>Clear left pointers</li>
+                <li>Efficient traversal</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
