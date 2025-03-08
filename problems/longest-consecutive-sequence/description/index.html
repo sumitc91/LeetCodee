@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Consecutive Sequence - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 128: Longest Consecutive Sequence. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>128. Longest Consecutive Sequence</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an unsorted array of integers <code>nums</code>, return <em>the length of the longest consecutive elements sequence</em>.</p>
+        <p>You must write an algorithm that runs in <code>O(n)</code> time.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [100,4,200,1,3,2]
+Output: 4
+Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+
+Example 2:
+Input: nums = [0,3,7,2,5,8,4,6,0,1]
+Output: 9
+Explanation: The longest consecutive elements sequence is [0, 1, 2, 3, 4, 5, 6, 7, 8]. Therefore its length is 9.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def longestConsecutive(nums: List[int]) -> int:
+    if not nums:
+        return 0
+    
+    # Create a set for O(1) lookup
+    num_set = set(nums)
+    longest = 0
+    
+    for num in num_set:
+        # Only check sequences from their smallest number
+        if num - 1 not in num_set:
+            current = num
+            current_streak = 1
+            
+            # Count consecutive numbers
+            while current + 1 in num_set:
+                current += 1
+                current_streak += 1
+            
+            longest = max(longest, current_streak)
+    
+    return longest</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        
+        // Create a set for O(1) lookup
+        Set<Integer> numSet = new HashSet<>();
+        for (int num : nums) {
+            numSet.add(num);
+        }
+        
+        int longest = 0;
+        
+        for (int num : numSet) {
+            // Only check sequences from their smallest number
+            if (!numSet.contains(num - 1)) {
+                int current = num;
+                int currentStreak = 1;
+                
+                // Count consecutive numbers
+                while (numSet.contains(current + 1)) {
+                    current++;
+                    currentStreak++;
+                }
+                
+                longest = Math.max(longest, currentStreak);
+            }
+        }
+        
+        return longest;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+        
+        // Create a set for O(1) lookup
+        unordered_set<int> numSet(nums.begin(), nums.end());
+        int longest = 0;
+        
+        for (int num : numSet) {
+            // Only check sequences from their smallest number
+            if (!numSet.count(num - 1)) {
+                int current = num;
+                int currentStreak = 1;
+                
+                // Count consecutive numbers
+                while (numSet.count(current + 1)) {
+                    current++;
+                    currentStreak++;
+                }
+                
+                longest = max(longest, currentStreak);
+            }
+        }
+        
+        return longest;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var longestConsecutive = function(nums) {
+    if (!nums.length) {
+        return 0;
+    }
+    
+    // Create a set for O(1) lookup
+    const numSet = new Set(nums);
+    let longest = 0;
+    
+    for (const num of numSet) {
+        // Only check sequences from their smallest number
+        if (!numSet.has(num - 1)) {
+            let current = num;
+            let currentStreak = 1;
+            
+            // Count consecutive numbers
+            while (numSet.has(current + 1)) {
+                current++;
+                currentStreak++;
+            }
+            
+            longest = Math.max(longest, currentStreak);
+        }
+    }
+    
+    return longest;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int LongestConsecutive(int[] nums) {
+        if (nums == null || nums.Length == 0) {
+            return 0;
+        }
+        
+        // Create a set for O(1) lookup
+        HashSet<int> numSet = new HashSet<int>(nums);
+        int longest = 0;
+        
+        foreach (int num in numSet) {
+            // Only check sequences from their smallest number
+            if (!numSet.Contains(num - 1)) {
+                int current = num;
+                int currentStreak = 1;
+                
+                // Count consecutive numbers
+                while (numSet.Contains(current + 1)) {
+                    current++;
+                    currentStreak++;
+                }
+                
+                longest = Math.Max(longest, currentStreak);
+            }
+        }
+        
+        return longest;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of nums</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the hash set</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a hash set approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Hash set lookup</li>
+                        <li>Sequence tracking</li>
+                        <li>Optimization</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Build hash set</li>
+                        <li>Find sequence starts</li>
+                        <li>Count sequence length</li>
+                        <li>Track maximum</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>O(1) lookup</li>
+                <li>Skip redundant checks</li>
+                <li>Handle edge cases</li>
+                <li>Linear time complexity</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Ladder II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 126: Word Ladder II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>126. Word Ladder II</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>A <strong>transformation sequence</strong> from word <code>beginWord</code> to word <code>endWord</code> using a dictionary <code>wordList</code> is a sequence of words <code>beginWord -> s<sub>1</sub> -> s<sub>2</sub> -> ... -> s<sub>k</sub></code> such that:</p>
+        <ul>
+            <li>Every adjacent pair of words differs by a single letter</li>
+            <li>Every <code>s<sub>i</sub></code> for <code>1 <= i <= k</code> is in <code>wordList</code>. Note that <code>beginWord</code> does not need to be in <code>wordList</code></li>
+            <li><code>s<sub>k</sub> == endWord</code></li>
+        </ul>
+        <p>Given two words, <code>beginWord</code> and <code>endWord</code>, and a dictionary <code>wordList</code>, return <em>all the <strong>shortest transformation sequences</strong> from</em> <code>beginWord</code> <em>to</em> <code>endWord</code>, <em>or an empty list if no such sequence exists</em>. Each sequence should be returned as a list of the words <code>[beginWord, s<sub>1</sub>, s<sub>2</sub>, ..., s<sub>k</sub>]</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
+Output: [["hit","hot","dot","dog","cog"],["hit","hot","lot","log","cog"]]
+Explanation: There are 2 shortest transformation sequences:
+"hit" -> "hot" -> "dot" -> "dog" -> "cog"
+"hit" -> "hot" -> "lot" -> "log" -> "cog"
+
+Example 2:
+Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
+Output: []
+Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+from collections import defaultdict, deque
+
+def findLadders(beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+    # Create word set for quick lookup
+    word_set = set(wordList)
+    if endWord not in word_set:
+        return []
+    
+    # Remove beginWord from word_set if it exists
+    if beginWord in word_set:
+        word_set.remove(beginWord)
+    
+    # Create a dictionary to store neighbors
+    neighbors = defaultdict(list)
+    
+    # Build the neighbors dictionary
+    def build_neighbors():
+        for word in [beginWord] + list(word_set):
+            for i in range(len(word)):
+                pattern = word[:i] + '*' + word[i+1:]
+                neighbors[pattern].append(word)
+    
+    build_neighbors()
+    
+    # BFS to find shortest paths
+    level = {beginWord: [[beginWord]]}
+    while level and endWord not in level:
+        next_level = defaultdict(list)
+        for word in level:
+            for i in range(len(word)):
+                pattern = word[:i] + '*' + word[i+1:]
+                for nei in neighbors[pattern]:
+                    if nei in word_set:
+                        for path in level[word]:
+                            next_level[nei].append(path + [nei])
+        
+        # Remove visited words to prevent cycles
+        word_set -= set(next_level.keys())
+        level = next_level
+    
+    return level.get(endWord, [])</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        Set<String> dict = new HashSet<>(wordList);
+        List<List<String>> res = new ArrayList<>();
+        if (!dict.contains(endWord)) {
+            return res;
+        }
+        
+        // Remove beginWord from dict if it exists
+        dict.remove(beginWord);
+        
+        // Level by level BFS
+        Map<String, List<List<String>>> level = new HashMap<>();
+        level.put(beginWord, Arrays.asList(Arrays.asList(beginWord)));
+        
+        while (!level.isEmpty() && !level.containsKey(endWord)) {
+            Map<String, List<List<String>>> nextLevel = new HashMap<>();
+            
+            for (String word : level.keySet()) {
+                char[] chars = word.toCharArray();
+                for (int i = 0; i < chars.length; i++) {
+                    char original = chars[i];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        chars[i] = c;
+                        String newWord = new String(chars);
+                        
+                        if (dict.contains(newWord)) {
+                            for (List<String> path : level.get(word)) {
+                                List<String> newPath = new ArrayList<>(path);
+                                newPath.add(newWord);
+                                nextLevel.computeIfAbsent(newWord, k -> new ArrayList<>())
+                                        .add(newPath);
+                            }
+                        }
+                    }
+                    chars[i] = original;
+                }
+            }
+            
+            // Remove visited words
+            dict.removeAll(nextLevel.keySet());
+            level = nextLevel;
+        }
+        
+        return level.getOrDefault(endWord, res);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> dict(wordList.begin(), wordList.end());
+        vector<vector<string>> res;
+        if (!dict.count(endWord)) {
+            return res;
+        }
+        
+        // Remove beginWord from dict if it exists
+        dict.erase(beginWord);
+        
+        // Level by level BFS
+        unordered_map<string, vector<vector<string>>> level;
+        level[beginWord] = {{beginWord}};
+        
+        while (!level.empty() && !level.count(endWord)) {
+            unordered_map<string, vector<vector<string>>> nextLevel;
+            
+            for (const auto& [word, paths] : level) {
+                string curr = word;
+                for (int i = 0; i < curr.length(); i++) {
+                    char original = curr[i];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        curr[i] = c;
+                        if (dict.count(curr)) {
+                            for (const auto& path : paths) {
+                                vector<string> newPath = path;
+                                newPath.push_back(curr);
+                                nextLevel[curr].push_back(newPath);
+                            }
+                        }
+                    }
+                    curr[i] = original;
+                }
+            }
+            
+            // Remove visited words
+            for (const auto& [word, _] : nextLevel) {
+                dict.erase(word);
+            }
+            level = nextLevel;
+        }
+        
+        return level.count(endWord) ? level[endWord] : res;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} beginWord
+ * @param {string} endWord
+ * @param {string[]} wordList
+ * @return {string[][]}
+ */
+var findLadders = function(beginWord, endWord, wordList) {
+    const dict = new Set(wordList);
+    if (!dict.has(endWord)) {
+        return [];
+    }
+    
+    // Remove beginWord from dict if it exists
+    dict.delete(beginWord);
+    
+    // Level by level BFS
+    let level = new Map();
+    level.set(beginWord, [[beginWord]]);
+    
+    while (level.size > 0 && !level.has(endWord)) {
+        const nextLevel = new Map();
+        
+        for (const [word, paths] of level) {
+            const chars = word.split('');
+            for (let i = 0; i < chars.length; i++) {
+                const original = chars[i];
+                for (let c = 97; c <= 122; c++) {  // ASCII 'a' to 'z'
+                    chars[i] = String.fromCharCode(c);
+                    const newWord = chars.join('');
+                    
+                    if (dict.has(newWord)) {
+                        for (const path of paths) {
+                            const newPath = [...path, newWord];
+                            if (!nextLevel.has(newWord)) {
+                                nextLevel.set(newWord, []);
+                            }
+                            nextLevel.get(newWord).push(newPath);
+                        }
+                    }
+                }
+                chars[i] = original;
+            }
+        }
+        
+        // Remove visited words
+        for (const word of nextLevel.keys()) {
+            dict.delete(word);
+        }
+        level = nextLevel;
+    }
+    
+    return level.has(endWord) ? level.get(endWord) : [];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<IList<string>> FindLadders(string beginWord, string endWord, IList<string> wordList) {
+        HashSet<string> dict = new HashSet<string>(wordList);
+        var result = new List<IList<string>>();
+        if (!dict.Contains(endWord)) {
+            return result;
+        }
+        
+        // Remove beginWord from dict if it exists
+        dict.Remove(beginWord);
+        
+        // Level by level BFS
+        var level = new Dictionary<string, List<List<string>>>();
+        level[beginWord] = new List<List<string>> { new List<string> { beginWord } };
+        
+        while (level.Count > 0 && !level.ContainsKey(endWord)) {
+            var nextLevel = new Dictionary<string, List<List<string>>>();
+            
+            foreach (var word in level.Keys) {
+                var chars = word.ToCharArray();
+                for (int i = 0; i < chars.Length; i++) {
+                    var original = chars[i];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        chars[i] = c;
+                        var newWord = new string(chars);
+                        
+                        if (dict.Contains(newWord)) {
+                            foreach (var path in level[word]) {
+                                var newPath = new List<string>(path);
+                                newPath.Add(newWord);
+                                if (!nextLevel.ContainsKey(newWord)) {
+                                    nextLevel[newWord] = new List<List<string>>();
+                                }
+                                nextLevel[newWord].Add(newPath);
+                            }
+                        }
+                    }
+                    chars[i] = original;
+                }
+            }
+            
+            // Remove visited words
+            foreach (var word in nextLevel.Keys) {
+                dict.Remove(word);
+            }
+            level = nextLevel;
+        }
+        
+        return level.ContainsKey(endWord) ? level[endWord] : result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(N × 26 × L × D) where N is the length of each word, L is the length of wordList, and D is the maximum depth of transformation</li>
+                <li><strong>Space Complexity:</strong> O(N × L × D) to store all possible paths</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a level-by-level BFS approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Level-wise BFS</li>
+                        <li>Path tracking</li>
+                        <li>Word transformation</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Build word set</li>
+                        <li>Track paths</li>
+                        <li>Transform words</li>
+                        <li>Find shortest paths</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Avoid cycles</li>
+                <li>Track all paths</li>
+                <li>Level-wise search</li>
+                <li>Efficient word generation</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

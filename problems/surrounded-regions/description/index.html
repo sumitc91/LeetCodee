@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surrounded Regions - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 130: Surrounded Regions. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>130. Surrounded Regions</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an <code>m x n</code> matrix <code>board</code> containing <code>'X'</code> and <code>'O'</code>, <em>capture all regions that are 4-directionally surrounded by</em> <code>'X'</code>.</p>
+        <p>A region is <strong>captured</strong> by flipping all <code>'O'</code>s into <code>'X'</code>s in that surrounded region.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+Output: [["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+Explanation: Notice that an 'O' should not be flipped if:
+- It is on the border, or
+- It is adjacent to an 'O' that should not be flipped.
+The bottom 'O' is on the border, so it is not flipped.
+The other three 'O' form a surrounded region, so they are flipped.
+
+Example 2:
+Input: board = [["X"]]
+Output: [["X"]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def solve(board: List[List[str]]) -> None:
+    """
+    Do not return anything, modify board in-place instead.
+    """
+    if not board or not board[0]:
+        return
+    
+    rows, cols = len(board), len(board[0])
+    
+    def dfs(i: int, j: int) -> None:
+        if i < 0 or i >= rows or j < 0 or j >= cols or board[i][j] != 'O':
+            return
+        
+        # Mark as visited
+        board[i][j] = '#'
+        
+        # Check all 4 directions
+        dfs(i+1, j)
+        dfs(i-1, j)
+        dfs(i, j+1)
+        dfs(i, j-1)
+    
+    # Check borders
+    for i in range(rows):
+        dfs(i, 0)
+        dfs(i, cols-1)
+    
+    for j in range(cols):
+        dfs(0, j)
+        dfs(rows-1, j)
+    
+    # Convert remaining 'O's to 'X's and '#'s back to 'O's
+    for i in range(rows):
+        for j in range(cols):
+            if board[i][j] == 'O':
+                board[i][j] = 'X'
+            elif board[i][j] == '#':
+                board[i][j] = 'O'</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    private int rows, cols;
+    
+    public void solve(char[][] board) {
+        if (board == null || board.length == 0) {
+            return;
+        }
+        
+        rows = board.length;
+        cols = board[0].length;
+        
+        // Check borders
+        for (int i = 0; i < rows; i++) {
+            dfs(board, i, 0);
+            dfs(board, i, cols-1);
+        }
+        
+        for (int j = 0; j < cols; j++) {
+            dfs(board, 0, j);
+            dfs(board, rows-1, j);
+        }
+        
+        // Convert remaining 'O's to 'X's and '#'s back to 'O's
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+    
+    private void dfs(char[][] board, int i, int j) {
+        if (i < 0 || i >= rows || j < 0 || j >= cols || board[i][j] != 'O') {
+            return;
+        }
+        
+        // Mark as visited
+        board[i][j] = '#';
+        
+        // Check all 4 directions
+        dfs(board, i+1, j);
+        dfs(board, i-1, j);
+        dfs(board, i, j+1);
+        dfs(board, i, j-1);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+private:
+    int rows, cols;
+    
+    void dfs(vector<vector<char>>& board, int i, int j) {
+        if (i < 0 || i >= rows || j < 0 || j >= cols || board[i][j] != 'O') {
+            return;
+        }
+        
+        // Mark as visited
+        board[i][j] = '#';
+        
+        // Check all 4 directions
+        dfs(board, i+1, j);
+        dfs(board, i-1, j);
+        dfs(board, i, j+1);
+        dfs(board, i, j-1);
+    }
+    
+public:
+    void solve(vector<vector<char>>& board) {
+        if (board.empty() || board[0].empty()) {
+            return;
+        }
+        
+        rows = board.size();
+        cols = board[0].size();
+        
+        // Check borders
+        for (int i = 0; i < rows; i++) {
+            dfs(board, i, 0);
+            dfs(board, i, cols-1);
+        }
+        
+        for (int j = 0; j < cols; j++) {
+            dfs(board, 0, j);
+            dfs(board, rows-1, j);
+        }
+        
+        // Convert remaining 'O's to 'X's and '#'s back to 'O's
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {character[][]} board
+ * @return {void} Do not return anything, modify board in-place instead.
+ */
+var solve = function(board) {
+    if (!board || !board[0]) {
+        return;
+    }
+    
+    const rows = board.length;
+    const cols = board[0].length;
+    
+    const dfs = (i, j) => {
+        if (i < 0 || i >= rows || j < 0 || j >= cols || board[i][j] !== 'O') {
+            return;
+        }
+        
+        // Mark as visited
+        board[i][j] = '#';
+        
+        // Check all 4 directions
+        dfs(i+1, j);
+        dfs(i-1, j);
+        dfs(i, j+1);
+        dfs(i, j-1);
+    };
+    
+    // Check borders
+    for (let i = 0; i < rows; i++) {
+        dfs(i, 0);
+        dfs(i, cols-1);
+    }
+    
+    for (let j = 0; j < cols; j++) {
+        dfs(0, j);
+        dfs(rows-1, j);
+    }
+    
+    // Convert remaining 'O's to 'X's and '#'s back to 'O's
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            if (board[i][j] === 'O') {
+                board[i][j] = 'X';
+            } else if (board[i][j] === '#') {
+                board[i][j] = 'O';
+            }
+        }
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    private int rows, cols;
+    
+    public void Solve(char[][] board) {
+        if (board == null || board.Length == 0) {
+            return;
+        }
+        
+        rows = board.Length;
+        cols = board[0].Length;
+        
+        // Check borders
+        for (int i = 0; i < rows; i++) {
+            DFS(board, i, 0);
+            DFS(board, i, cols-1);
+        }
+        
+        for (int j = 0; j < cols; j++) {
+            DFS(board, 0, j);
+            DFS(board, rows-1, j);
+        }
+        
+        // Convert remaining 'O's to 'X's and '#'s back to 'O's
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+    
+    private void DFS(char[][] board, int i, int j) {
+        if (i < 0 || i >= rows || j < 0 || j >= cols || board[i][j] != 'O') {
+            return;
+        }
+        
+        // Mark as visited
+        board[i][j] = '#';
+        
+        // Check all 4 directions
+        DFS(board, i+1, j);
+        DFS(board, i-1, j);
+        DFS(board, i, j+1);
+        DFS(board, i, j-1);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(m × n) where m and n are the dimensions of the board</li>
+                <li><strong>Space Complexity:</strong> O(m × n) in worst case for recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a DFS approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Border checking</li>
+                        <li>Region marking</li>
+                        <li>Connected components</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Check borders</li>
+                        <li>Mark safe regions</li>
+                        <li>Convert remaining</li>
+                        <li>Restore markings</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>In-place modification</li>
+                <li>Border handling</li>
+                <li>Connected regions</li>
+                <li>Efficient traversal</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

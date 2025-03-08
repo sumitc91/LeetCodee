@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum Root to Leaf Numbers - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 129: Sum Root to Leaf Numbers. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>129. Sum Root to Leaf Numbers</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given the <code>root</code> of a binary tree containing digits from <code>0</code> to <code>9</code> only.</p>
+        <p>Each root-to-leaf path in the tree represents a number.</p>
+        <ul>
+            <li>For example, the root-to-leaf path <code>1 -> 2 -> 3</code> represents the number <code>123</code>.</li>
+        </ul>
+        <p>Return <em>the total sum of all root-to-leaf numbers</em>. Test cases are generated so that the answer will fit in a <strong>32-bit</strong> integer.</p>
+        <p>A <strong>leaf</strong> node is a node with no children.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: root = [1,2,3]
+Output: 25
+Explanation:
+The root-to-leaf path 1->2 represents the number 12
+The root-to-leaf path 1->3 represents the number 13
+Therefore, sum = 12 + 13 = 25
+
+Example 2:
+Input: root = [4,9,0,5,1]
+Output: 1026
+Explanation:
+The root-to-leaf path 4->9->5 represents the number 495
+The root-to-leaf path 4->9->1 represents the number 491
+The root-to-leaf path 4->0 represents the number 40
+Therefore, sum = 495 + 491 + 40 = 1026</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+def sumNumbers(root: Optional[TreeNode]) -> int:
+    def dfs(node: TreeNode, current: int) -> int:
+        if not node:
+            return 0
+        
+        # Calculate current number
+        current = current * 10 + node.val
+        
+        # If leaf node, return current number
+        if not node.left and not node.right:
+            return current
+        
+        # Recursively calculate sum for left and right subtrees
+        return dfs(node.left, current) + dfs(node.right, current)
+    
+    return dfs(root, 0)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int sumNumbers(TreeNode root) {
+        return dfs(root, 0);
+    }
+    
+    private int dfs(TreeNode node, int current) {
+        if (node == null) {
+            return 0;
+        }
+        
+        // Calculate current number
+        current = current * 10 + node.val;
+        
+        // If leaf node, return current number
+        if (node.left == null && node.right == null) {
+            return current;
+        }
+        
+        // Recursively calculate sum for left and right subtrees
+        return dfs(node.left, current) + dfs(node.right, current);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        return dfs(root, 0);
+    }
+    
+private:
+    int dfs(TreeNode* node, int current) {
+        if (!node) {
+            return 0;
+        }
+        
+        // Calculate current number
+        current = current * 10 + node->val;
+        
+        // If leaf node, return current number
+        if (!node->left && !node->right) {
+            return current;
+        }
+        
+        // Recursively calculate sum for left and right subtrees
+        return dfs(node->left, current) + dfs(node->right, current);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var sumNumbers = function(root) {
+    const dfs = (node, current) => {
+        if (!node) {
+            return 0;
+        }
+        
+        // Calculate current number
+        current = current * 10 + node.val;
+        
+        // If leaf node, return current number
+        if (!node.left && !node.right) {
+            return current;
+        }
+        
+        // Recursively calculate sum for left and right subtrees
+        return dfs(node.left, current) + dfs(node.right, current);
+    };
+    
+    return dfs(root, 0);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int SumNumbers(TreeNode root) {
+        return DFS(root, 0);
+    }
+    
+    private int DFS(TreeNode node, int current) {
+        if (node == null) {
+            return 0;
+        }
+        
+        // Calculate current number
+        current = current * 10 + node.val;
+        
+        // If leaf node, return current number
+        if (node.left == null && node.right == null) {
+            return current;
+        }
+        
+        // Recursively calculate sum for left and right subtrees
+        return DFS(node.left, current) + DFS(node.right, current);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the tree</li>
+                <li><strong>Space Complexity:</strong> O(h) where h is the height of the tree due to recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a DFS approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Path number formation</li>
+                        <li>Recursive traversal</li>
+                        <li>Sum accumulation</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Build path number</li>
+                        <li>Check leaf nodes</li>
+                        <li>Recursive sum</li>
+                        <li>Return total</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Number formation</li>
+                <li>Leaf detection</li>
+                <li>Path tracking</li>
+                <li>Efficient traversal</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
