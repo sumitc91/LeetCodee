@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pascal's Triangle II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 119: Pascal's Triangle II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>119. Pascal's Triangle II</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer <code>rowIndex</code>, return the <code>rowIndex<sup>th</sup></code> (<strong>0-indexed</strong>) row of <strong>Pascal's triangle</strong>.</p>
+        <p>In <strong>Pascal's triangle</strong>, each number is the sum of the two numbers directly above it.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: rowIndex = 3
+Output: [1,3,3,1]
+
+Example 2:
+Input: rowIndex = 0
+Output: [1]
+
+Example 3:
+Input: rowIndex = 1
+Output: [1,1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def getRow(rowIndex: int) -> List[int]:
+    # Initialize row with 1
+    row = [1]
+    
+    for i in range(rowIndex):
+        # Calculate new row in-place from right to left
+        for j in range(i, 0, -1):
+            row[j] = row[j] + row[j-1]
+        # Add new 1 at the end
+        row.append(1)
+    
+    return row</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> row = new ArrayList<>();
+        row.add(1);
+        
+        for (int i = 0; i < rowIndex; i++) {
+            // Calculate new row in-place from right to left
+            for (int j = i; j > 0; j--) {
+                row.set(j, row.get(j) + row.get(j-1));
+            }
+            // Add new 1 at the end
+            row.add(1);
+        }
+        
+        return row;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        vector<int> row = {1};
+        
+        for (int i = 0; i < rowIndex; i++) {
+            // Calculate new row in-place from right to left
+            for (int j = i; j > 0; j--) {
+                row[j] = row[j] + row[j-1];
+            }
+            // Add new 1 at the end
+            row.push_back(1);
+        }
+        
+        return row;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} rowIndex
+ * @return {number[]}
+ */
+var getRow = function(rowIndex) {
+    const row = [1];
+    
+    for (let i = 0; i < rowIndex; i++) {
+        // Calculate new row in-place from right to left
+        for (let j = i; j > 0; j--) {
+            row[j] = row[j] + row[j-1];
+        }
+        // Add new 1 at the end
+        row.push(1);
+    }
+    
+    return row;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<int> GetRow(int rowIndex) {
+        IList<int> row = new List<int> { 1 };
+        
+        for (int i = 0; i < rowIndex; i++) {
+            // Calculate new row in-place from right to left
+            for (int j = i; j > 0; j--) {
+                row[j] = row[j] + row[j-1];
+            }
+            // Add new 1 at the end
+            row.Add(1);
+        }
+        
+        return row;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n²) where n is rowIndex</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the row</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses an optimized in-place approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Single array reuse</li>
+                        <li>Right-to-left updates</li>
+                        <li>Constant space</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Start with [1]</li>
+                        <li>Update values in-place</li>
+                        <li>Add trailing 1</li>
+                        <li>Repeat for each row</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Space optimization</li>
+                <li>In-place updates</li>
+                <li>Right-to-left order</li>
+                <li>No extra storage</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

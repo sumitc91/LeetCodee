@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pascal's Triangle - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 118: Pascal's Triangle. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>118. Pascal's Triangle</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer <code>numRows</code>, return the first <code>numRows</code> of <strong>Pascal's triangle</strong>.</p>
+        <p>In <strong>Pascal's triangle</strong>, each number is the sum of the two numbers directly above it.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: numRows = 5
+Output: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+
+Example 2:
+Input: numRows = 1
+Output: [[1]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def generate(numRows: int) -> List[List[int]]:
+    # Initialize triangle with first row
+    triangle = [[1]]
+    
+    for i in range(1, numRows):
+        # Previous row
+        prev_row = triangle[-1]
+        # Current row starts with 1
+        current_row = [1]
+        
+        # Calculate middle elements
+        for j in range(1, i):
+            current_row.append(prev_row[j-1] + prev_row[j])
+        
+        # Add final 1
+        current_row.append(1)
+        
+        # Add row to triangle
+        triangle.append(current_row)
+    
+    return triangle</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> triangle = new ArrayList<>();
+        
+        // First row is always [1]
+        triangle.add(Arrays.asList(1));
+        
+        for (int i = 1; i < numRows; i++) {
+            List<Integer> prev_row = triangle.get(i - 1);
+            List<Integer> current_row = new ArrayList<>();
+            
+            // First element is always 1
+            current_row.add(1);
+            
+            // Calculate middle elements
+            for (int j = 1; j < i; j++) {
+                current_row.add(prev_row.get(j-1) + prev_row.get(j));
+            }
+            
+            // Last element is always 1
+            current_row.add(1);
+            
+            triangle.add(current_row);
+        }
+        
+        return triangle;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> triangle;
+        
+        // First row is always [1]
+        triangle.push_back({1});
+        
+        for (int i = 1; i < numRows; i++) {
+            vector<int>& prev_row = triangle.back();
+            vector<int> current_row = {1};  // First element
+            
+            // Calculate middle elements
+            for (int j = 1; j < i; j++) {
+                current_row.push_back(prev_row[j-1] + prev_row[j]);
+            }
+            
+            // Last element is always 1
+            current_row.push_back(1);
+            
+            triangle.push_back(current_row);
+        }
+        
+        return triangle;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} numRows
+ * @return {number[][]}
+ */
+var generate = function(numRows) {
+    // Initialize triangle with first row
+    const triangle = [[1]];
+    
+    for (let i = 1; i < numRows; i++) {
+        const prev_row = triangle[i - 1];
+        const current_row = [1];  // First element
+        
+        // Calculate middle elements
+        for (let j = 1; j < i; j++) {
+            current_row.push(prev_row[j-1] + prev_row[j]);
+        }
+        
+        // Last element is always 1
+        current_row.push(1);
+        
+        triangle.push(current_row);
+    }
+    
+    return triangle;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<IList<int>> Generate(int numRows) {
+        IList<IList<int>> triangle = new List<IList<int>>();
+        
+        // First row is always [1]
+        triangle.Add(new List<int> { 1 });
+        
+        for (int i = 1; i < numRows; i++) {
+            IList<int> prev_row = triangle[i - 1];
+            IList<int> current_row = new List<int>();
+            
+            // First element is always 1
+            current_row.Add(1);
+            
+            // Calculate middle elements
+            for (int j = 1; j < i; j++) {
+                current_row.Add(prev_row[j-1] + prev_row[j]);
+            }
+            
+            // Last element is always 1
+            current_row.Add(1);
+            
+            triangle.Add(current_row);
+        }
+        
+        return triangle;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n²) where n is numRows</li>
+                <li><strong>Space Complexity:</strong> O(n²) to store the triangle</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution builds Pascal's Triangle row by row:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Each row starts and ends with 1</li>
+                        <li>Middle elements are sum of elements above</li>
+                        <li>Row i has i+1 elements</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Start with first row [1]</li>
+                        <li>Build each row using previous row</li>
+                        <li>Calculate middle elements</li>
+                        <li>Add row to triangle</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle first row</li>
+                <li>Efficient row building</li>
+                <li>Pattern recognition</li>
+                <li>Space optimization</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
