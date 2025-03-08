@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Duplicate Emails - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 196: Delete Duplicate Emails. SQL solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>196. Delete Duplicate Emails</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Table: <code>Person</code></p>
+        <pre>
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| email       | varchar |
++-------------+---------+
+id is the primary key column for this table.
+Each row of this table contains an email. The emails will not contain uppercase letters.</pre>
+
+        <p>Write an SQL query to <strong>delete</strong> all duplicate email entries in a table named <code>Person</code>, keeping only one unique email with the smallest <code>id</code>.</p>
+        <p>Return the result table in <strong>any order</strong>.</p>
+
+        <h3>Examples</h3>
+        <p>Example 1:</p>
+        <pre>
+Input: 
+Person table:
++----+------------------+
+| id | email            |
++----+------------------+
+| 1  | john@example.com |
+| 2  | bob@example.com  |
+| 3  | john@example.com |
++----+------------------+
+Output: 
++----+------------------+
+| id | email            |
++----+------------------+
+| 1  | john@example.com |
+| 2  | bob@example.com  |
++----+------------------+
+Explanation: john@example.com is repeated two times. We keep the row with the smallest Id = 1.</pre>
+
+        <div class="solution">
+            <h3>SQL Solution</h3>
+            <pre><code>
+DELETE p1 FROM Person p1, Person p2
+WHERE p1.email = p2.email AND p1.id > p2.id;</code></pre>
+
+            <p>Alternative Solution (using subquery):</p>
+            <pre><code>
+DELETE FROM Person
+WHERE id NOT IN (
+    SELECT id FROM (
+        SELECT MIN(id) as id
+        FROM Person
+        GROUP BY email
+    ) t
+);</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>Using Self Join:
+                    <ul>
+                        <li>Join table with itself</li>
+                        <li>Match emails</li>
+                        <li>Delete higher IDs</li>
+                        <li>More efficient</li>
+                    </ul>
+                </li>
+                <li>Using Subquery:
+                    <ul>
+                        <li>Find minimum IDs</li>
+                        <li>Group by email</li>
+                        <li>Delete non-matching</li>
+                        <li>More readable</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>DELETE syntax</li>
+                <li>Self joins</li>
+                <li>Subqueries</li>
+                <li>GROUP BY usage</li>
+            </ul>
+
+            <h4>Important Considerations</h4>
+            <ul>
+                <li>Performance impact</li>
+                <li>Index usage</li>
+                <li>Transaction handling</li>
+                <li>Data integrity</li>
+            </ul>
+
+            <h4>Database-Specific Notes</h4>
+            <ul>
+                <li>MySQL syntax shown</li>
+                <li>Other databases may need different syntax</li>
+                <li>Some databases don't allow direct table reference in DELETE</li>
+                <li>Consider using temporary tables for other databases</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

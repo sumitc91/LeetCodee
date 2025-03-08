@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Robber - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 198: House Robber. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>198. House Robber</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and <strong>it will automatically contact the police if two adjacent houses were broken into on the same night</strong>.</p>
+        <p>Given an integer array <code>nums</code> representing the amount of money of each house, return <em>the maximum amount of money you can rob tonight <strong>without alerting the police</strong></em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [1,2,3,1]
+Output: 4
+Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+Total amount you can rob = 1 + 3 = 4.
+
+Example 2:
+Input: nums = [2,7,9,3,1]
+Output: 12
+Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
+Total amount you can rob = 2 + 9 + 1 = 12.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def rob(nums: List[int]) -> int:
+    if not nums:
+        return 0
+    if len(nums) <= 2:
+        return max(nums)
+    
+    dp = [0] * len(nums)
+    dp[0] = nums[0]
+    dp[1] = max(nums[0], nums[1])
+    
+    for i in range(2, len(nums)):
+        dp[i] = max(dp[i-1], dp[i-2] + nums[i])
+    
+    return dp[-1]</code></pre>
+
+            <p>Space-Optimized Solution:</p>
+            <pre><code>
+def rob(nums: List[int]) -> int:
+    rob1, rob2 = 0, 0
+    
+    for num in nums:
+        temp = max(rob1 + num, rob2)
+        rob1 = rob2
+        rob2 = temp
+    
+    return rob2</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length <= 2) {
+            return nums.length == 1 ? nums[0] : Math.max(nums[0], nums[1]);
+        }
+        
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0], nums[1]);
+        
+        for (int i = 2; i < nums.length; i++) {
+            dp[i] = Math.max(dp[i-1], dp[i-2] + nums[i]);
+        }
+        
+        return dp[nums.length - 1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if (nums.empty()) {
+            return 0;
+        }
+        if (nums.size() <= 2) {
+            return nums.size() == 1 ? nums[0] : max(nums[0], nums[1]);
+        }
+        
+        vector<int> dp(nums.size());
+        dp[0] = nums[0];
+        dp[1] = max(nums[0], nums[1]);
+        
+        for (int i = 2; i < nums.size(); i++) {
+            dp[i] = max(dp[i-1], dp[i-2] + nums[i]);
+        }
+        
+        return dp.back();
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var rob = function(nums) {
+    if (!nums.length) {
+        return 0;
+    }
+    if (nums.length <= 2) {
+        return Math.max(...nums);
+    }
+    
+    let rob1 = 0;
+    let rob2 = 0;
+    
+    for (const num of nums) {
+        const temp = Math.max(rob1 + num, rob2);
+        rob1 = rob2;
+        rob2 = temp;
+    }
+    
+    return rob2;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int Rob(int[] nums) {
+        if (nums == null || nums.Length == 0) {
+            return 0;
+        }
+        if (nums.Length <= 2) {
+            return nums.Length == 1 ? nums[0] : Math.Max(nums[0], nums[1]);
+        }
+        
+        int[] dp = new int[nums.Length];
+        dp[0] = nums[0];
+        dp[1] = Math.Max(nums[0], nums[1]);
+        
+        for (int i = 2; i < nums.Length; i++) {
+            dp[i] = Math.Max(dp[i-1], dp[i-2] + nums[i]);
+        }
+        
+        return dp[nums.Length - 1];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(1) for optimized solution, O(n) for DP array solution</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This is a dynamic programming problem that can be solved in two ways:</p>
+            <ul>
+                <li>Using DP Array:
+                    <ul>
+                        <li>Create DP array to store maximum money at each house</li>
+                        <li>For each house, choose maximum of:
+                            <ul>
+                                <li>Previous house's money (skip current)</li>
+                                <li>Money from two houses ago plus current house</li>
+                            </ul>
+                        </li>
+                        <li>Final answer is last element in DP array</li>
+                    </ul>
+                </li>
+                <li>Space-Optimized:
+                    <ul>
+                        <li>Keep track of only two previous values</li>
+                        <li>Update values as we iterate</li>
+                        <li>Uses O(1) space</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Dynamic programming</li>
+                <li>Optimal substructure</li>
+                <li>Space optimization</li>
+                <li>Edge cases</li>
+            </ul>
+
+            <h4>State Transition</h4>
+            <p>The core of the solution is the state transition equation:</p>
+            <pre>dp[i] = max(dp[i-1], dp[i-2] + nums[i])</pre>
+            <p>This represents the choice at each house:</p>
+            <ul>
+                <li>Skip current house (dp[i-1])</li>
+                <li>Rob current house + money from two houses ago (dp[i-2] + nums[i])</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

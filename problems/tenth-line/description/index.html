@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenth Line - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 195: Tenth Line. Bash script solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>195. Tenth Line</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a text file <code>file.txt</code>, print just the 10th line of the file.</p>
+
+        <h3>Examples</h3>
+        <p>Assume that <code>file.txt</code> has the following content:</p>
+        <pre>
+Line 1
+Line 2
+Line 3
+Line 4
+Line 5
+Line 6
+Line 7
+Line 8
+Line 9
+Line 10</pre>
+
+        <p>Your script should output the tenth line, which is:</p>
+        <pre>Line 10</pre>
+
+        <div class="solution">
+            <h3>Bash Solution</h3>
+            <pre><code>
+# Using sed
+sed -n '10p' file.txt</code></pre>
+
+            <p>Alternative Solutions:</p>
+            <pre><code>
+# Using awk
+awk 'NR == 10' file.txt
+
+# Using head and tail
+head -n 10 file.txt | tail -n 1
+
+# Using tail and head
+tail -n+10 file.txt | head -n 1</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are several ways to solve this problem:</p>
+            <ul>
+                <li><code>sed -n '10p'</code>:
+                    <ul>
+                        <li>-n suppresses automatic printing</li>
+                        <li>10p prints only the 10th line</li>
+                        <li>Most concise solution</li>
+                    </ul>
+                </li>
+                <li><code>awk 'NR == 10'</code>:
+                    <ul>
+                        <li>NR is the current line number</li>
+                        <li>Prints line when NR equals 10</li>
+                        <li>Clean and readable</li>
+                    </ul>
+                </li>
+                <li><code>head -n 10 | tail -n 1</code>:
+                    <ul>
+                        <li>Get first 10 lines</li>
+                        <li>Then get last line</li>
+                        <li>More intuitive approach</li>
+                    </ul>
+                </li>
+                <li><code>tail -n+10 | head -n 1</code>:
+                    <ul>
+                        <li>Start from 10th line</li>
+                        <li>Get first line of result</li>
+                        <li>Alternative pipeline</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Line counting</li>
+                <li>Command options</li>
+                <li>Pipeline usage</li>
+                <li>Output control</li>
+            </ul>
+
+            <h4>Important Considerations</h4>
+            <ul>
+                <li>File size handling</li>
+                <li>Memory efficiency</li>
+                <li>Empty lines</li>
+                <li>Missing lines</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>File with fewer than 10 lines</li>
+                <li>Empty file</li>
+                <li>File with exactly 10 lines</li>
+                <li>Large files</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
