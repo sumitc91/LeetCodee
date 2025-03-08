@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transpose File - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 194: Transpose File. Bash script solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>194. Transpose File</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a text file <code>file.txt</code>, transpose its content.</p>
+        <p>You may assume that each row has the same number of columns, and each field is separated by the <code>' '</code> character.</p>
+
+        <h3>Examples</h3>
+        <p>If <code>file.txt</code> has the following content:</p>
+        <pre>
+name age
+alice 21
+ryan 30</pre>
+
+        <p>Output the following:</p>
+        <pre>
+name alice ryan
+age 21 30</pre>
+
+        <div class="solution">
+            <h3>Bash Solution</h3>
+            <pre><code>
+# Using awk to transpose the file
+awk '
+{
+    for (i = 1; i <= NF; i++) {
+        if (NR == 1) {
+            s[i] = $i;
+        } else {
+            s[i] = s[i] " " $i;
+        }
+    }
+}
+END {
+    for (i = 1; s[i] != ""; i++) {
+        print s[i];
+    }
+}' file.txt</code></pre>
+
+            <p>Alternative Solution (using more basic commands):</p>
+            <pre><code>
+#!/bin/bash
+
+# Get number of rows and columns
+cols=$(head -n1 file.txt | wc -w)
+rows=$(cat file.txt | wc -l)
+
+# Process each column
+for i in $(seq 1 $cols); do
+    # Cut the i-th field and paste as a row
+    cut -d' ' -f$i file.txt | paste -s -d' ' -
+done</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>The AWK solution works as follows:</p>
+            <ul>
+                <li>First Pass:
+                    <ul>
+                        <li>Process each line (NR = row number)</li>
+                        <li>For each field (NF = number of fields)</li>
+                        <li>Build transposed strings in array s</li>
+                    </ul>
+                </li>
+                <li>Second Pass (END block):
+                    <ul>
+                        <li>Print each transposed line</li>
+                        <li>Array s contains final result</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p>The alternative solution using cut and paste:</p>
+            <ul>
+                <li>First determines dimensions:
+                    <ul>
+                        <li>Count words in first line (columns)</li>
+                        <li>Count total lines (rows)</li>
+                    </ul>
+                </li>
+                <li>Then for each column:
+                    <ul>
+                        <li>Extract column using cut</li>
+                        <li>Convert to row using paste</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Matrix transposition</li>
+                <li>Field processing</li>
+                <li>Array handling</li>
+                <li>Output formatting</li>
+            </ul>
+
+            <h4>Important Considerations</h4>
+            <ul>
+                <li>Memory usage</li>
+                <li>Performance</li>
+                <li>Field separation</li>
+                <li>Line handling</li>
+            </ul>
+
+            <h4>AWK Variables Used</h4>
+            <ul>
+                <li><code>NR</code>: Current row number</li>
+                <li><code>NF</code>: Number of fields in current row</li>
+                <li><code>$i</code>: i-th field in current row</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

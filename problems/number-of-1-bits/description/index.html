@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number of 1 Bits - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 191: Number of 1 Bits. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>191. Number of 1 Bits</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Write a function that takes an unsigned integer and returns the number of '1' bits it has (also known as the <a href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight</a>).</p>
+        <p><strong>Note:</strong></p>
+        <ul>
+            <li>Note that in some languages, such as Java, there is no unsigned integer type. In this case, the input will be given as a signed integer type. It should not affect your implementation, as the integer's internal binary representation is the same, whether it is signed or unsigned.</li>
+            <li>In Java, the compiler represents the signed integers using 2's complement notation. Therefore, in Example 3, the input represents the signed integer <code>-3</code>.</li>
+        </ul>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 00000000000000000000000000001011
+Output: 3
+Explanation: The input binary string 00000000000000000000000000001011 has a total of three '1' bits.
+
+Example 2:
+Input: n = 00000000000000000000000010000000
+Output: 1
+Explanation: The input binary string 00000000000000000000000010000000 has a total of one '1' bit.
+
+Example 3:
+Input: n = 11111111111111111111111111111101
+Output: 31
+Explanation: The input binary string 11111111111111111111111111111101 has a total of thirty one '1' bits.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def hammingWeight(n: int) -> int:
+    count = 0
+    while n:
+        count += n & 1
+        n >>= 1
+    return count</code></pre>
+            
+            <p>Alternative Solution (Brian Kernighan's Algorithm):</p>
+            <pre><code>
+def hammingWeight(n: int) -> int:
+    count = 0
+    while n:
+        n &= (n - 1)  # Clear the least significant 1 bit
+        count += 1
+    return count</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+public class Solution {
+    public int hammingWeight(int n) {
+        int count = 0;
+        while (n != 0) {
+            count += n & 1;
+            n >>>= 1;  // Unsigned right shift
+        }
+        return count;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int count = 0;
+        while (n) {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n - a positive integer
+ * @return {number}
+ */
+var hammingWeight = function(n) {
+    let count = 0;
+    while (n !== 0) {
+        count += n & 1;
+        n >>>= 1;  // Unsigned right shift
+    }
+    return count;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int HammingWeight(uint n) {
+        int count = 0;
+        while (n != 0) {
+            count += (int)(n & 1);
+            n >>= 1;
+        }
+        return count;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(1) as we process at most 32 bits</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a constant amount of extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ol>
+                <li>Loop and Count:
+                    <ul>
+                        <li>Check each bit using AND operation</li>
+                        <li>Right shift to move to next bit</li>
+                        <li>Count the 1s</li>
+                    </ul>
+                </li>
+                <li>Brian Kernighan's Algorithm:
+                    <ul>
+                        <li>Uses n & (n-1) to clear least significant 1</li>
+                        <li>More efficient for sparse numbers</li>
+                        <li>Fewer iterations needed</li>
+                    </ul>
+                </li>
+            </ol>
+            <p>Key points:</p>
+            <ul>
+                <li>Bit manipulation</li>
+                <li>Unsigned integers</li>
+                <li>Language specifics</li>
+                <li>Optimization techniques</li>
+            </ul>
+            <p>Alternative approaches:</p>
+            <ul>
+                <li>Built-in functions</li>
+                <li>Lookup tables</li>
+                <li>Divide and conquer</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

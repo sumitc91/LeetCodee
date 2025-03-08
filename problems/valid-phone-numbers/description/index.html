@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valid Phone Numbers - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 193: Valid Phone Numbers. Bash script solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>193. Valid Phone Numbers</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a text file <code>file.txt</code> that contains a list of phone numbers (one per line), write a one-liner bash script to print all valid phone numbers.</p>
+        <p>You may assume that a valid phone number must appear in one of the following two formats:</p>
+        <ul>
+            <li>(xxx) xxx-xxxx</li>
+            <li>xxx-xxx-xxxx</li>
+        </ul>
+        <p>where x means a digit.</p>
+        <p>You may also assume each line in the text file must not contain leading or trailing white spaces.</p>
+
+        <h3>Examples</h3>
+        <p>Assume that <code>file.txt</code> has the following content:</p>
+        <pre>
+987-123-4567
+123 456 7890
+(123) 456-7890</pre>
+
+        <p>Your script should output the following valid phone numbers:</p>
+        <pre>
+987-123-4567
+(123) 456-7890</pre>
+
+        <div class="solution">
+            <h3>Bash Solution</h3>
+            <pre><code>
+# Using grep with regex pattern
+grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$' file.txt</code></pre>
+
+            <p>Alternative Solutions:</p>
+            <pre><code>
+# Using sed
+sed -n -E '/^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/p' file.txt
+
+# Using awk with regex
+awk '/^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/' file.txt</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>The solution uses regular expressions to match valid phone numbers:</p>
+            <ul>
+                <li>Pattern breakdown:
+                    <ul>
+                        <li><code>^</code> - Start of line</li>
+                        <li><code>(\([0-9]{3}\) |[0-9]{3}-)</code> - First part:
+                            <ul>
+                                <li><code>(xxx)</code> format OR</li>
+                                <li><code>xxx-</code> format</li>
+                            </ul>
+                        </li>
+                        <li><code>[0-9]{3}-</code> - Middle three digits with hyphen</li>
+                        <li><code>[0-9]{4}</code> - Last four digits</li>
+                        <li><code>$</code> - End of line</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Command Options</h4>
+            <ul>
+                <li><code>grep</code> options:
+                    <ul>
+                        <li><code>-E</code>: Extended regex</li>
+                    </ul>
+                </li>
+                <li><code>sed</code> options:
+                    <ul>
+                        <li><code>-n</code>: Suppress automatic printing</li>
+                        <li><code>-E</code>: Extended regex</li>
+                        <li><code>p</code>: Print matching lines</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Regular expressions</li>
+                <li>Pattern matching</li>
+                <li>Line processing</li>
+                <li>Format validation</li>
+            </ul>
+
+            <h4>Important Considerations</h4>
+            <ul>
+                <li>Line boundaries</li>
+                <li>Digit validation</li>
+                <li>Format flexibility</li>
+                <li>Performance impact</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

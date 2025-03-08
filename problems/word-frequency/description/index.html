@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Frequency - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 192: Word Frequency. Bash script solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>192. Word Frequency</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Write a bash script to calculate the frequency of each word in a text file <code>words.txt</code>.</p>
+        <p>For simplicity sake, you may assume:</p>
+        <ul>
+            <li><code>words.txt</code> contains only lowercase characters and space <code>' '</code> characters.</li>
+            <li>Each word must consist of lowercase characters only.</li>
+            <li>Words are separated by one or more whitespace characters.</li>
+        </ul>
+
+        <h3>Examples</h3>
+        <p>Assume that <code>words.txt</code> has the following content:</p>
+        <pre>
+the day is sunny the the
+the sunny is is</pre>
+
+        <p>Your script should output the following, sorted by descending frequency:</p>
+        <pre>
+the 4
+is 3
+sunny 2
+day 1</pre>
+
+        <div class="solution">
+            <h3>Bash Solution</h3>
+            <pre><code>
+# Read from the file words.txt and output the word frequency list to stdout.
+cat words.txt | tr -s ' ' '\n' | sort | uniq -c | sort -r | awk '{ print $2 " " $1 }'</code></pre>
+
+            <p>Alternative Solution (using more explicit commands):</p>
+            <pre><code>
+#!/bin/bash
+
+# Convert to one word per line and clean up spaces
+tr -s ' ' '\n' < words.txt |
+# Remove empty lines
+grep -v '^$' |
+# Sort words
+sort |
+# Count unique words
+uniq -c |
+# Sort by count (descending) and then by word
+sort -rn |
+# Format output
+awk '{print $2 " " $1}'</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>The solution uses a pipeline of Unix commands:</p>
+            <ul>
+                <li><code>tr -s ' ' '\n'</code>:
+                    <ul>
+                        <li>Replaces spaces with newlines</li>
+                        <li>-s squeezes multiple occurrences</li>
+                        <li>Creates one word per line</li>
+                    </ul>
+                </li>
+                <li><code>sort</code>:
+                    <ul>
+                        <li>Sorts words alphabetically</li>
+                        <li>Required for uniq to work</li>
+                    </ul>
+                </li>
+                <li><code>uniq -c</code>:
+                    <ul>
+                        <li>Counts unique occurrences</li>
+                        <li>Outputs "count word" format</li>
+                    </ul>
+                </li>
+                <li><code>sort -r</code>:
+                    <ul>
+                        <li>Sorts by count in reverse order</li>
+                        <li>-r for descending order</li>
+                    </ul>
+                </li>
+                <li><code>awk '{ print $2 " " $1 }'</code>:
+                    <ul>
+                        <li>Reorders output format</li>
+                        <li>Prints "word count" format</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Pipeline efficiency</li>
+                <li>Text processing</li>
+                <li>Unix commands</li>
+                <li>Output formatting</li>
+            </ul>
+
+            <h4>Important Considerations</h4>
+            <ul>
+                <li>Space handling</li>
+                <li>Empty lines</li>
+                <li>Sort order</li>
+                <li>Performance</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
