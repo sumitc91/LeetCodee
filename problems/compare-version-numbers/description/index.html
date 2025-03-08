@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Version Numbers - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 165: Compare Version Numbers. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>165. Compare Version Numbers</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two version numbers, <code>version1</code> and <code>version2</code>, compare them.</p>
+        <p>Version numbers consist of <strong>one or more revisions</strong> joined by a dot <code>'.'</code>. Each revision consists of <strong>digits</strong> and may contain leading zeros. Every revision contains at least one character. Revisions are <strong>0-indexed from left to right</strong>, with the leftmost revision being revision 0, the next revision being revision 1, and so on. For example <code>2.5.33</code> and <code>0.1</code> are valid version numbers.</p>
+        <p>To compare version numbers, compare their revisions in <strong>left-to-right order</strong>. Revisions are compared using their <strong>integer value ignoring any leading zeros</strong>. This means that revisions <code>1</code> and <code>001</code> are considered <strong>equal</strong>. If a version number does not specify a revision at an index, then <strong>treat the revision as <code>0</code></strong>. For example, version <code>1.0</code> is less than version <code>1.1</code> because their revision 0s are the same, but their revision 1s are <code>0</code> and <code>1</code> respectively, and <code>0 < 1</code>.</p>
+        <p>Return the following:</p>
+        <ul>
+            <li>If <code>version1 < version2</code>, return <code>-1</code></li>
+            <li>If <code>version1 > version2</code>, return <code>1</code></li>
+            <li>If <code>version1 == version2</code>, return <code>0</code></li>
+        </ul>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: version1 = "1.01", version2 = "1.001"
+Output: 0
+Explanation: Ignoring leading zeroes, both "01" and "001" represent the same integer "1".
+
+Example 2:
+Input: version1 = "1.0", version2 = "1.0.0"
+Output: 0
+Explanation: version1 does not specify revision 2, which means it is treated as "0".
+
+Example 3:
+Input: version1 = "0.1", version2 = "1.1"
+Output: -1
+Explanation: version1's revision 0 is "0", while version2's revision 0 is "1". 0 < 1, so version1 < version2.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def compareVersion(version1: str, version2: str) -> int:
+    v1 = [int(v) for v in version1.split('.')]
+    v2 = [int(v) for v in version2.split('.')]
+    
+    # Pad shorter version with zeros
+    max_len = max(len(v1), len(v2))
+    v1.extend([0] * (max_len - len(v1)))
+    v2.extend([0] * (max_len - len(v2)))
+    
+    # Compare revisions
+    for i in range(max_len):
+        if v1[i] < v2[i]:
+            return -1
+        elif v1[i] > v2[i]:
+            return 1
+    
+    return 0</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int compareVersion(String version1, String version2) {
+        String[] v1 = version1.split("\\.");
+        String[] v2 = version2.split("\\.");
+        
+        int maxLength = Math.max(v1.length, v2.length);
+        
+        for (int i = 0; i < maxLength; i++) {
+            int num1 = i < v1.length ? Integer.parseInt(v1[i]) : 0;
+            int num2 = i < v2.length ? Integer.parseInt(v2[i]) : 0;
+            
+            if (num1 < num2) {
+                return -1;
+            } else if (num1 > num2) {
+                return 1;
+            }
+        }
+        
+        return 0;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int compareVersion(string version1, string version2) {
+        vector<int> v1 = split(version1);
+        vector<int> v2 = split(version2);
+        
+        int maxLength = max(v1.size(), v2.size());
+        v1.resize(maxLength, 0);
+        v2.resize(maxLength, 0);
+        
+        for (int i = 0; i < maxLength; i++) {
+            if (v1[i] < v2[i]) {
+                return -1;
+            } else if (v1[i] > v2[i]) {
+                return 1;
+            }
+        }
+        
+        return 0;
+    }
+    
+private:
+    vector<int> split(const string& version) {
+        vector<int> result;
+        stringstream ss(version);
+        string token;
+        
+        while (getline(ss, token, '.')) {
+            result.push_back(stoi(token));
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} version1
+ * @param {string} version2
+ * @return {number}
+ */
+var compareVersion = function(version1, version2) {
+    const v1 = version1.split('.').map(Number);
+    const v2 = version2.split('.').map(Number);
+    
+    const maxLength = Math.max(v1.length, v2.length);
+    v1.length = maxLength;
+    v2.length = maxLength;
+    
+    for (let i = 0; i < maxLength; i++) {
+        const num1 = v1[i] || 0;
+        const num2 = v2[i] || 0;
+        
+        if (num1 < num2) {
+            return -1;
+        } else if (num1 > num2) {
+            return 1;
+        }
+    }
+    
+    return 0;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int CompareVersion(string version1, string version2) {
+        string[] v1 = version1.Split('.');
+        string[] v2 = version2.Split('.');
+        
+        int maxLength = Math.Max(v1.Length, v2.Length);
+        
+        for (int i = 0; i < maxLength; i++) {
+            int num1 = i < v1.Length ? int.Parse(v1[i]) : 0;
+            int num2 = i < v2.Length ? int.Parse(v2[i]) : 0;
+            
+            if (num1 < num2) {
+                return -1;
+            } else if (num1 > num2) {
+                return 1;
+            }
+        }
+        
+        return 0;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(max(n, m)) where n and m are the lengths of the input strings</li>
+                <li><strong>Space Complexity:</strong> O(max(n, m)) to store the split versions</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses string splitting and comparison:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>String splitting</li>
+                        <li>Version comparison</li>
+                        <li>Revision handling</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Split versions</li>
+                        <li>Convert to integers</li>
+                        <li>Compare revisions</li>
+                        <li>Handle missing revisions</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Leading zeros</li>
+                <li>Missing revisions</li>
+                <li>Integer comparison</li>
+                <li>Linear time</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

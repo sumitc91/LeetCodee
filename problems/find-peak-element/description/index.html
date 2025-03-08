@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Peak Element - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 162: Find Peak Element. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>162. Find Peak Element</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>A peak element is an element that is strictly greater than its neighbors.</p>
+        <p>Given a <strong>0-indexed</strong> integer array <code>nums</code>, find a peak element, and return its index. If the array contains multiple peaks, return the index to <strong>any of the peaks</strong>.</p>
+        <p>You may imagine that <code>nums[-1] = nums[n] = -∞</code>. In other words, an element is always considered to be strictly greater than a neighbor that is outside the array.</p>
+        <p>You must write an algorithm that runs in <code>O(log n)</code> time.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [1,2,3,1]
+Output: 2
+Explanation: 3 is a peak element and your function should return the index number 2.
+
+Example 2:
+Input: nums = [1,2,1,3,5,6,4]
+Output: 5
+Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the peak element is 6.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def findPeakElement(nums: List[int]) -> int:
+    left, right = 0, len(nums) - 1
+    
+    while left < right:
+        mid = left + (right - left) // 2
+        
+        if nums[mid] > nums[mid + 1]:
+            right = mid
+        else:
+            left = mid + 1
+    
+    return left</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int findPeakElement(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] > nums[mid + 1]) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        
+        return left;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        int left = 0;
+        int right = nums.size() - 1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] > nums[mid + 1]) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        
+        return left;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findPeakElement = function(nums) {
+    let left = 0;
+    let right = nums.length - 1;
+    
+    while (left < right) {
+        const mid = left + Math.floor((right - left) / 2);
+        
+        if (nums[mid] > nums[mid + 1]) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+    
+    return left;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int FindPeakElement(int[] nums) {
+        int left = 0;
+        int right = nums.Length - 1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] > nums[mid + 1]) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        
+        return left;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(log n) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a constant amount of extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses binary search to find a peak element:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Binary search</li>
+                        <li>Peak finding</li>
+                        <li>Neighbor comparison</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Compare with neighbor</li>
+                        <li>Move towards peak</li>
+                        <li>Binary search</li>
+                        <li>Find any peak</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Logarithmic time</li>
+                <li>Multiple peaks</li>
+                <li>Any peak valid</li>
+                <li>Constant space</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

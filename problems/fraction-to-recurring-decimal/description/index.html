@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraction to Recurring Decimal - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 166: Fraction to Recurring Decimal. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>166. Fraction to Recurring Decimal</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two integers representing the <code>numerator</code> and <code>denominator</code> of a fraction, return <em>the fraction in string format</em>.</p>
+        <p>If the fractional part is repeating, enclose the repeating part in parentheses.</p>
+        <p>If multiple answers are possible, return <strong>any of them</strong>.</p>
+        <p>It is <strong>guaranteed</strong> that the length of the answer string is less than <code>10<sup>4</sup></code> for all the given inputs.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: numerator = 1, denominator = 2
+Output: "0.5"
+
+Example 2:
+Input: numerator = 2, denominator = 1
+Output: "2"
+
+Example 3:
+Input: numerator = 4, denominator = 333
+Output: "0.(012)"</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def fractionToDecimal(numerator: int, denominator: int) -> str:
+    if numerator == 0:
+        return "0"
+    
+    result = []
+    
+    # Handle sign
+    if numerator * denominator < 0:
+        result.append("-")
+    numerator = abs(numerator)
+    denominator = abs(denominator)
+    
+    # Integer part
+    integer = numerator // denominator
+    result.append(str(integer))
+    
+    # Fractional part
+    remainder = numerator % denominator
+    if remainder == 0:
+        return "".join(result)
+    
+    result.append(".")
+    remainders = {}
+    
+    while remainder:
+        if remainder in remainders:
+            result.insert(remainders[remainder], "(")
+            result.append(")")
+            break
+        
+        remainders[remainder] = len(result)
+        remainder *= 10
+        result.append(str(remainder // denominator))
+        remainder %= denominator
+    
+    return "".join(result)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String fractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0) {
+            return "0";
+        }
+        
+        StringBuilder result = new StringBuilder();
+        
+        // Handle sign
+        if (numerator < 0 ^ denominator < 0) {
+            result.append("-");
+        }
+        
+        long num = Math.abs((long)numerator);
+        long den = Math.abs((long)denominator);
+        
+        // Integer part
+        result.append(num / den);
+        
+        // Fractional part
+        long remainder = num % den;
+        if (remainder == 0) {
+            return result.toString();
+        }
+        
+        result.append(".");
+        Map<Long, Integer> remainders = new HashMap<>();
+        
+        while (remainder != 0) {
+            if (remainders.containsKey(remainder)) {
+                result.insert(remainders.get(remainder), "(");
+                result.append(")");
+                break;
+            }
+            
+            remainders.put(remainder, result.length());
+            remainder *= 10;
+            result.append(remainder / den);
+            remainder %= den;
+        }
+        
+        return result.toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0) {
+            return "0";
+        }
+        
+        string result;
+        
+        // Handle sign
+        if (numerator < 0 ^ denominator < 0) {
+            result += "-";
+        }
+        
+        long num = labs((long)numerator);
+        long den = labs((long)denominator);
+        
+        // Integer part
+        result += to_string(num / den);
+        
+        // Fractional part
+        long remainder = num % den;
+        if (remainder == 0) {
+            return result;
+        }
+        
+        result += ".";
+        unordered_map<long, int> remainders;
+        
+        while (remainder) {
+            if (remainders.count(remainder)) {
+                result.insert(remainders[remainder], "(");
+                result += ")";
+                break;
+            }
+            
+            remainders[remainder] = result.length();
+            remainder *= 10;
+            result += to_string(remainder / den);
+            remainder %= den;
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} numerator
+ * @param {number} denominator
+ * @return {string}
+ */
+var fractionToDecimal = function(numerator, denominator) {
+    if (numerator === 0) {
+        return "0";
+    }
+    
+    const result = [];
+    
+    // Handle sign
+    if (numerator < 0 ^ denominator < 0) {
+        result.push("-");
+    }
+    
+    numerator = Math.abs(numerator);
+    denominator = Math.abs(denominator);
+    
+    // Integer part
+    const integer = Math.floor(numerator / denominator);
+    result.push(integer);
+    
+    // Fractional part
+    let remainder = numerator % denominator;
+    if (remainder === 0) {
+        return result.join("");
+    }
+    
+    result.push(".");
+    const remainders = new Map();
+    
+    while (remainder) {
+        if (remainders.has(remainder)) {
+            result.splice(remainders.get(remainder), 0, "(");
+            result.push(")");
+            break;
+        }
+        
+        remainders.set(remainder, result.length);
+        remainder *= 10;
+        result.push(Math.floor(remainder / denominator));
+        remainder %= denominator;
+    }
+    
+    return result.join("");
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string FractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0) {
+            return "0";
+        }
+        
+        StringBuilder result = new StringBuilder();
+        
+        // Handle sign
+        if (numerator < 0 ^ denominator < 0) {
+            result.Append("-");
+        }
+        
+        long num = Math.Abs((long)numerator);
+        long den = Math.Abs((long)denominator);
+        
+        // Integer part
+        result.Append(num / den);
+        
+        // Fractional part
+        long remainder = num % den;
+        if (remainder == 0) {
+            return result.ToString();
+        }
+        
+        result.Append(".");
+        Dictionary<long, int> remainders = new Dictionary<long, int>();
+        
+        while (remainder != 0) {
+            if (remainders.ContainsKey(remainder)) {
+                result.Insert(remainders[remainder], "(");
+                result.Append(")");
+                break;
+            }
+            
+            remainders[remainder] = result.Length;
+            remainder *= 10;
+            result.Append(remainder / den);
+            remainder %= den;
+        }
+        
+        return result.ToString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the recurring decimal</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the remainders and result string</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution simulates long division:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Long division</li>
+                        <li>Remainder tracking</li>
+                        <li>Cycle detection</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Handle sign</li>
+                        <li>Integer division</li>
+                        <li>Track remainders</li>
+                        <li>Detect cycles</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle overflow</li>
+                <li>Detect repeating</li>
+                <li>Handle edge cases</li>
+                <li>String building</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
