@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Skyline Problem - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 218: The Skyline Problem. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>218. The Skyline Problem</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>A city's skyline is the outer contour of the silhouette formed by all the buildings in that city when viewed from a distance. Given the locations and heights of all the buildings, return <em>the <strong>skyline</strong> formed by these buildings collectively</em>.</p>
+        <p>The geometric information of each building is given in the array <code>buildings</code> where <code>buildings[i] = [lefti, righti, heighti]</code>:</p>
+        <ul>
+            <li><code>lefti</code> is the x coordinate of the left edge of the <code>i<sup>th</sup></code> building.</li>
+            <li><code>righti</code> is the x coordinate of the right edge of the <code>i<sup>th</sup></code> building.</li>
+            <li><code>heighti</code> is the height of the <code>i<sup>th</sup></code> building.</li>
+        </ul>
+        <p>You may assume all buildings are perfect rectangles grounded on an absolutely flat surface at height 0.</p>
+        <p>The <strong>skyline</strong> should be represented as a list of "key points" <strong>sorted by their x-coordinate</strong> in the form <code>[[x1,y1],[x2,y2],...]</code>. Each key point is the left endpoint of some horizontal segment in the skyline except the last point in the list, which always has a y-coordinate 0 as a dummy point. Any ground between the leftmost and rightmost buildings should be part of the skyline's contour.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]
+Output: [[2,10],[3,15],[7,12],[12,0],[15,10],[20,8],[24,0]]
+
+Example 2:
+Input: buildings = [[0,2,3],[2,5,3]]
+Output: [[0,3],[5,0]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def getSkyline(buildings: List[List[int]]) -> List[List[int]]:
+    # Convert buildings to points with height
+    points = []
+    for left, right, height in buildings:
+        points.append((left, -height))  # Negative height for left point
+        points.append((right, height))  # Positive height for right point
+    
+    # Sort points by x-coordinate and height
+    points.sort(key=lambda x: (x[0], x[1]))
+    
+    # Use heap to track maximum height
+    result = []
+    heights = [0]  # Initialize with ground level
+    prev_max = 0
+    
+    for x, h in points:
+        if h < 0:  # Left point
+            heights.append(-h)
+        else:      # Right point
+            heights.remove(h)
+        
+        curr_max = max(heights)
+        if curr_max != prev_max:
+            result.append([x, curr_max])
+            prev_max = curr_max
+    
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        // Convert buildings to points
+        List<int[]> points = new ArrayList<>();
+        for (int[] b : buildings) {
+            points.add(new int[]{b[0], -b[2]});  // Left point
+            points.add(new int[]{b[1], b[2]});   // Right point
+        }
+        
+        // Sort points
+        Collections.sort(points, (a, b) -> {
+            if (a[0] != b[0]) return a[0] - b[0];
+            return a[1] - b[1];
+        });
+        
+        // Process points
+        List<List<Integer>> result = new ArrayList<>();
+        TreeMap<Integer, Integer> heights = new TreeMap<>();
+        heights.put(0, 1);  // Ground level
+        int prevMax = 0;
+        
+        for (int[] p : points) {
+            if (p[1] < 0) {  // Left point
+                heights.put(-p[1], heights.getOrDefault(-p[1], 0) + 1);
+            } else {         // Right point
+                heights.put(p[1], heights.get(p[1]) - 1);
+                if (heights.get(p[1]) == 0) heights.remove(p[1]);
+            }
+            
+            int currMax = heights.lastKey();
+            if (currMax != prevMax) {
+                result.add(Arrays.asList(p[0], currMax));
+                prevMax = currMax;
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        // Convert buildings to points
+        vector<pair<int, int>> points;
+        for (const auto& b : buildings) {
+            points.push_back({b[0], -b[2]});  // Left point
+            points.push_back({b[1], b[2]});   // Right point
+        }
+        
+        // Sort points
+        sort(points.begin(), points.end());
+        
+        // Process points
+        vector<vector<int>> result;
+        multiset<int> heights{0};  // Use multiset to handle duplicates
+        int prevMax = 0;
+        
+        for (const auto& p : points) {
+            if (p.second < 0) {  // Left point
+                heights.insert(-p.second);
+            } else {            // Right point
+                heights.erase(heights.find(p.second));
+            }
+            
+            int currMax = *heights.rbegin();
+            if (currMax != prevMax) {
+                result.push_back({p.first, currMax});
+                prevMax = currMax;
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[][]} buildings
+ * @return {number[][]}
+ */
+var getSkyline = function(buildings) {
+    // Convert buildings to points
+    const points = [];
+    for (const [left, right, height] of buildings) {
+        points.push([left, -height]);  // Left point
+        points.push([right, height]);   // Right point
+    }
+    
+    // Sort points
+    points.sort((a, b) => a[0] !== b[0] ? a[0] - b[0] : a[1] - b[1]);
+    
+    // Process points
+    const result = [];
+    const heights = [0];  // Initialize with ground level
+    let prevMax = 0;
+    
+    for (const [x, h] of points) {
+        if (h < 0) {  // Left point
+            heights.push(-h);
+        } else {      // Right point
+            const index = heights.indexOf(h);
+            heights.splice(index, 1);
+        }
+        
+        const currMax = Math.max(...heights);
+        if (currMax !== prevMax) {
+            result.push([x, currMax]);
+            prevMax = currMax;
+        }
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<IList<int>> GetSkyline(int[][] buildings) {
+        // Convert buildings to points
+        var points = new List<(int x, int h)>();
+        foreach (var b in buildings) {
+            points.Add((b[0], -b[2]));  // Left point
+            points.Add((b[1], b[2]));   // Right point
+        }
+        
+        // Sort points
+        points.Sort((a, b) => {
+            if (a.x != b.x) return a.x.CompareTo(b.x);
+            return a.h.CompareTo(b.h);
+        });
+        
+        // Process points
+        var result = new List<IList<int>>();
+        var heights = new SortedDictionary<int, int>();
+        heights[0] = 1;  // Ground level
+        var prevMax = 0;
+        
+        foreach (var (x, h) in points) {
+            if (h < 0) {  // Left point
+                if (!heights.ContainsKey(-h)) heights[-h] = 0;
+                heights[-h]++;
+            } else {      // Right point
+                heights[h]--;
+                if (heights[h] == 0) heights.Remove(h);
+            }
+            
+            var currMax = heights.Keys.Max();
+            if (currMax != prevMax) {
+                result.Add(new List<int> { x, currMax });
+                prevMax = currMax;
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n log n) where n is the number of buildings</li>
+                <li><strong>Space Complexity:</strong> O(n) for storing points and heights</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>The solution uses a sweep line algorithm:</p>
+            <ul>
+                <li>Key Concepts:
+                    <ul>
+                        <li>Convert buildings to points</li>
+                        <li>Process points in order</li>
+                        <li>Track maximum height</li>
+                        <li>Record key changes</li>
+                    </ul>
+                </li>
+                <li>Algorithm Steps:
+                    <ul>
+                        <li>Convert buildings to points</li>
+                        <li>Sort points by x-coordinate</li>
+                        <li>Process points in order</li>
+                        <li>Track height changes</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Point representation</li>
+                <li>Height tracking</li>
+                <li>Efficient data structures</li>
+                <li>Edge case handling</li>
+            </ul>
+
+            <h4>Data Structure Choices</h4>
+            <ul>
+                <li>Priority Queue/Heap</li>
+                <li>TreeMap/Multiset</li>
+                <li>Sorted Dictionary</li>
+                <li>Trade-offs</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty building list</li>
+                <li>Single building</li>
+                <li>Overlapping buildings</li>
+                <li>Same height buildings</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

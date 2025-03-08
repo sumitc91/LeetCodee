@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contains Duplicate II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 219: Contains Duplicate II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>219. Contains Duplicate II</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <code>true</code> if there are two <strong>distinct indices</strong> <code>i</code> and <code>j</code> in the array such that <code>nums[i] == nums[j]</code> and <code>abs(i - j) <= k</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [1,2,3,1], k = 3
+Output: true
+
+Example 2:
+Input: nums = [1,0,1,1], k = 1
+Output: true
+
+Example 3:
+Input: nums = [1,2,3,1,2,3], k = 2
+Output: false</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def containsNearbyDuplicate(nums: List[int], k: int) -> bool:
+    window = set()
+    left = 0
+    
+    for right in range(len(nums)):
+        if right - left > k:
+            window.remove(nums[left])
+            left += 1
+        
+        if nums[right] in window:
+            return True
+        
+        window.add(nums[right])
+    
+    return False</code></pre>
+
+            <p>Alternative Solution (Using Dictionary):</p>
+            <pre><code>
+def containsNearbyDuplicate(nums: List[int], k: int) -> bool:
+    last_seen = {}
+    
+    for i, num in enumerate(nums):
+        if num in last_seen and i - last_seen[num] <= k:
+            return True
+        last_seen[num] = i
+    
+    return False</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        Set<Integer> window = new HashSet<>();
+        int left = 0;
+        
+        for (int right = 0; right < nums.length; right++) {
+            if (right - left > k) {
+                window.remove(nums[left]);
+                left++;
+            }
+            
+            if (window.contains(nums[right])) {
+                return true;
+            }
+            
+            window.add(nums[right]);
+        }
+        
+        return false;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_set<int> window;
+        int left = 0;
+        
+        for (int right = 0; right < nums.size(); right++) {
+            if (right - left > k) {
+                window.erase(nums[left]);
+                left++;
+            }
+            
+            if (window.count(nums[right])) {
+                return true;
+            }
+            
+            window.insert(nums[right]);
+        }
+        
+        return false;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {boolean}
+ */
+var containsNearbyDuplicate = function(nums, k) {
+    const window = new Set();
+    let left = 0;
+    
+    for (let right = 0; right < nums.length; right++) {
+        if (right - left > k) {
+            window.delete(nums[left]);
+            left++;
+        }
+        
+        if (window.has(nums[right])) {
+            return true;
+        }
+        
+        window.add(nums[right]);
+    }
+    
+    return false;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public bool ContainsNearbyDuplicate(int[] nums, int k) {
+        HashSet<int> window = new HashSet<int>();
+        int left = 0;
+        
+        for (int right = 0; right < nums.Length; right++) {
+            if (right - left > k) {
+                window.Remove(nums[left]);
+                left++;
+            }
+            
+            if (window.Contains(nums[right])) {
+                return true;
+            }
+            
+            window.Add(nums[right]);
+        }
+        
+        return false;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the array</li>
+                <li><strong>Space Complexity:</strong> O(min(n, k)) for the sliding window</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>There are two main approaches to solve this problem:</p>
+            <ul>
+                <li>Sliding Window:
+                    <ul>
+                        <li>Maintain window of size k</li>
+                        <li>Use set for O(1) lookup</li>
+                        <li>Slide window forward</li>
+                        <li>Check for duplicates</li>
+                    </ul>
+                </li>
+                <li>Hash Map:
+                    <ul>
+                        <li>Track last seen index</li>
+                        <li>Check distance constraint</li>
+                        <li>Update indices</li>
+                        <li>Early termination</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Key Points</h4>
+            <ul>
+                <li>Window management</li>
+                <li>Distance checking</li>
+                <li>Hash set/map usage</li>
+                <li>Index tracking</li>
+            </ul>
+
+            <h4>Optimization Tips</h4>
+            <ul>
+                <li>Early termination</li>
+                <li>Memory efficiency</li>
+                <li>Window size control</li>
+                <li>Hash function</li>
+            </ul>
+
+            <h4>Edge Cases</h4>
+            <ul>
+                <li>Empty array</li>
+                <li>Single element</li>
+                <li>k = 0</li>
+                <li>k ≥ array length</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
