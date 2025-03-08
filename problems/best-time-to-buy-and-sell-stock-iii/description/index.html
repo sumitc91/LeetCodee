@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Time to Buy and Sell Stock III - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 123: Best Time to Buy and Sell Stock III. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>123. Best Time to Buy and Sell Stock III</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given an array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on the <code>i<sup>th</sup></code> day.</p>
+        <p>Find the maximum profit you can achieve. You may complete <strong>at most two transactions</strong>.</p>
+        <p><strong>Note:</strong> You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: prices = [3,3,5,0,0,3,1,4]
+Output: 6
+Explanation: Buy on day 4 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
+Then buy on day 7 (price = 1) and sell on day 8 (price = 4), profit = 4-1 = 3.
+
+Example 2:
+Input: prices = [1,2,3,4,5]
+Output: 4
+Explanation: Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-1 = 4.
+Note that you cannot buy on day 1, buy on day 2 and sell them later, as you are engaging in multiple transactions at the same time. You must sell before buying again.
+
+Example 3:
+Input: prices = [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def maxProfit(prices: List[int]) -> int:
+    if not prices:
+        return 0
+    
+    # Initialize states
+    buy1 = float('inf')  # First buy price
+    buy2 = float('inf')  # Second buy price
+    profit1 = 0  # Profit after first transaction
+    profit2 = 0  # Profit after second transaction
+    
+    for price in prices:
+        # Update the states
+        buy1 = min(buy1, price)  # Minimize first buy price
+        profit1 = max(profit1, price - buy1)  # Maximize first profit
+        buy2 = min(buy2, price - profit1)  # Minimize second buy price considering first profit
+        profit2 = max(profit2, price - buy2)  # Maximize second profit
+    
+    return profit2</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length == 0) {
+            return 0;
+        }
+        
+        // Initialize states
+        int buy1 = Integer.MAX_VALUE;  // First buy price
+        int buy2 = Integer.MAX_VALUE;  // Second buy price
+        int profit1 = 0;  // Profit after first transaction
+        int profit2 = 0;  // Profit after second transaction
+        
+        for (int price : prices) {
+            // Update the states
+            buy1 = Math.min(buy1, price);  // Minimize first buy price
+            profit1 = Math.max(profit1, price - buy1);  // Maximize first profit
+            buy2 = Math.min(buy2, price - profit1);  // Minimize second buy price
+            profit2 = Math.max(profit2, price - buy2);  // Maximize second profit
+        }
+        
+        return profit2;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if (prices.empty()) {
+            return 0;
+        }
+        
+        // Initialize states
+        int buy1 = INT_MAX;  // First buy price
+        int buy2 = INT_MAX;  // Second buy price
+        int profit1 = 0;  // Profit after first transaction
+        int profit2 = 0;  // Profit after second transaction
+        
+        for (int price : prices) {
+            // Update the states
+            buy1 = min(buy1, price);  // Minimize first buy price
+            profit1 = max(profit1, price - buy1);  // Maximize first profit
+            buy2 = min(buy2, price - profit1);  // Minimize second buy price
+            profit2 = max(profit2, price - buy2);  // Maximize second profit
+        }
+        
+        return profit2;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function(prices) {
+    if (!prices.length) {
+        return 0;
+    }
+    
+    // Initialize states
+    let buy1 = Infinity;  // First buy price
+    let buy2 = Infinity;  // Second buy price
+    let profit1 = 0;  // Profit after first transaction
+    let profit2 = 0;  // Profit after second transaction
+    
+    for (let price of prices) {
+        // Update the states
+        buy1 = Math.min(buy1, price);  // Minimize first buy price
+        profit1 = Math.max(profit1, price - buy1);  // Maximize first profit
+        buy2 = Math.min(buy2, price - profit1);  // Minimize second buy price
+        profit2 = Math.max(profit2, price - buy2);  // Maximize second profit
+    }
+    
+    return profit2;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        if (prices == null || prices.Length == 0) {
+            return 0;
+        }
+        
+        // Initialize states
+        int buy1 = int.MaxValue;  // First buy price
+        int buy2 = int.MaxValue;  // Second buy price
+        int profit1 = 0;  // Profit after first transaction
+        int profit2 = 0;  // Profit after second transaction
+        
+        foreach (int price in prices) {
+            // Update the states
+            buy1 = Math.Min(buy1, price);  // Minimize first buy price
+            profit1 = Math.Max(profit1, price - buy1);  // Maximize first profit
+            buy2 = Math.Min(buy2, price - profit1);  // Minimize second buy price
+            profit2 = Math.Max(profit2, price - buy2);  // Maximize second profit
+        }
+        
+        return profit2;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the prices array</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use four variables</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a state machine approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Four states tracking</li>
+                        <li>State transitions</li>
+                        <li>Profit maximization</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Track buy prices</li>
+                        <li>Track profits</li>
+                        <li>Update states</li>
+                        <li>Maximize profits</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Single pass solution</li>
+                <li>Constant space</li>
+                <li>State optimization</li>
+                <li>Handle edge cases</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

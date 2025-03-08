@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Time to Buy and Sell Stock II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 122: Best Time to Buy and Sell Stock II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>122. Best Time to Buy and Sell Stock II</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given an integer array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on the <code>i<sup>th</sup></code> day.</p>
+        <p>On each day, you may decide to buy and/or sell the stock. You can only hold at most one share of the stock at any time. However, you can buy it then immediately sell it on the same day.</p>
+        <p>Find and return <em>the maximum profit you can achieve</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: prices = [7,1,5,3,6,4]
+Output: 7
+Explanation: Buy on day 2 (price = 1) and sell on day 3 (price = 5), profit = 5-1 = 4.
+Then buy on day 4 (price = 3) and sell on day 5 (price = 6), profit = 6-3 = 3.
+Total profit is 4 + 3 = 7.
+
+Example 2:
+Input: prices = [1,2,3,4,5]
+Output: 4
+Explanation: Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-1 = 4.
+Total profit is 4.
+
+Example 3:
+Input: prices = [7,6,4,3,1]
+Output: 0
+Explanation: No transactions are done and the max profit = 0.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def maxProfit(prices: List[int]) -> int:
+    profit = 0
+    
+    # Iterate through the array starting from second element
+    for i in range(1, len(prices)):
+        # If current price is higher than previous price
+        # we can make profit by buying yesterday and selling today
+        if prices[i] > prices[i-1]:
+            profit += prices[i] - prices[i-1]
+    
+    return profit</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int maxProfit(int[] prices) {
+        int profit = 0;
+        
+        // Iterate through the array starting from second element
+        for (int i = 1; i < prices.length; i++) {
+            // If current price is higher than previous price
+            // we can make profit by buying yesterday and selling today
+            if (prices[i] > prices[i-1]) {
+                profit += prices[i] - prices[i-1];
+            }
+        }
+        
+        return profit;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int profit = 0;
+        
+        // Iterate through the array starting from second element
+        for (int i = 1; i < prices.size(); i++) {
+            // If current price is higher than previous price
+            // we can make profit by buying yesterday and selling today
+            if (prices[i] > prices[i-1]) {
+                profit += prices[i] - prices[i-1];
+            }
+        }
+        
+        return profit;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function(prices) {
+    let profit = 0;
+    
+    // Iterate through the array starting from second element
+    for (let i = 1; i < prices.length; i++) {
+        // If current price is higher than previous price
+        // we can make profit by buying yesterday and selling today
+        if (prices[i] > prices[i-1]) {
+            profit += prices[i] - prices[i-1];
+        }
+    }
+    
+    return profit;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        int profit = 0;
+        
+        // Iterate through the array starting from second element
+        for (int i = 1; i < prices.Length; i++) {
+            // If current price is higher than previous price
+            // we can make profit by buying yesterday and selling today
+            if (prices[i] > prices[i-1]) {
+                profit += prices[i] - prices[i-1];
+            }
+        }
+        
+        return profit;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the prices array</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a single variable</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a greedy approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Valley-peak approach</li>
+                        <li>Capture all profits</li>
+                        <li>Local optimization</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Track total profit</li>
+                        <li>Compare adjacent prices</li>
+                        <li>Add positive differences</li>
+                        <li>Return total profit</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Simple one-pass</li>
+                <li>No need to track buy/sell days</li>
+                <li>Captures all profits</li>
+                <li>Handles all cases</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
