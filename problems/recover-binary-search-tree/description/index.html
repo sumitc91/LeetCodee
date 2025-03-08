@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recover Binary Search Tree - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 99: Recover Binary Search Tree. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>99. Recover Binary Search Tree</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are given the <code>root</code> of a binary search tree (BST), where the values of <strong>exactly</strong> two nodes of the tree were swapped by mistake. <em>Recover the tree without changing its structure</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: root = [1,3,null,null,2]
+Output: [3,1,null,null,2]
+Explanation: 3 cannot be a left child of 1 because 3 > 1. Swapping 1 and 3 makes the BST valid.
+
+Example 2:
+Input: root = [3,1,4,null,null,2]
+Output: [2,1,4,null,null,3]
+Explanation: 2 cannot be in the right subtree of 3 because 2 < 3. Swapping 2 and 3 makes the BST valid.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+def recoverTree(root: Optional[TreeNode]) -> None:
+    """
+    Do not return anything, modify root in-place instead.
+    """
+    first = second = prev = None
+    
+    def inorder(node):
+        nonlocal first, second, prev
+        
+        if not node:
+            return
+        
+        # Traverse left subtree
+        inorder(node.left)
+        
+        # Process current node
+        if prev and prev.val > node.val:
+            if not first:
+                first = prev
+            second = node
+        prev = node
+        
+        # Traverse right subtree
+        inorder(node.right)
+    
+    inorder(root)
+    first.val, second.val = second.val, first.val</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    private TreeNode first = null;
+    private TreeNode second = null;
+    private TreeNode prev = null;
+    
+    public void recoverTree(TreeNode root) {
+        inorder(root);
+        
+        // Swap the values of the two nodes
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
+    }
+    
+    private void inorder(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        
+        // Traverse left subtree
+        inorder(node.left);
+        
+        // Process current node
+        if (prev != null && prev.val > node.val) {
+            if (first == null) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+        
+        // Traverse right subtree
+        inorder(node.right);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    TreeNode* first = nullptr;
+    TreeNode* second = nullptr;
+    TreeNode* prev = nullptr;
+    
+    void inorder(TreeNode* node) {
+        if (!node) {
+            return;
+        }
+        
+        // Traverse left subtree
+        inorder(node->left);
+        
+        // Process current node
+        if (prev && prev->val > node->val) {
+            if (!first) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+        
+        // Traverse right subtree
+        inorder(node->right);
+    }
+    
+public:
+    void recoverTree(TreeNode* root) {
+        inorder(root);
+        
+        // Swap the values of the two nodes
+        swap(first->val, second->val);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {void} Do not return anything, modify root in-place instead.
+ */
+var recoverTree = function(root) {
+    let first = null;
+    let second = null;
+    let prev = null;
+    
+    const inorder = (node) => {
+        if (!node) {
+            return;
+        }
+        
+        // Traverse left subtree
+        inorder(node.left);
+        
+        // Process current node
+        if (prev && prev.val > node.val) {
+            if (!first) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+        
+        // Traverse right subtree
+        inorder(node.right);
+    };
+    
+    inorder(root);
+    
+    // Swap the values of the two nodes
+    [first.val, second.val] = [second.val, first.val];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private TreeNode first = null;
+    private TreeNode second = null;
+    private TreeNode prev = null;
+    
+    public void RecoverTree(TreeNode root) {
+        Inorder(root);
+        
+        // Swap the values of the two nodes
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
+    }
+    
+    private void Inorder(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        
+        // Traverse left subtree
+        Inorder(node.left);
+        
+        // Process current node
+        if (prev != null && prev.val > node.val) {
+            if (first == null) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+        
+        // Traverse right subtree
+        Inorder(node.right);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the tree</li>
+                <li><strong>Space Complexity:</strong> O(h) where h is the height of the tree</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses inorder traversal to find and fix the swapped nodes:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Inorder traversal</li>
+                        <li>Track violations</li>
+                        <li>Swap values</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Find first violation</li>
+                        <li>Find second violation</li>
+                        <li>Swap node values</li>
+                        <li>Maintain BST structure</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>In-place modification</li>
+                <li>Single traversal</li>
+                <li>Handle edge cases</li>
+                <li>Efficient solution</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

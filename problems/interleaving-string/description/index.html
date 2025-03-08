@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interleaving String - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 97: Interleaving String. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>97. Interleaving String</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given strings <code>s1</code>, <code>s2</code>, and <code>s3</code>, find whether <code>s3</code> is formed by an interleaving of <code>s1</code> and <code>s2</code>.</p>
+        <p>An <strong>interleaving</strong> of two strings <code>s</code> and <code>t</code> is a configuration where <code>s</code> and <code>t</code> are divided into <code>n</code> and <code>m</code> substrings respectively, such that:</p>
+        <ul>
+            <li><code>s = s1 + s2 + ... + sn</code></li>
+            <li><code>t = t1 + t2 + ... + tm</code></li>
+            <li><code>|n - m| <= 1</code></li>
+            <li>The <strong>interleaving</strong> is <code>s1 + t1 + s2 + t2 + s3 + t3 + ...</code> or <code>t1 + s1 + t2 + s2 + t3 + s3 + ...</code></li>
+        </ul>
+        <p><strong>Note:</strong> <code>a + b</code> is the concatenation of strings <code>a</code> and <code>b</code>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
+Output: true
+Explanation: One way to obtain s3 is:
+Split s1 into s1 = "aa" + "bc" + "c"
+Split s2 into s2 = "dbbc" + "a"
+Interleaving the two splits: "aa" + "dbbc" + "bc" + "a" + "c" = "aadbbcbcac"
+
+Example 2:
+Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
+Output: false
+Explanation: Notice how it is impossible to interleave s2 with any other string to obtain s3.
+
+Example 3:
+Input: s1 = "", s2 = "", s3 = ""
+Output: true</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def isInterleave(s1: str, s2: str, s3: str) -> bool:
+    if len(s1) + len(s2) != len(s3):
+        return False
+    
+    # dp[i][j] represents if s3[0:i+j] is formed by interleaving s1[0:i] and s2[0:j]
+    dp = [[False] * (len(s2) + 1) for _ in range(len(s1) + 1)]
+    dp[0][0] = True
+    
+    # Initialize first row
+    for j in range(1, len(s2) + 1):
+        dp[0][j] = dp[0][j-1] and s2[j-1] == s3[j-1]
+    
+    # Initialize first column
+    for i in range(1, len(s1) + 1):
+        dp[i][0] = dp[i-1][0] and s1[i-1] == s3[i-1]
+    
+    # Fill the dp table
+    for i in range(1, len(s1) + 1):
+        for j in range(1, len(s2) + 1):
+            dp[i][j] = (dp[i-1][j] and s1[i-1] == s3[i+j-1]) or \
+                      (dp[i][j-1] and s2[j-1] == s3[i+j-1])
+    
+    return dp[len(s1)][len(s2)]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if (s1.length() + s2.length() != s3.length()) {
+            return false;
+        }
+        
+        // dp[i][j] represents if s3[0:i+j] is formed by interleaving s1[0:i] and s2[0:j]
+        boolean[][] dp = new boolean[s1.length() + 1][s2.length() + 1];
+        dp[0][0] = true;
+        
+        // Initialize first row
+        for (int j = 1; j <= s2.length(); j++) {
+            dp[0][j] = dp[0][j-1] && s2.charAt(j-1) == s3.charAt(j-1);
+        }
+        
+        // Initialize first column
+        for (int i = 1; i <= s1.length(); i++) {
+            dp[i][0] = dp[i-1][0] && s1.charAt(i-1) == s3.charAt(i-1);
+        }
+        
+        // Fill the dp table
+        for (int i = 1; i <= s1.length(); i++) {
+            for (int j = 1; j <= s2.length(); j++) {
+                dp[i][j] = (dp[i-1][j] && s1.charAt(i-1) == s3.charAt(i+j-1)) ||
+                          (dp[i][j-1] && s2.charAt(j-1) == s3.charAt(i+j-1));
+            }
+        }
+        
+        return dp[s1.length()][s2.length()];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        if (s1.length() + s2.length() != s3.length()) {
+            return false;
+        }
+        
+        // dp[i][j] represents if s3[0:i+j] is formed by interleaving s1[0:i] and s2[0:j]
+        vector<vector<bool>> dp(s1.length() + 1, vector<bool>(s2.length() + 1, false));
+        dp[0][0] = true;
+        
+        // Initialize first row
+        for (int j = 1; j <= s2.length(); j++) {
+            dp[0][j] = dp[0][j-1] && s2[j-1] == s3[j-1];
+        }
+        
+        // Initialize first column
+        for (int i = 1; i <= s1.length(); i++) {
+            dp[i][0] = dp[i-1][0] && s1[i-1] == s3[i-1];
+        }
+        
+        // Fill the dp table
+        for (int i = 1; i <= s1.length(); i++) {
+            for (int j = 1; j <= s2.length(); j++) {
+                dp[i][j] = (dp[i-1][j] && s1[i-1] == s3[i+j-1]) ||
+                          (dp[i][j-1] && s2[j-1] == s3[i+j-1]);
+            }
+        }
+        
+        return dp[s1.length()][s2.length()];
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s1
+ * @param {string} s2
+ * @param {string} s3
+ * @return {boolean}
+ */
+var isInterleave = function(s1, s2, s3) {
+    if (s1.length + s2.length !== s3.length) {
+        return false;
+    }
+    
+    // dp[i][j] represents if s3[0:i+j] is formed by interleaving s1[0:i] and s2[0:j]
+    const dp = Array(s1.length + 1).fill().map(() => Array(s2.length + 1).fill(false));
+    dp[0][0] = true;
+    
+    // Initialize first row
+    for (let j = 1; j <= s2.length; j++) {
+        dp[0][j] = dp[0][j-1] && s2[j-1] === s3[j-1];
+    }
+    
+    // Initialize first column
+    for (let i = 1; i <= s1.length; i++) {
+        dp[i][0] = dp[i-1][0] && s1[i-1] === s3[i-1];
+    }
+    
+    // Fill the dp table
+    for (let i = 1; i <= s1.length; i++) {
+        for (let j = 1; j <= s2.length; j++) {
+            dp[i][j] = (dp[i-1][j] && s1[i-1] === s3[i+j-1]) ||
+                      (dp[i][j-1] && s2[j-1] === s3[i+j-1]);
+        }
+    }
+    
+    return dp[s1.length][s2.length];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public bool IsInterleave(string s1, string s2, string s3) {
+        if (s1.Length + s2.Length != s3.Length) {
+            return false;
+        }
+        
+        // dp[i][j] represents if s3[0:i+j] is formed by interleaving s1[0:i] and s2[0:j]
+        bool[,] dp = new bool[s1.Length + 1, s2.Length + 1];
+        dp[0,0] = true;
+        
+        // Initialize first row
+        for (int j = 1; j <= s2.Length; j++) {
+            dp[0,j] = dp[0,j-1] && s2[j-1] == s3[j-1];
+        }
+        
+        // Initialize first column
+        for (int i = 1; i <= s1.Length; i++) {
+            dp[i,0] = dp[i-1,0] && s1[i-1] == s3[i-1];
+        }
+        
+        // Fill the dp table
+        for (int i = 1; i <= s1.Length; i++) {
+            for (int j = 1; j <= s2.Length; j++) {
+                dp[i,j] = (dp[i-1,j] && s1[i-1] == s3[i+j-1]) ||
+                         (dp[i,j-1] && s2[j-1] == s3[i+j-1]);
+            }
+        }
+        
+        return dp[s1.Length, s2.Length];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(m × n) where m and n are the lengths of s1 and s2</li>
+                <li><strong>Space Complexity:</strong> O(m × n) for the dp table</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses dynamic programming:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Use 2D DP table</li>
+                        <li>Track valid interleavings</li>
+                        <li>Build solution bottom-up</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize base cases</li>
+                        <li>Fill first row and column</li>
+                        <li>Build dp table</li>
+                        <li>Check final state</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle empty strings</li>
+                <li>Check length condition</li>
+                <li>Efficient DP solution</li>
+                <li>Clear state transitions</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
