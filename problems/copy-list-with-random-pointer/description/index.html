@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy List with Random Pointer - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 138: Copy List with Random Pointer. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>138. Copy List with Random Pointer</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>A linked list of length <code>n</code> is given such that each node contains an additional random pointer, which could point to any node in the list, or <code>null</code>.</p>
+        <p>Construct a <strong>deep copy</strong> of the list. The deep copy should consist of exactly <code>n</code> <strong>brand new</strong> nodes, where each new node has its value set to the value of its corresponding original node. Both the <code>next</code> and <code>random</code> pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. <strong>None of the pointers in the new list should point to nodes in the original list</strong>.</p>
+        <p>For example, if there are two nodes <code>X</code> and <code>Y</code> in the original list, where <code>X.random --> Y</code>, then for the corresponding two nodes <code>x</code> and <code>y</code> in the copied list, <code>x.random --> y</code>.</p>
+        <p>Return <em>the head of the copied linked list</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+Output: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+
+Example 2:
+Input: head = [[1,1],[2,1]]
+Output: [[1,1],[2,1]]
+
+Example 3:
+Input: head = [[3,null],[3,0],[3,null]]
+Output: [[3,null],[3,0],[3,null]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
+"""
+def copyRandomList(head: 'Optional[Node]') -> 'Optional[Node]':
+    if not head:
+        return None
+    
+    # First pass: create new nodes and interweave them
+    curr = head
+    while curr:
+        new_node = Node(curr.val)
+        new_node.next = curr.next
+        curr.next = new_node
+        curr = new_node.next
+    
+    # Second pass: set random pointers
+    curr = head
+    while curr:
+        if curr.random:
+            curr.next.random = curr.random.next
+        curr = curr.next.next
+    
+    # Third pass: separate lists
+    dummy = Node(0)
+    curr_new = dummy
+    curr = head
+    while curr:
+        curr_new.next = curr.next
+        curr.next = curr.next.next
+        curr = curr.next
+        curr_new = curr_new.next
+    
+    return dummy.next</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) {
+            return null;
+        }
+        
+        // First pass: create new nodes and interweave them
+        Node curr = head;
+        while (curr != null) {
+            Node newNode = new Node(curr.val);
+            newNode.next = curr.next;
+            curr.next = newNode;
+            curr = newNode.next;
+        }
+        
+        // Second pass: set random pointers
+        curr = head;
+        while (curr != null) {
+            if (curr.random != null) {
+                curr.next.random = curr.random.next;
+            }
+            curr = curr.next.next;
+        }
+        
+        // Third pass: separate lists
+        Node dummy = new Node(0);
+        Node currNew = dummy;
+        curr = head;
+        while (curr != null) {
+            currNew.next = curr.next;
+            curr.next = curr.next.next;
+            curr = curr.next;
+            currNew = currNew.next;
+        }
+        
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (!head) {
+            return nullptr;
+        }
+        
+        // First pass: create new nodes and interweave them
+        Node* curr = head;
+        while (curr) {
+            Node* newNode = new Node(curr->val);
+            newNode->next = curr->next;
+            curr->next = newNode;
+            curr = newNode->next;
+        }
+        
+        // Second pass: set random pointers
+        curr = head;
+        while (curr) {
+            if (curr->random) {
+                curr->next->random = curr->random->next;
+            }
+            curr = curr->next->next;
+        }
+        
+        // Third pass: separate lists
+        Node* dummy = new Node(0);
+        Node* currNew = dummy;
+        curr = head;
+        while (curr) {
+            currNew->next = curr->next;
+            curr->next = curr->next->next;
+            curr = curr->next;
+            currNew = currNew->next;
+        }
+        
+        return dummy->next;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * // Definition for a Node.
+ * function Node(val, next, random) {
+ *    this.val = val;
+ *    this.next = next;
+ *    this.random = random;
+ * };
+ */
+/**
+ * @param {Node} head
+ * @return {Node}
+ */
+var copyRandomList = function(head) {
+    if (!head) {
+        return null;
+    }
+    
+    // First pass: create new nodes and interweave them
+    let curr = head;
+    while (curr) {
+        const newNode = new Node(curr.val);
+        newNode.next = curr.next;
+        curr.next = newNode;
+        curr = newNode.next;
+    }
+    
+    // Second pass: set random pointers
+    curr = head;
+    while (curr) {
+        if (curr.random) {
+            curr.next.random = curr.random.next;
+        }
+        curr = curr.next.next;
+    }
+    
+    // Third pass: separate lists
+    const dummy = new Node(0);
+    let currNew = dummy;
+    curr = head;
+    while (curr) {
+        currNew.next = curr.next;
+        curr.next = curr.next.next;
+        curr = curr.next;
+        currNew = currNew.next;
+    }
+    
+    return dummy.next;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public Node next;
+    public Node random;
+    
+    public Node(int _val) {
+        val = _val;
+        next = null;
+        random = null;
+    }
+}
+*/
+public class Solution {
+    public Node CopyRandomList(Node head) {
+        if (head == null) {
+            return null;
+        }
+        
+        // First pass: create new nodes and interweave them
+        Node curr = head;
+        while (curr != null) {
+            Node newNode = new Node(curr.val);
+            newNode.next = curr.next;
+            curr.next = newNode;
+            curr = newNode.next;
+        }
+        
+        // Second pass: set random pointers
+        curr = head;
+        while (curr != null) {
+            if (curr.random != null) {
+                curr.next.random = curr.random.next;
+            }
+            curr = curr.next.next;
+        }
+        
+        // Third pass: separate lists
+        Node dummy = new Node(0);
+        Node currNew = dummy;
+        curr = head;
+        while (curr != null) {
+            currNew.next = curr.next;
+            curr.next = curr.next.next;
+            curr = curr.next;
+            currNew = currNew.next;
+        }
+        
+        return dummy.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the linked list</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use constant extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a three-pass approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Interweaving nodes</li>
+                        <li>Pointer manipulation</li>
+                        <li>List separation</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Create nodes</li>
+                        <li>Set random pointers</li>
+                        <li>Separate lists</li>
+                        <li>Return copy</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>No extra space</li>
+                <li>Three passes</li>
+                <li>Pointer tracking</li>
+                <li>Deep copy</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

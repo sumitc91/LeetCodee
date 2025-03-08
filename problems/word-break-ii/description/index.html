@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Break II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 140: Word Break II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>140. Word Break II</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a string <code>s</code> and a dictionary of strings <code>wordDict</code>, add spaces in <code>s</code> to construct a sentence where each word is a valid dictionary word. Return all such possible sentences in <strong>any order</strong>.</p>
+        <p><strong>Note</strong> that the same word in the dictionary may be reused multiple times in the segmentation.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "catsanddog", wordDict = ["cat","cats","and","sand","dog"]
+Output: ["cats and dog","cat sand dog"]
+
+Example 2:
+Input: s = "pineapplepenapple", wordDict = ["apple","pen","applepen","pine","pineapple"]
+Output: ["pine apple pen apple","pineapple pen apple","pine applepen apple"]
+
+Example 3:
+Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+Output: []</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def wordBreak(s: str, wordDict: List[str]) -> List[str]:
+    def backtrack(start: int, memo: Dict[int, List[str]]) -> List[str]:
+        if start in memo:
+            return memo[start]
+        
+        result = []
+        if start == len(s):
+            result.append("")
+            return result
+        
+        for word in wordDict:
+            if s.startswith(word, start):
+                sub_sentences = backtrack(start + len(word), memo)
+                for sub in sub_sentences:
+                    result.append((word + " " + sub).strip())
+        
+        memo[start] = result
+        return result
+    
+    return backtrack(0, {})</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    private Map<Integer, List<String>> memo;
+    private String s;
+    private List<String> wordDict;
+    
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        this.memo = new HashMap<>();
+        this.s = s;
+        this.wordDict = wordDict;
+        return backtrack(0);
+    }
+    
+    private List<String> backtrack(int start) {
+        if (memo.containsKey(start)) {
+            return memo.get(start);
+        }
+        
+        List<String> result = new ArrayList<>();
+        if (start == s.length()) {
+            result.add("");
+            return result;
+        }
+        
+        for (String word : wordDict) {
+            if (s.startsWith(word, start)) {
+                List<String> subSentences = backtrack(start + word.length());
+                for (String sub : subSentences) {
+                    result.add((word + (sub.isEmpty() ? "" : " " + sub)));
+                }
+            }
+        }
+        
+        memo.put(start, result);
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+private:
+    unordered_map<int, vector<string>> memo;
+    string s;
+    vector<string> wordDict;
+    
+    vector<string> backtrack(int start) {
+        if (memo.count(start)) {
+            return memo[start];
+        }
+        
+        vector<string> result;
+        if (start == s.length()) {
+            result.push_back("");
+            return result;
+        }
+        
+        for (const string& word : wordDict) {
+            if (s.compare(start, word.length(), word) == 0) {
+                vector<string> subSentences = backtrack(start + word.length());
+                for (const string& sub : subSentences) {
+                    result.push_back(word + (sub.empty() ? "" : " " + sub));
+                }
+            }
+        }
+        
+        memo[start] = result;
+        return result;
+    }
+    
+public:
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        this->s = s;
+        this->wordDict = wordDict;
+        return backtrack(0);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @param {string[]} wordDict
+ * @return {string[]}
+ */
+var wordBreak = function(s, wordDict) {
+    const memo = new Map();
+    
+    const backtrack = (start) => {
+        if (memo.has(start)) {
+            return memo.get(start);
+        }
+        
+        const result = [];
+        if (start === s.length) {
+            result.push("");
+            return result;
+        }
+        
+        for (const word of wordDict) {
+            if (s.startsWith(word, start)) {
+                const subSentences = backtrack(start + word.length);
+                for (const sub of subSentences) {
+                    result.push(word + (sub ? " " + sub : ""));
+                }
+            }
+        }
+        
+        memo.set(start, result);
+        return result;
+    };
+    
+    return backtrack(0);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    private Dictionary<int, IList<string>> memo;
+    private string s;
+    private IList<string> wordDict;
+    
+    public IList<string> WordBreak(string s, IList<string> wordDict) {
+        this.memo = new Dictionary<int, IList<string>>();
+        this.s = s;
+        this.wordDict = wordDict;
+        return Backtrack(0);
+    }
+    
+    private IList<string> Backtrack(int start) {
+        if (memo.ContainsKey(start)) {
+            return memo[start];
+        }
+        
+        var result = new List<string>();
+        if (start == s.Length) {
+            result.Add("");
+            return result;
+        }
+        
+        foreach (string word in wordDict) {
+            if (s.Length - start >= word.Length && 
+                s.Substring(start, word.Length) == word) {
+                var subSentences = Backtrack(start + word.Length);
+                foreach (var sub in subSentences) {
+                    result.Add(word + (string.IsNullOrEmpty(sub) ? "" : " " + sub));
+                }
+            }
+        }
+        
+        memo[start] = result;
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(2^n) where n is the length of the string in the worst case</li>
+                <li><strong>Space Complexity:</strong> O(2^n) to store all possible combinations</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking with memoization:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Recursive backtracking</li>
+                        <li>Memoization</li>
+                        <li>String manipulation</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Check memo</li>
+                        <li>Try each word</li>
+                        <li>Build sentences</li>
+                        <li>Cache results</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Memoization optimization</li>
+                <li>String concatenation</li>
+                <li>Base case handling</li>
+                <li>Result collection</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
