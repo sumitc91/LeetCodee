@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Majority Element - LeetCodee</title>
-    <meta name="description" content="Detailed solution explanation for LeetCode problem 169: Majority Element. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <title>Excel Sheet Column Title - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 168: Excel Sheet Column Title. Solutions in Python, Java, C++, JavaScript, and C#.">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -75,24 +75,37 @@
 </head>
 <body>
     <header>
-        <h1>169. Majority Element</h1>
+        <h1>168. Excel Sheet Column Title</h1>
         <span class="difficulty easy">Easy</span>
     </header>
 
     <div class="content">
         <h2>Problem Description</h2>
-        <p>Given an array <code>nums</code> of size <code>n</code>, return <em>the majority element</em>.</p>
-        <p>The majority element is the element that appears more than <code>⌊n / 2⌋</code> times. You may assume that the majority element always exists in the array.</p>
+        <p>Given an integer <code>columnNumber</code>, return <em>its corresponding column title as it appears in an Excel sheet</em>.</p>
+        <p>For example:</p>
+        <pre>
+A -> 1
+B -> 2
+C -> 3
+...
+Z -> 26
+AA -> 27
+AB -> 28 
+...</pre>
 
         <h3>Examples</h3>
         <pre>
 Example 1:
-Input: nums = [3,2,3]
-Output: 3
+Input: columnNumber = 1
+Output: "A"
 
 Example 2:
-Input: nums = [2,2,1,1,1,2,2]
-Output: 2</pre>
+Input: columnNumber = 28
+Output: "AB"
+
+Example 3:
+Input: columnNumber = 701
+Output: "ZY"</pre>
 
         <div class="solution-nav">
             Jump to Solution:
@@ -106,34 +119,31 @@ Output: 2</pre>
         <div class="solution" id="python">
             <h3>Python Solution</h3>
             <pre><code>
-def majorityElement(nums: List[int]) -> int:
-    count = 0
-    candidate = None
+def convertToTitle(columnNumber: int) -> str:
+    result = []
     
-    for num in nums:
-        if count == 0:
-            candidate = num
-        count += 1 if num == candidate else -1
+    while columnNumber > 0:
+        columnNumber -= 1
+        result.append(chr(columnNumber % 26 + ord('A')))
+        columnNumber //= 26
     
-    return candidate</code></pre>
+    return ''.join(reversed(result))</code></pre>
         </div>
 
         <div class="solution" id="java">
             <h3>Java Solution</h3>
             <pre><code>
 class Solution {
-    public int majorityElement(int[] nums) {
-        int count = 0;
-        Integer candidate = null;
+    public String convertToTitle(int columnNumber) {
+        StringBuilder result = new StringBuilder();
         
-        for (int num : nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += (num == candidate) ? 1 : -1;
+        while (columnNumber > 0) {
+            columnNumber--;
+            result.append((char)('A' + columnNumber % 26));
+            columnNumber /= 26;
         }
         
-        return candidate;
+        return result.reverse().toString();
     }
 }</code></pre>
         </div>
@@ -143,18 +153,16 @@ class Solution {
             <pre><code>
 class Solution {
 public:
-    int majorityElement(vector<int>& nums) {
-        int count = 0;
-        int candidate = 0;
+    string convertToTitle(int columnNumber) {
+        string result;
         
-        for (int num : nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += (num == candidate) ? 1 : -1;
+        while (columnNumber > 0) {
+            columnNumber--;
+            result = (char)('A' + columnNumber % 26) + result;
+            columnNumber /= 26;
         }
         
-        return candidate;
+        return result;
     }
 };</code></pre>
         </div>
@@ -163,21 +171,19 @@ public:
             <h3>JavaScript Solution</h3>
             <pre><code>
 /**
- * @param {number[]} nums
- * @return {number}
+ * @param {number} columnNumber
+ * @return {string}
  */
-var majorityElement = function(nums) {
-    let count = 0;
-    let candidate = null;
+var convertToTitle = function(columnNumber) {
+    const result = [];
     
-    for (const num of nums) {
-        if (count === 0) {
-            candidate = num;
-        }
-        count += num === candidate ? 1 : -1;
+    while (columnNumber > 0) {
+        columnNumber--;
+        result.push(String.fromCharCode('A'.charCodeAt(0) + columnNumber % 26));
+        columnNumber = Math.floor(columnNumber / 26);
     }
     
-    return candidate;
+    return result.reverse().join('');
 };</code></pre>
         </div>
 
@@ -185,18 +191,16 @@ var majorityElement = function(nums) {
             <h3>C# Solution</h3>
             <pre><code>
 public class Solution {
-    public int MajorityElement(int[] nums) {
-        int count = 0;
-        int? candidate = null;
+    public string ConvertToTitle(int columnNumber) {
+        StringBuilder result = new StringBuilder();
         
-        foreach (int num in nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += num == candidate ? 1 : -1;
+        while (columnNumber > 0) {
+            columnNumber--;
+            result.Append((char)('A' + columnNumber % 26));
+            columnNumber /= 26;
         }
         
-        return candidate.Value;
+        return new string(result.ToString().Reverse().ToArray());
     }
 }</code></pre>
         </div>
@@ -204,37 +208,37 @@ public class Solution {
         <div class="complexity">
             <h3>Complexity Analysis</h3>
             <ul>
-                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
-                <li><strong>Space Complexity:</strong> O(1) as we only use two variables</li>
+                <li><strong>Time Complexity:</strong> O(log n) where n is the input number</li>
+                <li><strong>Space Complexity:</strong> O(log n) to store the result string</li>
             </ul>
         </div>
 
         <div class="explanation">
             <h3>Solution Explanation</h3>
-            <p>This solution uses the Boyer-Moore Voting Algorithm:</p>
+            <p>This solution converts from base-10 to base-26:</p>
             <ul>
                 <li>Key concept:
                     <ul>
-                        <li>Voting algorithm</li>
-                        <li>Counter technique</li>
-                        <li>Majority element</li>
+                        <li>Base conversion</li>
+                        <li>Character mapping</li>
+                        <li>Zero-based indexing</li>
                     </ul>
                 </li>
                 <li>Algorithm steps:
                     <ul>
-                        <li>Initialize counter</li>
-                        <li>Update candidate</li>
-                        <li>Count votes</li>
-                        <li>Find majority</li>
+                        <li>Adjust for zero-based</li>
+                        <li>Convert remainder</li>
+                        <li>Build string</li>
+                        <li>Reverse result</li>
                     </ul>
                 </li>
             </ul>
             <p>Key points:</p>
             <ul>
-                <li>Linear time</li>
-                <li>Constant space</li>
-                <li>No sorting needed</li>
-                <li>Always exists</li>
+                <li>Logarithmic time</li>
+                <li>Handle zero-based</li>
+                <li>String building</li>
+                <li>Reverse order</li>
             </ul>
         </div>
     </div>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Majority Element - LeetCodee</title>
-    <meta name="description" content="Detailed solution explanation for LeetCode problem 169: Majority Element. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <title>Excel Sheet Column Number - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 171: Excel Sheet Column Number. Solutions in Python, Java, C++, JavaScript, and C#.">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -75,24 +75,37 @@
 </head>
 <body>
     <header>
-        <h1>169. Majority Element</h1>
+        <h1>171. Excel Sheet Column Number</h1>
         <span class="difficulty easy">Easy</span>
     </header>
 
     <div class="content">
         <h2>Problem Description</h2>
-        <p>Given an array <code>nums</code> of size <code>n</code>, return <em>the majority element</em>.</p>
-        <p>The majority element is the element that appears more than <code>⌊n / 2⌋</code> times. You may assume that the majority element always exists in the array.</p>
+        <p>Given a string <code>columnTitle</code> that represents the column title as appears in an Excel sheet, return <em>its corresponding column number</em>.</p>
+        <p>For example:</p>
+        <pre>
+A -> 1
+B -> 2
+C -> 3
+...
+Z -> 26
+AA -> 27
+AB -> 28 
+...</pre>
 
         <h3>Examples</h3>
         <pre>
 Example 1:
-Input: nums = [3,2,3]
-Output: 3
+Input: columnTitle = "A"
+Output: 1
 
 Example 2:
-Input: nums = [2,2,1,1,1,2,2]
-Output: 2</pre>
+Input: columnTitle = "AB"
+Output: 28
+
+Example 3:
+Input: columnTitle = "ZY"
+Output: 701</pre>
 
         <div class="solution-nav">
             Jump to Solution:
@@ -106,34 +119,27 @@ Output: 2</pre>
         <div class="solution" id="python">
             <h3>Python Solution</h3>
             <pre><code>
-def majorityElement(nums: List[int]) -> int:
-    count = 0
-    candidate = None
+def titleToNumber(columnTitle: str) -> int:
+    result = 0
     
-    for num in nums:
-        if count == 0:
-            candidate = num
-        count += 1 if num == candidate else -1
+    for char in columnTitle:
+        result = result * 26 + (ord(char) - ord('A') + 1)
     
-    return candidate</code></pre>
+    return result</code></pre>
         </div>
 
         <div class="solution" id="java">
             <h3>Java Solution</h3>
             <pre><code>
 class Solution {
-    public int majorityElement(int[] nums) {
-        int count = 0;
-        Integer candidate = null;
+    public int titleToNumber(String columnTitle) {
+        int result = 0;
         
-        for (int num : nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += (num == candidate) ? 1 : -1;
+        for (char c : columnTitle.toCharArray()) {
+            result = result * 26 + (c - 'A' + 1);
         }
         
-        return candidate;
+        return result;
     }
 }</code></pre>
         </div>
@@ -143,18 +149,14 @@ class Solution {
             <pre><code>
 class Solution {
 public:
-    int majorityElement(vector<int>& nums) {
-        int count = 0;
-        int candidate = 0;
+    int titleToNumber(string columnTitle) {
+        int result = 0;
         
-        for (int num : nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += (num == candidate) ? 1 : -1;
+        for (char c : columnTitle) {
+            result = result * 26 + (c - 'A' + 1);
         }
         
-        return candidate;
+        return result;
     }
 };</code></pre>
         </div>
@@ -163,21 +165,17 @@ public:
             <h3>JavaScript Solution</h3>
             <pre><code>
 /**
- * @param {number[]} nums
+ * @param {string} columnTitle
  * @return {number}
  */
-var majorityElement = function(nums) {
-    let count = 0;
-    let candidate = null;
+var titleToNumber = function(columnTitle) {
+    let result = 0;
     
-    for (const num of nums) {
-        if (count === 0) {
-            candidate = num;
-        }
-        count += num === candidate ? 1 : -1;
+    for (const char of columnTitle) {
+        result = result * 26 + (char.charCodeAt(0) - 'A'.charCodeAt(0) + 1);
     }
     
-    return candidate;
+    return result;
 };</code></pre>
         </div>
 
@@ -185,18 +183,14 @@ var majorityElement = function(nums) {
             <h3>C# Solution</h3>
             <pre><code>
 public class Solution {
-    public int MajorityElement(int[] nums) {
-        int count = 0;
-        int? candidate = null;
+    public int TitleToNumber(string columnTitle) {
+        int result = 0;
         
-        foreach (int num in nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += num == candidate ? 1 : -1;
+        foreach (char c in columnTitle) {
+            result = result * 26 + (c - 'A' + 1);
         }
         
-        return candidate.Value;
+        return result;
     }
 }</code></pre>
         </div>
@@ -204,28 +198,28 @@ public class Solution {
         <div class="complexity">
             <h3>Complexity Analysis</h3>
             <ul>
-                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
-                <li><strong>Space Complexity:</strong> O(1) as we only use two variables</li>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input string</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a single variable</li>
             </ul>
         </div>
 
         <div class="explanation">
             <h3>Solution Explanation</h3>
-            <p>This solution uses the Boyer-Moore Voting Algorithm:</p>
+            <p>This solution uses base-26 number conversion:</p>
             <ul>
                 <li>Key concept:
                     <ul>
-                        <li>Voting algorithm</li>
-                        <li>Counter technique</li>
-                        <li>Majority element</li>
+                        <li>Base conversion</li>
+                        <li>ASCII values</li>
+                        <li>Character mapping</li>
                     </ul>
                 </li>
                 <li>Algorithm steps:
                     <ul>
-                        <li>Initialize counter</li>
-                        <li>Update candidate</li>
-                        <li>Count votes</li>
-                        <li>Find majority</li>
+                        <li>Initialize result</li>
+                        <li>Process each char</li>
+                        <li>Multiply by base</li>
+                        <li>Add position value</li>
                     </ul>
                 </li>
             </ul>
@@ -233,8 +227,8 @@ public class Solution {
             <ul>
                 <li>Linear time</li>
                 <li>Constant space</li>
-                <li>No sorting needed</li>
-                <li>Always exists</li>
+                <li>No recursion needed</li>
+                <li>Simple math</li>
             </ul>
         </div>
     </div>

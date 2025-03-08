@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Majority Element - LeetCodee</title>
-    <meta name="description" content="Detailed solution explanation for LeetCode problem 169: Majority Element. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <title>Factorial Trailing Zeroes - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 172: Factorial Trailing Zeroes. Solutions in Python, Java, C++, JavaScript, and C#.">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -38,7 +38,7 @@
             font-size: 14px;
             margin-right: 10px;
         }
-        .easy { background-color: #00B8A3; color: white; }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
         pre {
             background-color: #f8f8f8;
             padding: 15px;
@@ -75,24 +75,30 @@
 </head>
 <body>
     <header>
-        <h1>169. Majority Element</h1>
-        <span class="difficulty easy">Easy</span>
+        <h1>172. Factorial Trailing Zeroes</h1>
+        <span class="difficulty medium">Medium</span>
     </header>
 
     <div class="content">
         <h2>Problem Description</h2>
-        <p>Given an array <code>nums</code> of size <code>n</code>, return <em>the majority element</em>.</p>
-        <p>The majority element is the element that appears more than <code>⌊n / 2⌋</code> times. You may assume that the majority element always exists in the array.</p>
+        <p>Given an integer <code>n</code>, return <em>the number of trailing zeroes in <code>n!</code></em>.</p>
+        <p>Note that <code>n! = n * (n - 1) * (n - 2) * ... * 3 * 2 * 1</code>.</p>
 
         <h3>Examples</h3>
         <pre>
 Example 1:
-Input: nums = [3,2,3]
-Output: 3
+Input: n = 3
+Output: 0
+Explanation: 3! = 6, no trailing zero.
 
 Example 2:
-Input: nums = [2,2,1,1,1,2,2]
-Output: 2</pre>
+Input: n = 5
+Output: 1
+Explanation: 5! = 120, one trailing zero.
+
+Example 3:
+Input: n = 0
+Output: 0</pre>
 
         <div class="solution-nav">
             Jump to Solution:
@@ -106,34 +112,29 @@ Output: 2</pre>
         <div class="solution" id="python">
             <h3>Python Solution</h3>
             <pre><code>
-def majorityElement(nums: List[int]) -> int:
+def trailingZeroes(n: int) -> int:
     count = 0
-    candidate = None
+    i = 5
     
-    for num in nums:
-        if count == 0:
-            candidate = num
-        count += 1 if num == candidate else -1
+    while i <= n:
+        count += n // i
+        i *= 5
     
-    return candidate</code></pre>
+    return count</code></pre>
         </div>
 
         <div class="solution" id="java">
             <h3>Java Solution</h3>
             <pre><code>
 class Solution {
-    public int majorityElement(int[] nums) {
+    public int trailingZeroes(int n) {
         int count = 0;
-        Integer candidate = null;
         
-        for (int num : nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += (num == candidate) ? 1 : -1;
+        for (long i = 5; i <= n; i *= 5) {
+            count += n / i;
         }
         
-        return candidate;
+        return count;
     }
 }</code></pre>
         </div>
@@ -143,18 +144,14 @@ class Solution {
             <pre><code>
 class Solution {
 public:
-    int majorityElement(vector<int>& nums) {
+    int trailingZeroes(int n) {
         int count = 0;
-        int candidate = 0;
         
-        for (int num : nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += (num == candidate) ? 1 : -1;
+        for (long i = 5; i <= n; i *= 5) {
+            count += n / i;
         }
         
-        return candidate;
+        return count;
     }
 };</code></pre>
         </div>
@@ -163,21 +160,17 @@ public:
             <h3>JavaScript Solution</h3>
             <pre><code>
 /**
- * @param {number[]} nums
+ * @param {number} n
  * @return {number}
  */
-var majorityElement = function(nums) {
+var trailingZeroes = function(n) {
     let count = 0;
-    let candidate = null;
     
-    for (const num of nums) {
-        if (count === 0) {
-            candidate = num;
-        }
-        count += num === candidate ? 1 : -1;
+    for (let i = 5; i <= n; i *= 5) {
+        count += Math.floor(n / i);
     }
     
-    return candidate;
+    return count;
 };</code></pre>
         </div>
 
@@ -185,18 +178,14 @@ var majorityElement = function(nums) {
             <h3>C# Solution</h3>
             <pre><code>
 public class Solution {
-    public int MajorityElement(int[] nums) {
+    public int TrailingZeroes(int n) {
         int count = 0;
-        int? candidate = null;
         
-        foreach (int num in nums) {
-            if (count == 0) {
-                candidate = num;
-            }
-            count += num == candidate ? 1 : -1;
+        for (long i = 5; i <= n; i *= 5) {
+            count += n / (int)i;
         }
         
-        return candidate.Value;
+        return count;
     }
 }</code></pre>
         </div>
@@ -204,37 +193,37 @@ public class Solution {
         <div class="complexity">
             <h3>Complexity Analysis</h3>
             <ul>
-                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
-                <li><strong>Space Complexity:</strong> O(1) as we only use two variables</li>
+                <li><strong>Time Complexity:</strong> O(log n) as we divide n by 5 in each iteration</li>
+                <li><strong>Space Complexity:</strong> O(1) as we only use a counter variable</li>
             </ul>
         </div>
 
         <div class="explanation">
             <h3>Solution Explanation</h3>
-            <p>This solution uses the Boyer-Moore Voting Algorithm:</p>
+            <p>This solution counts factors of 5:</p>
             <ul>
                 <li>Key concept:
                     <ul>
-                        <li>Voting algorithm</li>
-                        <li>Counter technique</li>
-                        <li>Majority element</li>
+                        <li>Factor counting</li>
+                        <li>Powers of 5</li>
+                        <li>Trailing zeros</li>
                     </ul>
                 </li>
                 <li>Algorithm steps:
                     <ul>
-                        <li>Initialize counter</li>
-                        <li>Update candidate</li>
-                        <li>Count votes</li>
-                        <li>Find majority</li>
+                        <li>Count factors of 5</li>
+                        <li>Handle powers of 5</li>
+                        <li>Accumulate count</li>
+                        <li>Return result</li>
                     </ul>
                 </li>
             </ul>
             <p>Key points:</p>
             <ul>
-                <li>Linear time</li>
+                <li>Logarithmic time</li>
                 <li>Constant space</li>
-                <li>No sorting needed</li>
-                <li>Always exists</li>
+                <li>No factorial needed</li>
+                <li>Handle overflow</li>
             </ul>
         </div>
     </div>
