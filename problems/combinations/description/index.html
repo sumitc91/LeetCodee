@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combinations - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 77: Combinations. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>77. Combinations</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two integers <code>n</code> and <code>k</code>, return <em>all possible combinations of</em> <code>k</code> <em>numbers chosen from the range</em> <code>[1, n]</code>.</p>
+        <p>You may return the answer in <strong>any order</strong>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 4, k = 2
+Output: [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
+Explanation: There are 6 possible combinations.
+
+Example 2:
+Input: n = 1, k = 1
+Output: [[1]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def combine(n: int, k: int) -> List[List[int]]:
+    def backtrack(start: int, curr: List[int]):
+        if len(curr) == k:
+            result.append(curr[:])
+            return
+        
+        for i in range(start, n + 1):
+            curr.append(i)
+            backtrack(i + 1, curr)
+            curr.pop()
+    
+    result = []
+    backtrack(1, [])
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    private List<List<Integer>> result;
+    
+    public List<List<Integer>> combine(int n, int k) {
+        result = new ArrayList<>();
+        backtrack(n, k, 1, new ArrayList<>());
+        return result;
+    }
+    
+    private void backtrack(int n, int k, int start, List<Integer> curr) {
+        if (curr.size() == k) {
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        
+        for (int i = start; i <= n; i++) {
+            curr.add(i);
+            backtrack(n, k, i + 1, curr);
+            curr.remove(curr.size() - 1);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+private:
+    vector<vector<int>> result;
+    
+    void backtrack(int n, int k, int start, vector<int>& curr) {
+        if (curr.size() == k) {
+            result.push_back(curr);
+            return;
+        }
+        
+        for (int i = start; i <= n; i++) {
+            curr.push_back(i);
+            backtrack(n, k, i + 1, curr);
+            curr.pop_back();
+        }
+    }
+    
+public:
+    vector<vector<int>> combine(int n, int k) {
+        vector<int> curr;
+        backtrack(n, k, 1, curr);
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n
+ * @param {number} k
+ * @return {number[][]}
+ */
+var combine = function(n, k) {
+    const result = [];
+    
+    function backtrack(start, curr) {
+        if (curr.length === k) {
+            result.push([...curr]);
+            return;
+        }
+        
+        for (let i = start; i <= n; i++) {
+            curr.push(i);
+            backtrack(i + 1, curr);
+            curr.pop();
+        }
+    }
+    
+    backtrack(1, []);
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    private IList<IList<int>> result;
+    
+    public IList<IList<int>> Combine(int n, int k) {
+        result = new List<IList<int>>();
+        Backtrack(n, k, 1, new List<int>());
+        return result;
+    }
+    
+    private void Backtrack(int n, int k, int start, List<int> curr) {
+        if (curr.Count == k) {
+            result.Add(new List<int>(curr));
+            return;
+        }
+        
+        for (int i = start; i <= n; i++) {
+            curr.Add(i);
+            Backtrack(n, k, i + 1, curr);
+            curr.RemoveAt(curr.Count - 1);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(C(n,k)) where C(n,k) is the binomial coefficient</li>
+                <li><strong>Space Complexity:</strong> O(k) for the recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking to generate all possible combinations:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Use backtracking to build combinations</li>
+                        <li>Track current combination</li>
+                        <li>Maintain start position</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Start with empty combination</li>
+                        <li>Add numbers one by one</li>
+                        <li>Backtrack when combination complete</li>
+                        <li>Remove last number and try next</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient backtracking approach</li>
+                <li>Avoids duplicate combinations</li>
+                <li>Maintains lexicographic order</li>
+                <li>Handles all valid inputs</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

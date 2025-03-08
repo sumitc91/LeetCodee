@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Window Substring - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 76: Minimum Window Substring. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>76. Minimum Window Substring</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two strings <code>s</code> and <code>t</code> of lengths <code>m</code> and <code>n</code> respectively, return <em>the minimum window substring</em> of <code>s</code> such that every character in <code>t</code> (including duplicates) is included in the window. If there is no such substring, return the empty string <code>""</code>.</p>
+        <p>The testcases will be generated such that the answer is unique.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "ADOBECODEBANC", t = "ABC"
+Output: "BANC"
+Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+
+Example 2:
+Input: s = "a", t = "a"
+Output: "a"
+Explanation: The entire string s is the minimum window.
+
+Example 3:
+Input: s = "a", t = "aa"
+Output: ""
+Explanation: Both 'a's from t must be included in the window.
+Since the largest window of s only has one 'a', return empty string.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def minWindow(s: str, t: str) -> str:
+    if not s or not t:
+        return ""
+        
+    # Initialize dictionaries
+    t_count = {}
+    window = {}
+    for char in t:
+        t_count[char] = t_count.get(char, 0) + 1
+        window[char] = 0
+    
+    # Initialize variables
+    required = len(t_count)
+    formed = 0
+    left = right = 0
+    min_len = float('inf')
+    min_window = ""
+    
+    while right < len(s):
+        # Add one character from the right
+        char = s[right]
+        if char in t_count:
+            window[char] += 1
+            if window[char] == t_count[char]:
+                formed += 1
+        
+        # Contract window from the left
+        while formed == required and left <= right:
+            # Update minimum window
+            if right - left + 1 < min_len:
+                min_len = right - left + 1
+                min_window = s[left:right + 1]
+            
+            # Remove leftmost character
+            char = s[left]
+            if char in t_count:
+                window[char] -= 1
+                if window[char] < t_count[char]:
+                    formed -= 1
+            left += 1
+        
+        right += 1
+    
+    return min_window</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || s.length() == 0 || t.length() == 0) {
+            return "";
+        }
+        
+        // Initialize frequency maps
+        Map<Character, Integer> tCount = new HashMap<>();
+        Map<Character, Integer> window = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            tCount.put(c, tCount.getOrDefault(c, 0) + 1);
+        }
+        
+        // Initialize variables
+        int required = tCount.size();
+        int formed = 0;
+        int left = 0, right = 0;
+        int minLen = Integer.MAX_VALUE;
+        int minLeft = 0, minRight = 0;
+        
+        while (right < s.length()) {
+            // Add one character from the right
+            char c = s.charAt(right);
+            window.put(c, window.getOrDefault(c, 0) + 1);
+            
+            if (tCount.containsKey(c) && window.get(c).equals(tCount.get(c))) {
+                formed++;
+            }
+            
+            // Contract window from the left
+            while (formed == required && left <= right) {
+                // Update minimum window
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                    minRight = right;
+                }
+                
+                // Remove leftmost character
+                char leftChar = s.charAt(left);
+                window.put(leftChar, window.get(leftChar) - 1);
+                
+                if (tCount.containsKey(leftChar) && 
+                    window.get(leftChar) < tCount.get(leftChar)) {
+                    formed--;
+                }
+                
+                left++;
+            }
+            
+            right++;
+        }
+        
+        return minLen == Integer.MAX_VALUE ? "" : 
+               s.substring(minLeft, minRight + 1);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        if (s.empty() || t.empty()) {
+            return "";
+        }
+        
+        // Initialize frequency maps
+        unordered_map<char, int> tCount;
+        unordered_map<char, int> window;
+        for (char c : t) {
+            tCount[c]++;
+        }
+        
+        // Initialize variables
+        int required = tCount.size();
+        int formed = 0;
+        int left = 0, right = 0;
+        int minLen = INT_MAX;
+        int minLeft = 0;
+        
+        while (right < s.length()) {
+            // Add one character from the right
+            char c = s[right];
+            window[c]++;
+            
+            if (tCount.count(c) && window[c] == tCount[c]) {
+                formed++;
+            }
+            
+            // Contract window from the left
+            while (formed == required && left <= right) {
+                // Update minimum window
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                }
+                
+                // Remove leftmost character
+                char leftChar = s[left];
+                window[leftChar]--;
+                
+                if (tCount.count(leftChar) && 
+                    window[leftChar] < tCount[leftChar]) {
+                    formed--;
+                }
+                
+                left++;
+            }
+            
+            right++;
+        }
+        
+        return minLen == INT_MAX ? "" : 
+               s.substr(minLeft, minLen);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {string}
+ */
+var minWindow = function(s, t) {
+    if (!s || !t) {
+        return "";
+    }
+    
+    // Initialize frequency maps
+    const tCount = new Map();
+    const window = new Map();
+    for (let char of t) {
+        tCount.set(char, (tCount.get(char) || 0) + 1);
+    }
+    
+    // Initialize variables
+    const required = tCount.size;
+    let formed = 0;
+    let left = 0, right = 0;
+    let minLen = Infinity;
+    let minWindow = "";
+    
+    while (right < s.length) {
+        // Add one character from the right
+        let char = s[right];
+        window.set(char, (window.get(char) || 0) + 1);
+        
+        if (tCount.has(char) && window.get(char) === tCount.get(char)) {
+            formed++;
+        }
+        
+        // Contract window from the left
+        while (formed === required && left <= right) {
+            // Update minimum window
+            if (right - left + 1 < minLen) {
+                minLen = right - left + 1;
+                minWindow = s.slice(left, right + 1);
+            }
+            
+            // Remove leftmost character
+            let leftChar = s[left];
+            window.set(leftChar, window.get(leftChar) - 1);
+            
+            if (tCount.has(leftChar) && 
+                window.get(leftChar) < tCount.get(leftChar)) {
+                formed--;
+            }
+            
+            left++;
+        }
+        
+        right++;
+    }
+    
+    return minWindow;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string MinWindow(string s, string t) {
+        if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(t)) {
+            return "";
+        }
+        
+        // Initialize frequency dictionaries
+        Dictionary<char, int> tCount = new Dictionary<char, int>();
+        Dictionary<char, int> window = new Dictionary<char, int>();
+        foreach (char c in t) {
+            if (!tCount.ContainsKey(c)) tCount[c] = 0;
+            tCount[c]++;
+        }
+        
+        // Initialize variables
+        int required = tCount.Count;
+        int formed = 0;
+        int left = 0, right = 0;
+        int minLen = int.MaxValue;
+        int minLeft = 0, minRight = 0;
+        
+        while (right < s.Length) {
+            // Add one character from the right
+            char c = s[right];
+            if (!window.ContainsKey(c)) window[c] = 0;
+            window[c]++;
+            
+            if (tCount.ContainsKey(c) && window[c] == tCount[c]) {
+                formed++;
+            }
+            
+            // Contract window from the left
+            while (formed == required && left <= right) {
+                // Update minimum window
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    minLeft = left;
+                    minRight = right;
+                }
+                
+                // Remove leftmost character
+                char leftChar = s[left];
+                window[leftChar]--;
+                
+                if (tCount.ContainsKey(leftChar) && 
+                    window[leftChar] < tCount[leftChar]) {
+                    formed--;
+                }
+                
+                left++;
+            }
+            
+            right++;
+        }
+        
+        return minLen == int.MaxValue ? "" : 
+               s.Substring(minLeft, minRight - minLeft + 1);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(|S| + |T|) where |S| and |T| are the lengths of strings s and t</li>
+                <li><strong>Space Complexity:</strong> O(|T|) to store the character frequency maps</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the sliding window technique with two pointers:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Use two pointers to maintain a window</li>
+                        <li>Track character frequencies</li>
+                        <li>Expand and contract window as needed</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize frequency maps for target string</li>
+                        <li>Expand window until valid substring found</li>
+                        <li>Contract window to minimize length</li>
+                        <li>Track minimum window seen so far</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient sliding window approach</li>
+                <li>Handles duplicates correctly</li>
+                <li>Maintains minimum window size</li>
+                <li>Returns empty string if no solution</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

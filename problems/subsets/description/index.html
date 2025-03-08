@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subsets - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 78: Subsets. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>78. Subsets</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer array <code>nums</code> of <strong>unique</strong> elements, return <em>all possible subsets (the power set)</em>.</p>
+        <p>The solution set <strong>must not</strong> contain duplicate subsets. Return the solution in <strong>any order</strong>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [1,2,3]
+Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+
+Example 2:
+Input: nums = [0]
+Output: [[],[0]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def subsets(nums: List[int]) -> List[List[int]]:
+    def backtrack(start: int, curr: List[int]):
+        result.append(curr[:])
+        
+        for i in range(start, len(nums)):
+            curr.append(nums[i])
+            backtrack(i + 1, curr)
+            curr.pop()
+    
+    result = []
+    backtrack(0, [])
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    private List<List<Integer>> result;
+    
+    public List<List<Integer>> subsets(int[] nums) {
+        result = new ArrayList<>();
+        backtrack(nums, 0, new ArrayList<>());
+        return result;
+    }
+    
+    private void backtrack(int[] nums, int start, List<Integer> curr) {
+        result.add(new ArrayList<>(curr));
+        
+        for (int i = start; i < nums.length; i++) {
+            curr.add(nums[i]);
+            backtrack(nums, i + 1, curr);
+            curr.remove(curr.size() - 1);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+private:
+    vector<vector<int>> result;
+    
+    void backtrack(vector<int>& nums, int start, vector<int>& curr) {
+        result.push_back(curr);
+        
+        for (int i = start; i < nums.size(); i++) {
+            curr.push_back(nums[i]);
+            backtrack(nums, i + 1, curr);
+            curr.pop_back();
+        }
+    }
+    
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<int> curr;
+        backtrack(nums, 0, curr);
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var subsets = function(nums) {
+    const result = [];
+    
+    function backtrack(start, curr) {
+        result.push([...curr]);
+        
+        for (let i = start; i < nums.length; i++) {
+            curr.push(nums[i]);
+            backtrack(i + 1, curr);
+            curr.pop();
+        }
+    }
+    
+    backtrack(0, []);
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    private IList<IList<int>> result;
+    
+    public IList<IList<int>> Subsets(int[] nums) {
+        result = new List<IList<int>>();
+        Backtrack(nums, 0, new List<int>());
+        return result;
+    }
+    
+    private void Backtrack(int[] nums, int start, List<int> curr) {
+        result.Add(new List<int>(curr));
+        
+        for (int i = start; i < nums.Length; i++) {
+            curr.Add(nums[i]);
+            Backtrack(nums, i + 1, curr);
+            curr.RemoveAt(curr.Count - 1);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(2^n) where n is the length of nums</li>
+                <li><strong>Space Complexity:</strong> O(n) for the recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking to generate all possible subsets:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Each element has two choices</li>
+                        <li>Include or exclude in subset</li>
+                        <li>Build subsets incrementally</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Start with empty subset</li>
+                        <li>Add current subset to result</li>
+                        <li>Try including next elements</li>
+                        <li>Backtrack and try different combinations</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient backtracking approach</li>
+                <li>No duplicate subsets</li>
+                <li>Handles empty input</li>
+                <li>Maintains lexicographic order</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
