@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decode Ways - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 91: Decode Ways. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>91. Decode Ways</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>A message containing letters from <code>A-Z</code> can be encoded into numbers using the following mapping:</p>
+        <pre>'A' -> "1"
+'B' -> "2"
+...
+'Z' -> "26"</pre>
+        <p>To <strong>decode</strong> an encoded message, all the digits must be grouped then mapped back into letters using the reverse of the mapping above (there may be multiple ways). For example, <code>"11106"</code> can be mapped into:</p>
+        <ul>
+            <li><code>"AAJF"</code> with the grouping <code>(1 1 10 6)</code></li>
+            <li><code>"KJF"</code> with the grouping <code>(11 10 6)</code></li>
+        </ul>
+        <p>Note that the grouping <code>(1 11 06)</code> is invalid because <code>"06"</code> cannot be mapped into <code>'F'</code> since <code>"6"</code> is different from <code>"06"</code>.</p>
+        <p>Given a string <code>s</code> containing only digits, return <em>the <strong>number</strong> of ways to <strong>decode</strong> it</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "12"
+Output: 2
+Explanation: "12" could be decoded as "AB" (1 2) or "L" (12).
+
+Example 2:
+Input: s = "226"
+Output: 3
+Explanation: "226" could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
+
+Example 3:
+Input: s = "06"
+Output: 0
+Explanation: "06" cannot be mapped to "F" because of the leading zero ("6" is different from "06").</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def numDecodings(s: str) -> int:
+    if not s or s[0] == '0':
+        return 0
+    
+    n = len(s)
+    dp = [0] * (n + 1)
+    dp[0] = 1
+    dp[1] = 1
+    
+    for i in range(2, n + 1):
+        # Single digit
+        if s[i-1] != '0':
+            dp[i] += dp[i-1]
+        
+        # Two digits
+        two_digit = int(s[i-2:i])
+        if 10 <= two_digit <= 26:
+            dp[i] += dp[i-2]
+    
+    return dp[n]</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int numDecodings(String s) {
+        if (s == null || s.length() == 0 || s.charAt(0) == '0') {
+            return 0;
+        }
+        
+        int n = s.length();
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        
+        for (int i = 2; i <= n; i++) {
+            // Single digit
+            if (s.charAt(i-1) != '0') {
+                dp[i] += dp[i-1];
+            }
+            
+            // Two digits
+            int twoDigit = Integer.parseInt(s.substring(i-2, i));
+            if (twoDigit >= 10 && twoDigit <= 26) {
+                dp[i] += dp[i-2];
+            }
+        }
+        
+        return dp[n];
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int numDecodings(string s) {
+        if (s.empty() || s[0] == '0') {
+            return 0;
+        }
+        
+        int n = s.length();
+        vector<int> dp(n + 1);
+        dp[0] = 1;
+        dp[1] = 1;
+        
+        for (int i = 2; i <= n; i++) {
+            // Single digit
+            if (s[i-1] != '0') {
+                dp[i] += dp[i-1];
+            }
+            
+            // Two digits
+            int twoDigit = stoi(s.substr(i-2, 2));
+            if (twoDigit >= 10 && twoDigit <= 26) {
+                dp[i] += dp[i-2];
+            }
+        }
+        
+        return dp[n];
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var numDecodings = function(s) {
+    if (!s || s[0] === '0') {
+        return 0;
+    }
+    
+    const n = s.length;
+    const dp = new Array(n + 1).fill(0);
+    dp[0] = 1;
+    dp[1] = 1;
+    
+    for (let i = 2; i <= n; i++) {
+        // Single digit
+        if (s[i-1] !== '0') {
+            dp[i] += dp[i-1];
+        }
+        
+        // Two digits
+        const twoDigit = parseInt(s.slice(i-2, i));
+        if (twoDigit >= 10 && twoDigit <= 26) {
+            dp[i] += dp[i-2];
+        }
+    }
+    
+    return dp[n];
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int NumDecodings(string s) {
+        if (string.IsNullOrEmpty(s) || s[0] == '0') {
+            return 0;
+        }
+        
+        int n = s.Length;
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        
+        for (int i = 2; i <= n; i++) {
+            // Single digit
+            if (s[i-1] != '0') {
+                dp[i] += dp[i-1];
+            }
+            
+            // Two digits
+            int twoDigit = int.Parse(s.Substring(i-2, 2));
+            if (twoDigit >= 10 && twoDigit <= 26) {
+                dp[i] += dp[i-2];
+            }
+        }
+        
+        return dp[n];
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the string</li>
+                <li><strong>Space Complexity:</strong> O(n) for the dp array</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses dynamic programming:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Use dp array to store ways</li>
+                        <li>Consider single and double digits</li>
+                        <li>Handle leading zeros</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize base cases</li>
+                        <li>Process single digits</li>
+                        <li>Process two digits</li>
+                        <li>Build solution bottom-up</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle edge cases</li>
+                <li>Check valid ranges</li>
+                <li>Efficient DP solution</li>
+                <li>Clear state transitions</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

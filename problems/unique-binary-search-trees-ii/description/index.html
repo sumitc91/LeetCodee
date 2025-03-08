@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique Binary Search Trees II - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 95: Unique Binary Search Trees II. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>95. Unique Binary Search Trees II</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer <code>n</code>, return <em>all the structurally unique <strong>BST</strong>'s (binary search trees), which has exactly</em> <code>n</code> <em>nodes of unique values from</em> <code>1</code> <em>to</em> <code>n</code>. Return the answer in <strong>any order</strong>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 3
+Output: [[1,null,2,null,3],[1,null,3,2],[2,1,3],[3,1,null,null,2],[3,2,null,1]]
+
+Example 2:
+Input: n = 1
+Output: [[1]]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+def generateTrees(n: int) -> List[Optional[TreeNode]]:
+    def generate(start: int, end: int) -> List[Optional[TreeNode]]:
+        if start > end:
+            return [None]
+        
+        result = []
+        for i in range(start, end + 1):
+            # Generate all possible left and right subtrees
+            left_trees = generate(start, i - 1)
+            right_trees = generate(i + 1, end)
+            
+            # Create trees with current root
+            for left in left_trees:
+                for right in right_trees:
+                    root = TreeNode(i)
+                    root.left = left
+                    root.right = right
+                    result.append(root)
+        
+        return result
+    
+    if n == 0:
+        return []
+    return generate(1, n)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) {
+            return new ArrayList<>();
+        }
+        return generate(1, n);
+    }
+    
+    private List<TreeNode> generate(int start, int end) {
+        List<TreeNode> result = new ArrayList<>();
+        
+        if (start > end) {
+            result.add(null);
+            return result;
+        }
+        
+        for (int i = start; i <= end; i++) {
+            // Generate all possible left and right subtrees
+            List<TreeNode> leftTrees = generate(start, i - 1);
+            List<TreeNode> rightTrees = generate(i + 1, end);
+            
+            // Create trees with current root
+            for (TreeNode left : leftTrees) {
+                for (TreeNode right : rightTrees) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = left;
+                    root.right = right;
+                    result.add(root);
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    vector<TreeNode*> generate(int start, int end) {
+        vector<TreeNode*> result;
+        
+        if (start > end) {
+            result.push_back(nullptr);
+            return result;
+        }
+        
+        for (int i = start; i <= end; i++) {
+            // Generate all possible left and right subtrees
+            vector<TreeNode*> leftTrees = generate(start, i - 1);
+            vector<TreeNode*> rightTrees = generate(i + 1, end);
+            
+            // Create trees with current root
+            for (TreeNode* left : leftTrees) {
+                for (TreeNode* right : rightTrees) {
+                    TreeNode* root = new TreeNode(i);
+                    root->left = left;
+                    root->right = right;
+                    result.push_back(root);
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        if (n == 0) {
+            return vector<TreeNode*>();
+        }
+        return generate(1, n);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {number} n
+ * @return {TreeNode[]}
+ */
+var generateTrees = function(n) {
+    if (n === 0) {
+        return [];
+    }
+    
+    const generate = (start, end) => {
+        const result = [];
+        
+        if (start > end) {
+            result.push(null);
+            return result;
+        }
+        
+        for (let i = start; i <= end; i++) {
+            // Generate all possible left and right subtrees
+            const leftTrees = generate(start, i - 1);
+            const rightTrees = generate(i + 1, end);
+            
+            // Create trees with current root
+            for (const left of leftTrees) {
+                for (const right of rightTrees) {
+                    const root = new TreeNode(i);
+                    root.left = left;
+                    root.right = right;
+                    result.push(root);
+                }
+            }
+        }
+        
+        return result;
+    };
+    
+    return generate(1, n);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<TreeNode> GenerateTrees(int n) {
+        if (n == 0) {
+            return new List<TreeNode>();
+        }
+        return Generate(1, n);
+    }
+    
+    private IList<TreeNode> Generate(int start, int end) {
+        IList<TreeNode> result = new List<TreeNode>();
+        
+        if (start > end) {
+            result.Add(null);
+            return result;
+        }
+        
+        for (int i = start; i <= end; i++) {
+            // Generate all possible left and right subtrees
+            IList<TreeNode> leftTrees = Generate(start, i - 1);
+            IList<TreeNode> rightTrees = Generate(i + 1, end);
+            
+            // Create trees with current root
+            foreach (TreeNode left in leftTrees) {
+                foreach (TreeNode right in rightTrees) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = left;
+                    root.right = right;
+                    result.Add(root);
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(4^n / √n) using the nth Catalan number</li>
+                <li><strong>Space Complexity:</strong> O(4^n / √n) to store all unique trees</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses recursive generation of BSTs:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Each value can be root</li>
+                        <li>Generate subtrees recursively</li>
+                        <li>Combine all possibilities</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Try each value as root</li>
+                        <li>Generate left subtrees</li>
+                        <li>Generate right subtrees</li>
+                        <li>Combine all combinations</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Recursive generation</li>
+                <li>BST properties maintained</li>
+                <li>All unique trees found</li>
+                <li>Efficient combination</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

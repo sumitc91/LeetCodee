@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restore IP Addresses - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 93: Restore IP Addresses. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>93. Restore IP Addresses</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>A <strong>valid IP address</strong> consists of exactly four integers separated by single dots. Each integer is between <code>0</code> and <code>255</code> (inclusive) and cannot have leading zeros.</p>
+        <p>For example:</p>
+        <ul>
+            <li><code>"0.1.2.201"</code> and <code>"192.168.1.1"</code> are <strong>valid</strong> IP addresses</li>
+            <li><code>"0.011.255.245"</code>, <code>"192.168.1.312"</code> and <code>"192.168@1.1"</code> are <strong>invalid</strong> IP addresses</li>
+        </ul>
+        <p>Given a string <code>s</code> containing only digits, return <em>all possible valid IP addresses that can be formed by inserting dots into</em> <code>s</code>. You are <strong>not</strong> allowed to reorder or remove any digits in <code>s</code>. You may return the valid IP addresses in <strong>any</strong> order.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "25525511135"
+Output: ["255.255.11.135","255.255.111.35"]
+
+Example 2:
+Input: s = "0000"
+Output: ["0.0.0.0"]
+
+Example 3:
+Input: s = "101023"
+Output: ["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def restoreIpAddresses(s: str) -> List[str]:
+    def backtrack(start: int, parts: List[str]):
+        if len(parts) == 4 and start == len(s):
+            result.append('.'.join(parts))
+            return
+        
+        if len(parts) == 4 or start == len(s):
+            return
+        
+        # Try 1 digit
+        parts.append(s[start:start+1])
+        backtrack(start + 1, parts)
+        parts.pop()
+        
+        # Try 2 digits if valid
+        if start + 1 < len(s) and s[start] != '0':
+            parts.append(s[start:start+2])
+            backtrack(start + 2, parts)
+            parts.pop()
+        
+        # Try 3 digits if valid
+        if (start + 2 < len(s) and s[start] != '0' and 
+            int(s[start:start+3]) <= 255):
+            parts.append(s[start:start+3])
+            backtrack(start + 3, parts)
+            parts.pop()
+    
+    result = []
+    backtrack(0, [])
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    private List<String> result;
+    private String s;
+    
+    public List<String> restoreIpAddresses(String s) {
+        result = new ArrayList<>();
+        this.s = s;
+        backtrack(0, new ArrayList<>());
+        return result;
+    }
+    
+    private void backtrack(int start, List<String> parts) {
+        if (parts.size() == 4 && start == s.length()) {
+            result.add(String.join(".", parts));
+            return;
+        }
+        
+        if (parts.size() == 4 || start == s.length()) {
+            return;
+        }
+        
+        // Try 1 digit
+        parts.add(s.substring(start, start + 1));
+        backtrack(start + 1, parts);
+        parts.remove(parts.size() - 1);
+        
+        // Try 2 digits if valid
+        if (start + 1 < s.length() && s.charAt(start) != '0') {
+            parts.add(s.substring(start, start + 2));
+            backtrack(start + 2, parts);
+            parts.remove(parts.size() - 1);
+        }
+        
+        // Try 3 digits if valid
+        if (start + 2 < s.length() && s.charAt(start) != '0') {
+            String num = s.substring(start, start + 3);
+            if (Integer.parseInt(num) <= 255) {
+                parts.add(num);
+                backtrack(start + 3, parts);
+                parts.remove(parts.size() - 1);
+            }
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+private:
+    vector<string> result;
+    string s;
+    
+    void backtrack(int start, vector<string>& parts) {
+        if (parts.size() == 4 && start == s.length()) {
+            string ip;
+            for (int i = 0; i < 4; i++) {
+                ip += parts[i];
+                if (i < 3) ip += ".";
+            }
+            result.push_back(ip);
+            return;
+        }
+        
+        if (parts.size() == 4 || start == s.length()) {
+            return;
+        }
+        
+        // Try 1 digit
+        parts.push_back(s.substr(start, 1));
+        backtrack(start + 1, parts);
+        parts.pop_back();
+        
+        // Try 2 digits if valid
+        if (start + 1 < s.length() && s[start] != '0') {
+            parts.push_back(s.substr(start, 2));
+            backtrack(start + 2, parts);
+            parts.pop_back();
+        }
+        
+        // Try 3 digits if valid
+        if (start + 2 < s.length() && s[start] != '0') {
+            string num = s.substr(start, 3);
+            if (stoi(num) <= 255) {
+                parts.push_back(num);
+                backtrack(start + 3, parts);
+                parts.pop_back();
+            }
+        }
+    }
+    
+public:
+    vector<string> restoreIpAddresses(string s) {
+        this->s = s;
+        vector<string> parts;
+        backtrack(0, parts);
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @return {string[]}
+ */
+var restoreIpAddresses = function(s) {
+    const result = [];
+    
+    const backtrack = (start, parts) => {
+        if (parts.length === 4 && start === s.length) {
+            result.push(parts.join('.'));
+            return;
+        }
+        
+        if (parts.length === 4 || start === s.length) {
+            return;
+        }
+        
+        // Try 1 digit
+        parts.push(s.slice(start, start + 1));
+        backtrack(start + 1, parts);
+        parts.pop();
+        
+        // Try 2 digits if valid
+        if (start + 1 < s.length && s[start] !== '0') {
+            parts.push(s.slice(start, start + 2));
+            backtrack(start + 2, parts);
+            parts.pop();
+        }
+        
+        // Try 3 digits if valid
+        if (start + 2 < s.length && s[start] !== '0') {
+            const num = s.slice(start, start + 3);
+            if (parseInt(num) <= 255) {
+                parts.push(num);
+                backtrack(start + 3, parts);
+                parts.pop();
+            }
+        }
+    };
+    
+    backtrack(0, []);
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    private IList<string> result;
+    private string s;
+    
+    public IList<string> RestoreIpAddresses(string s) {
+        result = new List<string>();
+        this.s = s;
+        Backtrack(0, new List<string>());
+        return result;
+    }
+    
+    private void Backtrack(int start, List<string> parts) {
+        if (parts.Count == 4 && start == s.Length) {
+            result.Add(string.Join(".", parts));
+            return;
+        }
+        
+        if (parts.Count == 4 || start == s.Length) {
+            return;
+        }
+        
+        // Try 1 digit
+        parts.Add(s.Substring(start, 1));
+        Backtrack(start + 1, parts);
+        parts.RemoveAt(parts.Count - 1);
+        
+        // Try 2 digits if valid
+        if (start + 1 < s.Length && s[start] != '0') {
+            parts.Add(s.Substring(start, 2));
+            Backtrack(start + 2, parts);
+            parts.RemoveAt(parts.Count - 1);
+        }
+        
+        // Try 3 digits if valid
+        if (start + 2 < s.Length && s[start] != '0') {
+            string num = s.Substring(start, 3);
+            if (int.Parse(num) <= 255) {
+                parts.Add(num);
+                Backtrack(start + 3, parts);
+                parts.RemoveAt(parts.Count - 1);
+            }
+        }
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(1) since IP address has fixed length</li>
+                <li><strong>Space Complexity:</strong> O(1) for recursion stack and result storage</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses backtracking to generate valid IP addresses:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Try different splits</li>
+                        <li>Validate each part</li>
+                        <li>Build IP address</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Try 1, 2, or 3 digits</li>
+                        <li>Validate each segment</li>
+                        <li>Check leading zeros</li>
+                        <li>Build valid addresses</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle leading zeros</li>
+                <li>Check valid ranges</li>
+                <li>Maintain original order</li>
+                <li>Efficient pruning</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
