@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers Who Never Order - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 183: Customers Who Never Order. SQL solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>183. Customers Who Never Order</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Table: <code>Customers</code></p>
+        <pre>
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| name        | varchar |
++-------------+---------+
+id is the primary key column for this table.
+Each row of this table indicates the ID and name of a customer.</pre>
+
+        <p>Table: <code>Orders</code></p>
+        <pre>
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| id          | int  |
+| customerId  | int  |
++-------------+------+
+id is the primary key column for this table.
+customerId is a foreign key of the ID from the Customers table.
+Each row of this table indicates the ID of an order and the ID of the customer who ordered it.</pre>
+
+        <p>Write an SQL query to report all customers who never order anything.</p>
+        <p>Return the result table in <strong>any order</strong>.</p>
+
+        <h3>Examples</h3>
+        <p>Example 1:</p>
+        <pre>
+Input: 
+Customers table:
++----+-------+
+| id | name  |
++----+-------+
+| 1  | Joe   |
+| 2  | Henry |
+| 3  | Sam   |
+| 4  | Max   |
++----+-------+
+Orders table:
++----+------------+
+| id | customerId |
++----+------------+
+| 1  | 3         |
+| 2  | 1         |
++----+------------+
+Output: 
++-----------+
+| Customers |
++-----------+
+| Henry     |
+| Max       |
++-----------+</pre>
+
+        <div class="solution">
+            <h3>SQL Solution</h3>
+            <pre><code>
+SELECT name AS Customers
+FROM Customers
+WHERE id NOT IN (
+    SELECT customerId 
+    FROM Orders
+);</code></pre>
+
+            <p>Alternative Solution (using LEFT JOIN):</p>
+            <pre><code>
+SELECT c.name AS Customers
+FROM Customers c
+LEFT JOIN Orders o ON c.id = o.customerId
+WHERE o.id IS NULL;</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This problem can be solved in two ways:</p>
+            <ul>
+                <li>Using NOT IN:
+                    <ul>
+                        <li>Subquery for customer IDs</li>
+                        <li>Exclude matching customers</li>
+                        <li>Simple to understand</li>
+                    </ul>
+                </li>
+                <li>Using LEFT JOIN:
+                    <ul>
+                        <li>Join with Orders table</li>
+                        <li>Find NULL matches</li>
+                        <li>Often more efficient</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle missing orders</li>
+                <li>Foreign key relationship</li>
+                <li>NULL handling</li>
+                <li>Result formatting</li>
+            </ul>
+            <p>Important considerations:</p>
+            <ul>
+                <li>JOIN vs Subquery</li>
+                <li>Performance impact</li>
+                <li>Index usage</li>
+                <li>Column aliasing</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

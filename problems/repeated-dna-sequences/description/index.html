@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repeated DNA Sequences - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 187: Repeated DNA Sequences. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>187. Repeated DNA Sequences</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>The DNA sequence is composed of a series of nucleotides abbreviated as <code>'A'</code>, <code>'C'</code>, <code>'G'</code>, and <code>'T'</code>.</p>
+        <ul>
+            <li>For example, <code>"ACGAATTCCG"</code> is a DNA sequence.</li>
+        </ul>
+        <p>When studying DNA, it is useful to identify repeated sequences within the DNA.</p>
+        <p>Given a string <code>s</code> that represents a DNA sequence, return all the <strong>10-letter-long</strong> sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in <strong>any order</strong>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+Output: ["AAAAACCCCC","CCCCCAAAAA"]
+
+Example 2:
+Input: s = "AAAAAAAAAAAAA"
+Output: ["AAAAAAAAAA"]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def findRepeatedDnaSequences(s: str) -> List[str]:
+    seen = set()
+    result = set()
+    
+    for i in range(len(s) - 9):
+        curr = s[i:i+10]
+        if curr in seen:
+            result.add(curr)
+        seen.add(curr)
+    
+    return list(result)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        Set<String> seen = new HashSet<>();
+        Set<String> result = new HashSet<>();
+        
+        for (int i = 0; i <= s.length() - 10; i++) {
+            String curr = s.substring(i, i + 10);
+            if (!seen.add(curr)) {
+                result.add(curr);
+            }
+        }
+        
+        return new ArrayList<>(result);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        unordered_set<string> seen;
+        unordered_set<string> result;
+        
+        for (int i = 0; i <= (int)s.length() - 10; i++) {
+            string curr = s.substr(i, 10);
+            if (seen.count(curr)) {
+                result.insert(curr);
+            }
+            seen.insert(curr);
+        }
+        
+        return vector<string>(result.begin(), result.end());
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @return {string[]}
+ */
+var findRepeatedDnaSequences = function(s) {
+    const seen = new Set();
+    const result = new Set();
+    
+    for (let i = 0; i <= s.length - 10; i++) {
+        const curr = s.slice(i, i + 10);
+        if (seen.has(curr)) {
+            result.add(curr);
+        }
+        seen.add(curr);
+    }
+    
+    return Array.from(result);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<string> FindRepeatedDnaSequences(string s) {
+        var seen = new HashSet<string>();
+        var result = new HashSet<string>();
+        
+        for (int i = 0; i <= s.Length - 10; i++) {
+            string curr = s.Substring(i, 10);
+            if (!seen.Add(curr)) {
+                result.Add(curr);
+            }
+        }
+        
+        return result.ToList();
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input string</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the sequences in the sets</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses hash sets to track sequences:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Sliding window</li>
+                        <li>Hash set tracking</li>
+                        <li>Duplicate detection</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Extract sequences</li>
+                        <li>Track seen sequences</li>
+                        <li>Record duplicates</li>
+                        <li>Convert to list</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Fixed length (10)</li>
+                <li>String slicing</li>
+                <li>Set operations</li>
+                <li>Memory efficiency</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
