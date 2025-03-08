@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search Tree Iterator - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 173: Binary Search Tree Iterator. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>173. Binary Search Tree Iterator</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Implement the <code>BSTIterator</code> class that represents an iterator over the <strong>in-order traversal</strong> of a binary search tree (BST):</p>
+        <ul>
+            <li><code>BSTIterator(TreeNode root)</code> Initializes an object of the <code>BSTIterator</code> class. The <code>root</code> of the BST is given as part of the constructor. The pointer should be initialized to a non-existent number smaller than any element in the BST.</li>
+            <li><code>boolean hasNext()</code> Returns <code>true</code> if there exists a number in the traversal to the right of the pointer, otherwise returns <code>false</code>.</li>
+            <li><code>int next()</code> Moves the pointer to the right, then returns the number at the pointer.</li>
+        </ul>
+        <p>Notice that by initializing the pointer to a non-existent smallest number, the first call to <code>next()</code> will return the smallest element in the BST.</p>
+        <p>You may assume that <code>next()</code> calls will always be valid. That is, there will be at least a next number in the in-order traversal when <code>next()</code> is called.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input
+["BSTIterator", "next", "next", "hasNext", "next", "hasNext", "next", "hasNext", "next", "hasNext"]
+[[[7, 3, 15, null, null, 9, 20]], [], [], [], [], [], [], [], [], []]
+Output
+[null, 3, 7, true, 9, true, 15, true, 20, false]
+
+Explanation
+BSTIterator bSTIterator = new BSTIterator([7, 3, 15, null, null, 9, 20]);
+bSTIterator.next();    // return 3
+bSTIterator.next();    // return 7
+bSTIterator.hasNext(); // return True
+bSTIterator.next();    // return 9
+bSTIterator.hasNext(); // return True
+bSTIterator.next();    // return 15
+bSTIterator.hasNext(); // return True
+bSTIterator.next();    // return 20
+bSTIterator.hasNext(); // return False</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+class BSTIterator:
+    def __init__(self, root: Optional[TreeNode]):
+        self.stack = []
+        self._leftmost_inorder(root)
+        
+    def _leftmost_inorder(self, root):
+        while root:
+            self.stack.append(root)
+            root = root.left
+    
+    def next(self) -> int:
+        topmost_node = self.stack.pop()
+        if topmost_node.right:
+            self._leftmost_inorder(topmost_node.right)
+        return topmost_node.val
+        
+    def hasNext(self) -> bool:
+        return len(self.stack) > 0</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class BSTIterator {
+    private Stack<TreeNode> stack;
+    
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<>();
+        leftmostInorder(root);
+    }
+    
+    private void leftmostInorder(TreeNode root) {
+        while (root != null) {
+            stack.push(root);
+            root = root.left;
+        }
+    }
+    
+    public int next() {
+        TreeNode topmostNode = stack.pop();
+        if (topmostNode.right != null) {
+            leftmostInorder(topmostNode.right);
+        }
+        return topmostNode.val;
+    }
+    
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class BSTIterator {
+private:
+    stack<TreeNode*> stack;
+    
+    void leftmostInorder(TreeNode* root) {
+        while (root) {
+            stack.push(root);
+            root = root->left;
+        }
+    }
+    
+public:
+    BSTIterator(TreeNode* root) {
+        leftmostInorder(root);
+    }
+    
+    int next() {
+        TreeNode* topmostNode = stack.top();
+        stack.pop();
+        if (topmostNode->right) {
+            leftmostInorder(topmostNode->right);
+        }
+        return topmostNode->val;
+    }
+    
+    bool hasNext() {
+        return !stack.empty();
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+class BSTIterator {
+    constructor(root) {
+        this.stack = [];
+        this.leftmostInorder(root);
+    }
+    
+    leftmostInorder(root) {
+        while (root) {
+            this.stack.push(root);
+            root = root.left;
+        }
+    }
+    
+    next() {
+        const topmostNode = this.stack.pop();
+        if (topmostNode.right) {
+            this.leftmostInorder(topmostNode.right);
+        }
+        return topmostNode.val;
+    }
+    
+    hasNext() {
+        return this.stack.length > 0;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class BSTIterator {
+    private Stack<TreeNode> stack;
+    
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<TreeNode>();
+        LeftmostInorder(root);
+    }
+    
+    private void LeftmostInorder(TreeNode root) {
+        while (root != null) {
+            stack.Push(root);
+            root = root.left;
+        }
+    }
+    
+    public int Next() {
+        TreeNode topmostNode = stack.Pop();
+        if (topmostNode.right != null) {
+            LeftmostInorder(topmostNode.right);
+        }
+        return topmostNode.val;
+    }
+    
+    public bool HasNext() {
+        return stack.Count > 0;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong>
+                    <ul>
+                        <li>Constructor: O(h) where h is the height of the tree</li>
+                        <li>next(): O(1) amortized</li>
+                        <li>hasNext(): O(1)</li>
+                    </ul>
+                </li>
+                <li><strong>Space Complexity:</strong> O(h) where h is the height of the tree</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution implements controlled inorder traversal:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Stack-based traversal</li>
+                        <li>Inorder traversal</li>
+                        <li>Lazy evaluation</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize stack</li>
+                        <li>Process left path</li>
+                        <li>Handle right subtrees</li>
+                        <li>Maintain state</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Constant average time</li>
+                <li>Space efficient</li>
+                <li>Iterator pattern</li>
+                <li>BST properties</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

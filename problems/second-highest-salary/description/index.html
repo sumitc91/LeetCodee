@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Highest Salary - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 176: Second Highest Salary. SQL solution with explanation.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>176. Second Highest Salary</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Table: <code>Employee</code></p>
+        <pre>
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| id          | int  |
+| salary      | int  |
++-------------+------+
+id is the primary key column for this table.
+Each row of this table contains information about the salary of an employee.</pre>
+
+        <p>Write an SQL query to report the second highest salary from the <code>Employee</code> table. If there is no second highest salary, the query should report <code>null</code>.</p>
+
+        <h3>Examples</h3>
+        <p>Example 1:</p>
+        <pre>
+Input: 
+Employee table:
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+Output: 
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| 200                 |
++---------------------+</pre>
+
+        <p>Example 2:</p>
+        <pre>
+Input: 
+Employee table:
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
++----+--------+
+Output: 
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| null                |
++---------------------+</pre>
+
+        <div class="solution">
+            <h3>SQL Solution</h3>
+            <pre><code>
+SELECT MAX(salary) AS SecondHighestSalary
+FROM Employee
+WHERE salary < (SELECT MAX(salary) FROM Employee);</code></pre>
+
+            <p>Alternative Solution:</p>
+            <pre><code>
+SELECT IFNULL(
+    (SELECT DISTINCT salary
+     FROM Employee
+     ORDER BY salary DESC
+     LIMIT 1 OFFSET 1),
+    NULL
+) AS SecondHighestSalary;</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This problem can be solved in two ways:</p>
+            <ul>
+                <li>First approach:
+                    <ul>
+                        <li>Use subquery to find max salary</li>
+                        <li>Find max salary less than the highest</li>
+                        <li>Simple but may return empty result</li>
+                    </ul>
+                </li>
+                <li>Second approach:
+                    <ul>
+                        <li>Order by salary descending</li>
+                        <li>Use LIMIT and OFFSET</li>
+                        <li>Handle NULL with IFNULL</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle NULL case</li>
+                <li>Handle duplicates</li>
+                <li>Consider empty table</li>
+                <li>Consider single row</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
