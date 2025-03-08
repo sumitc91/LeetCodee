@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximal Rectangle - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 85: Maximal Rectangle. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>85. Maximal Rectangle</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a <code>rows x cols</code> binary matrix filled with <code>0</code>'s and <code>1</code>'s, find the largest rectangle containing only <code>1</code>'s and return <em>its area</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+Output: 6
+Explanation: The maximal rectangle is shown in the above picture.
+
+Example 2:
+Input: matrix = [["0"]]
+Output: 0
+
+Example 3:
+Input: matrix = [["1"]]
+Output: 1</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def maximalRectangle(matrix: List[List[str]]) -> int:
+    if not matrix or not matrix[0]:
+        return 0
+    
+    def largestRectangleArea(heights):
+        stack = []  # (index, height)
+        max_area = 0
+        heights = [0] + heights + [0]
+        
+        for i, height in enumerate(heights):
+            start = i
+            while stack and stack[-1][1] > height:
+                index, h = stack.pop()
+                width = i - index
+                max_area = max(max_area, width * h)
+                start = index
+            stack.append((start, height))
+        
+        return max_area
+    
+    rows, cols = len(matrix), len(matrix[0])
+    heights = [0] * cols
+    max_area = 0
+    
+    for row in range(rows):
+        # Update heights
+        for col in range(cols):
+            if matrix[row][col] == "1":
+                heights[col] += 1
+            else:
+                heights[col] = 0
+        
+        # Calculate max area for current row
+        max_area = max(max_area, largestRectangleArea(heights))
+    
+    return max_area</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return 0;
+        }
+        
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int[] heights = new int[cols];
+        int maxArea = 0;
+        
+        for (int row = 0; row < rows; row++) {
+            // Update heights
+            for (int col = 0; col < cols; col++) {
+                if (matrix[row][col] == '1') {
+                    heights[col]++;
+                } else {
+                    heights[col] = 0;
+                }
+            }
+            
+            // Calculate max area for current row
+            maxArea = Math.max(maxArea, largestRectangleArea(heights));
+        }
+        
+        return maxArea;
+    }
+    
+    private int largestRectangleArea(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        int maxArea = 0;
+        int[] h = new int[heights.length + 2];
+        
+        System.arraycopy(heights, 0, h, 1, heights.length);
+        
+        for (int i = 0; i < h.length; i++) {
+            while (!stack.isEmpty() && h[stack.peek()] > h[i]) {
+                int height = h[stack.pop()];
+                int width = i - stack.peek() - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+            stack.push(i);
+        }
+        
+        return maxArea;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return 0;
+        }
+        
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        vector<int> heights(cols);
+        int maxArea = 0;
+        
+        for (int row = 0; row < rows; row++) {
+            // Update heights
+            for (int col = 0; col < cols; col++) {
+                if (matrix[row][col] == '1') {
+                    heights[col]++;
+                } else {
+                    heights[col] = 0;
+                }
+            }
+            
+            // Calculate max area for current row
+            maxArea = max(maxArea, largestRectangleArea(heights));
+        }
+        
+        return maxArea;
+    }
+    
+private:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> st;
+        int maxArea = 0;
+        
+        heights.insert(heights.begin(), 0);
+        heights.push_back(0);
+        
+        for (int i = 0; i < heights.size(); i++) {
+            while (!st.empty() && heights[st.top()] > heights[i]) {
+                int height = heights[st.top()];
+                st.pop();
+                int width = i - st.top() - 1;
+                maxArea = max(maxArea, height * width);
+            }
+            st.push(i);
+        }
+        
+        return maxArea;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {character[][]} matrix
+ * @return {number}
+ */
+var maximalRectangle = function(matrix) {
+    if (!matrix.length || !matrix[0].length) {
+        return 0;
+    }
+    
+    const largestRectangleArea = (heights) => {
+        const stack = [];  // [index, height]
+        let maxArea = 0;
+        heights = [0, ...heights, 0];
+        
+        for (let i = 0; i < heights.length; i++) {
+            let start = i;
+            while (stack.length && stack[stack.length - 1][1] > heights[i]) {
+                const [index, height] = stack.pop();
+                const width = i - index;
+                maxArea = Math.max(maxArea, width * height);
+                start = index;
+            }
+            stack.push([start, heights[i]]);
+        }
+        
+        return maxArea;
+    };
+    
+    const rows = matrix.length;
+    const cols = matrix[0].length;
+    const heights = new Array(cols).fill(0);
+    let maxArea = 0;
+    
+    for (let row = 0; row < rows; row++) {
+        // Update heights
+        for (let col = 0; col < cols; col++) {
+            if (matrix[row][col] === '1') {
+                heights[col]++;
+            } else {
+                heights[col] = 0;
+            }
+        }
+        
+        // Calculate max area for current row
+        maxArea = Math.max(maxArea, largestRectangleArea(heights));
+    }
+    
+    return maxArea;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MaximalRectangle(char[][] matrix) {
+        if (matrix == null || matrix.Length == 0 || matrix[0].Length == 0) {
+            return 0;
+        }
+        
+        int rows = matrix.Length;
+        int cols = matrix[0].Length;
+        int[] heights = new int[cols];
+        int maxArea = 0;
+        
+        for (int row = 0; row < rows; row++) {
+            // Update heights
+            for (int col = 0; col < cols; col++) {
+                if (matrix[row][col] == '1') {
+                    heights[col]++;
+                } else {
+                    heights[col] = 0;
+                }
+            }
+            
+            // Calculate max area for current row
+            maxArea = Math.Max(maxArea, LargestRectangleArea(heights));
+        }
+        
+        return maxArea;
+    }
+    
+    private int LargestRectangleArea(int[] heights) {
+        Stack<int> stack = new Stack<int>();
+        int maxArea = 0;
+        int[] h = new int[heights.Length + 2];
+        
+        Array.Copy(heights, 0, h, 1, heights.Length);
+        
+        for (int i = 0; i < h.Length; i++) {
+            while (stack.Count > 0 && h[stack.Peek()] > h[i]) {
+                int height = h[stack.Pop()];
+                int width = i - stack.Peek() - 1;
+                maxArea = Math.Max(maxArea, height * width);
+            }
+            stack.Push(i);
+        }
+        
+        return maxArea;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(rows × cols) where rows and cols are the dimensions of the matrix</li>
+                <li><strong>Space Complexity:</strong> O(cols) for the heights array and stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution converts the 2D problem into multiple 1D histogram problems:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Convert each row to histogram</li>
+                        <li>Use histogram solution</li>
+                        <li>Track maximum area</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Process each row</li>
+                        <li>Update heights array</li>
+                        <li>Find largest rectangle</li>
+                        <li>Track maximum area</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient conversion to 1D</li>
+                <li>Reuses histogram solution</li>
+                <li>Handles all edge cases</li>
+                <li>Optimal space usage</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

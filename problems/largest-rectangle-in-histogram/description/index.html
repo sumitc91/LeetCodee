@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Largest Rectangle in Histogram - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 84: Largest Rectangle in Histogram. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>84. Largest Rectangle in Histogram</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an array of integers <code>heights</code> representing the histogram's bar height where the width of each bar is <code>1</code>, return <em>the area of the largest rectangle in the histogram</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: heights = [2,1,5,6,2,3]
+Output: 10
+Explanation: The largest rectangle has area = 10 (height = 5, width = 2).
+
+Example 2:
+Input: heights = [2,4]
+Output: 4</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def largestRectangleArea(heights: List[int]) -> int:
+    stack = []  # (index, height)
+    max_area = 0
+    
+    # Add sentinel values
+    heights = [0] + heights + [0]
+    
+    for i, height in enumerate(heights):
+        start = i
+        
+        # Pop higher heights and calculate their areas
+        while stack and stack[-1][1] > height:
+            index, h = stack.pop()
+            width = i - index
+            max_area = max(max_area, width * h)
+            start = index
+        
+        stack.append((start, height))
+    
+    return max_area</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        int maxArea = 0;
+        int[] h = new int[heights.length + 2];
+        
+        // Copy array with sentinel values
+        System.arraycopy(heights, 0, h, 1, heights.length);
+        
+        for (int i = 0; i < h.length; i++) {
+            while (!stack.isEmpty() && h[stack.peek()] > h[i]) {
+                int height = h[stack.pop()];
+                int width = i - stack.peek() - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+            stack.push(i);
+        }
+        
+        return maxArea;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> st;
+        int maxArea = 0;
+        
+        // Add sentinel values
+        heights.insert(heights.begin(), 0);
+        heights.push_back(0);
+        
+        for (int i = 0; i < heights.size(); i++) {
+            while (!st.empty() && heights[st.top()] > heights[i]) {
+                int height = heights[st.top()];
+                st.pop();
+                int width = i - st.top() - 1;
+                maxArea = max(maxArea, height * width);
+            }
+            st.push(i);
+        }
+        
+        return maxArea;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number[]} heights
+ * @return {number}
+ */
+var largestRectangleArea = function(heights) {
+    const stack = [];  // [index, height]
+    let maxArea = 0;
+    
+    // Add sentinel values
+    heights = [0, ...heights, 0];
+    
+    for (let i = 0; i < heights.length; i++) {
+        let start = i;
+        
+        while (stack.length && stack[stack.length - 1][1] > heights[i]) {
+            const [index, height] = stack.pop();
+            const width = i - index;
+            maxArea = Math.max(maxArea, width * height);
+            start = index;
+        }
+        
+        stack.push([start, heights[i]]);
+    }
+    
+    return maxArea;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int LargestRectangleArea(int[] heights) {
+        Stack<int> stack = new Stack<int>();
+        int maxArea = 0;
+        int[] h = new int[heights.Length + 2];
+        
+        // Copy array with sentinel values
+        Array.Copy(heights, 0, h, 1, heights.Length);
+        
+        for (int i = 0; i < h.Length; i++) {
+            while (stack.Count > 0 && h[stack.Peek()] > h[i]) {
+                int height = h[stack.Pop()];
+                int width = i - stack.Peek() - 1;
+                maxArea = Math.Max(maxArea, height * width);
+            }
+            stack.Push(i);
+        }
+        
+        return maxArea;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of heights array</li>
+                <li><strong>Space Complexity:</strong> O(n) for the stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses a monotonic stack approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Use stack to track heights</li>
+                        <li>Maintain increasing order</li>
+                        <li>Calculate areas when popping</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Add sentinel values</li>
+                        <li>Process each height</li>
+                        <li>Pop higher heights</li>
+                        <li>Calculate areas</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient stack solution</li>
+                <li>Handles all edge cases</li>
+                <li>Single pass through array</li>
+                <li>Uses sentinel values</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
