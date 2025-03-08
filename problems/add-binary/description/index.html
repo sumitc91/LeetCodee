@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Binary - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 67: Add Binary. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>67. Add Binary</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two binary strings <code>a</code> and <code>b</code>, return <em>their sum as a binary string</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: a = "11", b = "1"
+Output: "100"
+
+Example 2:
+Input: a = "1010", b = "1011"
+Output: "10101"</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def addBinary(a: str, b: str) -> str:
+    result = []
+    carry = 0
+    i = len(a) - 1
+    j = len(b) - 1
+    
+    while i >= 0 or j >= 0 or carry:
+        # Get digits from right to left
+        digit_a = int(a[i]) if i >= 0 else 0
+        digit_b = int(b[j]) if j >= 0 else 0
+        
+        # Calculate current sum and carry
+        current_sum = digit_a + digit_b + carry
+        carry = current_sum // 2
+        result.append(str(current_sum % 2))
+        
+        i -= 1
+        j -= 1
+    
+    return ''.join(result[::-1])</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String addBinary(String a, String b) {
+        StringBuilder result = new StringBuilder();
+        int carry = 0;
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        
+        while (i >= 0 || j >= 0 || carry > 0) {
+            // Get digits from right to left
+            int digitA = i >= 0 ? a.charAt(i) - '0' : 0;
+            int digitB = j >= 0 ? b.charAt(j) - '0' : 0;
+            
+            // Calculate current sum and carry
+            int currentSum = digitA + digitB + carry;
+            carry = currentSum / 2;
+            result.append(currentSum % 2);
+            
+            i--;
+            j--;
+        }
+        
+        return result.reverse().toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        string result;
+        int carry = 0;
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        
+        while (i >= 0 || j >= 0 || carry) {
+            // Get digits from right to left
+            int digitA = i >= 0 ? a[i] - '0' : 0;
+            int digitB = j >= 0 ? b[j] - '0' : 0;
+            
+            // Calculate current sum and carry
+            int currentSum = digitA + digitB + carry;
+            carry = currentSum / 2;
+            result = to_string(currentSum % 2) + result;
+            
+            i--;
+            j--;
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} a
+ * @param {string} b
+ * @return {string}
+ */
+var addBinary = function(a, b) {
+    let result = '';
+    let carry = 0;
+    let i = a.length - 1;
+    let j = b.length - 1;
+    
+    while (i >= 0 || j >= 0 || carry > 0) {
+        // Get digits from right to left
+        const digitA = i >= 0 ? parseInt(a[i]) : 0;
+        const digitB = j >= 0 ? parseInt(b[j]) : 0;
+        
+        // Calculate current sum and carry
+        const currentSum = digitA + digitB + carry;
+        carry = Math.floor(currentSum / 2);
+        result = (currentSum % 2) + result;
+        
+        i--;
+        j--;
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string AddBinary(string a, string b) {
+        StringBuilder result = new StringBuilder();
+        int carry = 0;
+        int i = a.Length - 1;
+        int j = b.Length - 1;
+        
+        while (i >= 0 || j >= 0 || carry > 0) {
+            // Get digits from right to left
+            int digitA = i >= 0 ? a[i] - '0' : 0;
+            int digitB = j >= 0 ? b[j] - '0' : 0;
+            
+            // Calculate current sum and carry
+            int currentSum = digitA + digitB + carry;
+            carry = currentSum / 2;
+            result.Insert(0, currentSum % 2);
+            
+            i--;
+            j--;
+        }
+        
+        return result.ToString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(max(N, M)) where N and M are lengths of input strings</li>
+                <li><strong>Space Complexity:</strong> O(max(N, M)) to store the result</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution implements binary addition with carry:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Process digits from right to left</li>
+                        <li>Handle carry propagation</li>
+                        <li>Build result string</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize carry and result</li>
+                        <li>Process digits while either:
+                            <ul>
+                                <li>Digits remain in either number</li>
+                                <li>Carry remains to be processed</li>
+                            </ul>
+                        </li>
+                        <li>For each position:
+                            <ul>
+                                <li>Add digits and carry</li>
+                                <li>Update carry</li>
+                                <li>Append remainder to result</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle different length inputs</li>
+                <li>Process carry correctly</li>
+                <li>Build result efficiently</li>
+                <li>No need for binary conversion</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

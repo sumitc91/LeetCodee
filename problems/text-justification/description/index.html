@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Justification - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 68: Text Justification. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .hard { background-color: #FF2D55; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>68. Text Justification</h1>
+        <span class="difficulty hard">Hard</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an array of strings <code>words</code> and a width <code>maxWidth</code>, format the text such that each line has exactly <code>maxWidth</code> characters and is fully (left and right) justified.</p>
+        <p>You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces <code>' '</code> when necessary so that each line has exactly <code>maxWidth</code> characters.</p>
+        <p>Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line does not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.</p>
+        <p>For the last line of text, it should be left-justified, and no extra space is inserted between words.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: words = ["This", "is", "an", "example", "of", "text", "justification."], maxWidth = 16
+Output: [
+   "This    is    an",
+   "example  of text",
+   "justification.  "
+]
+
+Example 2:
+Input: words = ["What","must","be","acknowledgment","shall","be"], maxWidth = 16
+Output: [
+  "What   must   be",
+  "acknowledgment  ",
+  "shall be        "
+]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def fullJustify(words: List[str], maxWidth: int) -> List[str]:
+    result = []
+    current_line = []
+    current_width = 0
+    i = 0
+    
+    while i < len(words):
+        # Check if we can add the current word
+        if current_width + len(current_line) + len(words[i]) <= maxWidth:
+            current_line.append(words[i])
+            current_width += len(words[i])
+            i += 1
+        else:
+            # Justify current line
+            spaces_needed = maxWidth - current_width
+            if len(current_line) == 1:
+                # Single word case
+                result.append(current_line[0] + ' ' * spaces_needed)
+            else:
+                # Multiple words case
+                spaces_between = spaces_needed // (len(current_line) - 1)
+                extra_spaces = spaces_needed % (len(current_line) - 1)
+                line = ''
+                for j in range(len(current_line) - 1):
+                    line += current_line[j]
+                    line += ' ' * spaces_between
+                    if j < extra_spaces:
+                        line += ' '
+                line += current_line[-1]
+                result.append(line)
+            current_line = []
+            current_width = 0
+    
+    # Handle last line (left-justified)
+    if current_line:
+        last_line = ' '.join(current_line)
+        last_line += ' ' * (maxWidth - len(last_line))
+        result.append(last_line)
+    
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> result = new ArrayList<>();
+        List<String> currentLine = new ArrayList<>();
+        int currentWidth = 0;
+        int i = 0;
+        
+        while (i < words.length) {
+            // Check if we can add the current word
+            if (currentWidth + currentLine.size() + words[i].length() <= maxWidth) {
+                currentLine.add(words[i]);
+                currentWidth += words[i].length();
+                i++;
+            } else {
+                // Justify current line
+                int spacesNeeded = maxWidth - currentWidth;
+                if (currentLine.size() == 1) {
+                    // Single word case
+                    result.add(currentLine.get(0) + " ".repeat(spacesNeeded));
+                } else {
+                    // Multiple words case
+                    int spacesBetween = spacesNeeded / (currentLine.size() - 1);
+                    int extraSpaces = spacesNeeded % (currentLine.size() - 1);
+                    StringBuilder line = new StringBuilder();
+                    for (int j = 0; j < currentLine.size() - 1; j++) {
+                        line.append(currentLine.get(j));
+                        line.append(" ".repeat(spacesBetween));
+                        if (j < extraSpaces) {
+                            line.append(" ");
+                        }
+                    }
+                    line.append(currentLine.get(currentLine.size() - 1));
+                    result.add(line.toString());
+                }
+                currentLine.clear();
+                currentWidth = 0;
+            }
+        }
+        
+        // Handle last line (left-justified)
+        if (!currentLine.isEmpty()) {
+            String lastLine = String.join(" ", currentLine);
+            lastLine += " ".repeat(maxWidth - lastLine.length());
+            result.add(lastLine);
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        vector<string> result;
+        vector<string> currentLine;
+        int currentWidth = 0;
+        int i = 0;
+        
+        while (i < words.size()) {
+            // Check if we can add the current word
+            if (currentWidth + currentLine.size() + words[i].length() <= maxWidth) {
+                currentLine.push_back(words[i]);
+                currentWidth += words[i].length();
+                i++;
+            } else {
+                // Justify current line
+                int spacesNeeded = maxWidth - currentWidth;
+                if (currentLine.size() == 1) {
+                    // Single word case
+                    result.push_back(currentLine[0] + string(spacesNeeded, ' '));
+                } else {
+                    // Multiple words case
+                    int spacesBetween = spacesNeeded / (currentLine.size() - 1);
+                    int extraSpaces = spacesNeeded % (currentLine.size() - 1);
+                    string line;
+                    for (int j = 0; j < currentLine.size() - 1; j++) {
+                        line += currentLine[j];
+                        line += string(spacesBetween, ' ');
+                        if (j < extraSpaces) {
+                            line += " ";
+                        }
+                    }
+                    line += currentLine.back();
+                    result.push_back(line);
+                }
+                currentLine.clear();
+                currentWidth = 0;
+            }
+        }
+        
+        // Handle last line (left-justified)
+        if (!currentLine.empty()) {
+            string lastLine = currentLine[0];
+            for (int j = 1; j < currentLine.size(); j++) {
+                lastLine += " " + currentLine[j];
+            }
+            lastLine += string(maxWidth - lastLine.length(), ' ');
+            result.push_back(lastLine);
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string[]} words
+ * @param {number} maxWidth
+ * @return {string[]}
+ */
+var fullJustify = function(words, maxWidth) {
+    const result = [];
+    let currentLine = [];
+    let currentWidth = 0;
+    let i = 0;
+    
+    while (i < words.length) {
+        // Check if we can add the current word
+        if (currentWidth + currentLine.length + words[i].length <= maxWidth) {
+            currentLine.push(words[i]);
+            currentWidth += words[i].length;
+            i++;
+        } else {
+            // Justify current line
+            const spacesNeeded = maxWidth - currentWidth;
+            if (currentLine.length === 1) {
+                // Single word case
+                result.push(currentLine[0] + ' '.repeat(spacesNeeded));
+            } else {
+                // Multiple words case
+                const spacesBetween = Math.floor(spacesNeeded / (currentLine.length - 1));
+                const extraSpaces = spacesNeeded % (currentLine.length - 1);
+                let line = '';
+                for (let j = 0; j < currentLine.length - 1; j++) {
+                    line += currentLine[j];
+                    line += ' '.repeat(spacesBetween);
+                    if (j < extraSpaces) {
+                        line += ' ';
+                    }
+                }
+                line += currentLine[currentLine.length - 1];
+                result.push(line);
+            }
+            currentLine = [];
+            currentWidth = 0;
+        }
+    }
+    
+    // Handle last line (left-justified)
+    if (currentLine.length > 0) {
+        let lastLine = currentLine.join(' ');
+        lastLine += ' '.repeat(maxWidth - lastLine.length);
+        result.push(lastLine);
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<string> FullJustify(string[] words, int maxWidth) {
+        IList<string> result = new List<string>();
+        List<string> currentLine = new List<string>();
+        int currentWidth = 0;
+        int i = 0;
+        
+        while (i < words.Length) {
+            // Check if we can add the current word
+            if (currentWidth + currentLine.Count + words[i].Length <= maxWidth) {
+                currentLine.Add(words[i]);
+                currentWidth += words[i].Length;
+                i++;
+            } else {
+                // Justify current line
+                int spacesNeeded = maxWidth - currentWidth;
+                if (currentLine.Count == 1) {
+                    // Single word case
+                    result.Add(currentLine[0] + new string(' ', spacesNeeded));
+                } else {
+                    // Multiple words case
+                    int spacesBetween = spacesNeeded / (currentLine.Count - 1);
+                    int extraSpaces = spacesNeeded % (currentLine.Count - 1);
+                    StringBuilder line = new StringBuilder();
+                    for (int j = 0; j < currentLine.Count - 1; j++) {
+                        line.Append(currentLine[j]);
+                        line.Append(new string(' ', spacesBetween));
+                        if (j < extraSpaces) {
+                            line.Append(' ');
+                        }
+                    }
+                    line.Append(currentLine[currentLine.Count - 1]);
+                    result.Add(line.ToString());
+                }
+                currentLine.Clear();
+                currentWidth = 0;
+            }
+        }
+        
+        // Handle last line (left-justified)
+        if (currentLine.Count > 0) {
+            string lastLine = string.Join(" ", currentLine);
+            lastLine += new string(' ', maxWidth - lastLine.Length);
+            result.Add(lastLine);
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the total number of characters in all words</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the result</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution handles text justification in three main steps:</p>
+            <ul>
+                <li>Line building:
+                    <ul>
+                        <li>Pack words into lines</li>
+                        <li>Track current width</li>
+                        <li>Consider spaces between words</li>
+                    </ul>
+                </li>
+                <li>Line justification:
+                    <ul>
+                        <li>Calculate spaces needed</li>
+                        <li>Distribute spaces evenly</li>
+                        <li>Handle extra spaces</li>
+                        <li>Special case for single word</li>
+                    </ul>
+                </li>
+                <li>Last line handling:
+                    <ul>
+                        <li>Left justify only</li>
+                        <li>Single space between words</li>
+                        <li>Pad with spaces at end</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Greedy approach for packing</li>
+                <li>Careful space distribution</li>
+                <li>Special cases handling</li>
+                <li>Efficient string building</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

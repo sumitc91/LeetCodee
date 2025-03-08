@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climbing Stairs - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 70: Climbing Stairs. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>70. Climbing Stairs</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>You are climbing a staircase. It takes <code>n</code> steps to reach the top.</p>
+        <p>Each time you can either climb <code>1</code> or <code>2</code> steps. In how many distinct ways can you climb to the top?</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+
+Example 2:
+Input: n = 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def climbStairs(n: int) -> int:
+    if n <= 2:
+        return n
+    
+    # Initialize first two numbers
+    prev1, prev2 = 1, 2
+    
+    # Calculate Fibonacci sequence
+    for i in range(3, n + 1):
+        current = prev1 + prev2
+        prev1 = prev2
+        prev2 = current
+    
+    return prev2</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) {
+            return n;
+        }
+        
+        // Initialize first two numbers
+        int prev1 = 1;
+        int prev2 = 2;
+        
+        // Calculate Fibonacci sequence
+        for (int i = 3; i <= n; i++) {
+            int current = prev1 + prev2;
+            prev1 = prev2;
+            prev2 = current;
+        }
+        
+        return prev2;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int climbStairs(int n) {
+        if (n <= 2) {
+            return n;
+        }
+        
+        // Initialize first two numbers
+        int prev1 = 1;
+        int prev2 = 2;
+        
+        // Calculate Fibonacci sequence
+        for (int i = 3; i <= n; i++) {
+            int current = prev1 + prev2;
+            prev1 = prev2;
+            prev2 = current;
+        }
+        
+        return prev2;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairs = function(n) {
+    if (n <= 2) {
+        return n;
+    }
+    
+    // Initialize first two numbers
+    let prev1 = 1;
+    let prev2 = 2;
+    
+    // Calculate Fibonacci sequence
+    for (let i = 3; i <= n; i++) {
+        const current = prev1 + prev2;
+        prev1 = prev2;
+        prev2 = current;
+    }
+    
+    return prev2;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int ClimbStairs(int n) {
+        if (n <= 2) {
+            return n;
+        }
+        
+        // Initialize first two numbers
+        int prev1 = 1;
+        int prev2 = 2;
+        
+        // Calculate Fibonacci sequence
+        for (int i = 3; i <= n; i++) {
+            int current = prev1 + prev2;
+            prev1 = prev2;
+            prev2 = current;
+        }
+        
+        return prev2;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) to calculate n Fibonacci numbers</li>
+                <li><strong>Space Complexity:</strong> O(1) using only constant extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the Fibonacci sequence pattern:</p>
+            <ul>
+                <li>Key insight:
+                    <ul>
+                        <li>Ways to reach n steps = Ways to reach (n-1) + Ways to reach (n-2)</li>
+                        <li>This forms Fibonacci sequence</li>
+                        <li>Base cases: n=1 → 1 way, n=2 → 2 ways</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Handle base cases (n ≤ 2)</li>
+                        <li>Initialize first two numbers:
+                            <ul>
+                                <li>prev1 = F(1) = 1</li>
+                                <li>prev2 = F(2) = 2</li>
+                            </ul>
+                        </li>
+                        <li>Calculate next numbers:
+                            <ul>
+                                <li>current = prev1 + prev2</li>
+                                <li>Update previous numbers</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Dynamic programming approach</li>
+                <li>Optimized to O(1) space</li>
+                <li>Simple iterative solution</li>
+                <li>No recursion needed</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sqrt(x) - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 69: Sqrt(x). Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>69. Sqrt(x)</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given a non-negative integer <code>x</code>, return <em>the square root of</em> <code>x</code> <em>rounded down to the nearest integer</em>. The returned integer should be <strong>non-negative</strong> as well.</p>
+        <p>You <strong>must not use</strong> any built-in exponent function or operator.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: x = 4
+Output: 2
+Explanation: The square root of 4 is 2, so we return 2.
+
+Example 2:
+Input: x = 8
+Output: 2
+Explanation: The square root of 8 is 2.82842..., and since we round it down to the nearest integer, 2 is returned.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def mySqrt(x: int) -> int:
+    if x == 0:
+        return 0
+    
+    left, right = 1, x
+    
+    while left <= right:
+        mid = left + (right - left) // 2
+        if mid * mid == x:
+            return mid
+        elif mid * mid < x:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return right</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public int mySqrt(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        
+        int left = 1;
+        int right = x;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            // Use division instead of multiplication to avoid overflow
+            if (mid == x / mid) {
+                return mid;
+            } else if (mid < x / mid) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return right;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    int mySqrt(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        
+        int left = 1;
+        int right = x;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            // Use division instead of multiplication to avoid overflow
+            if (mid == x / mid) {
+                return mid;
+            } else if (mid < x / mid) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return right;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} x
+ * @return {number}
+ */
+var mySqrt = function(x) {
+    if (x === 0) {
+        return 0;
+    }
+    
+    let left = 1;
+    let right = x;
+    
+    while (left <= right) {
+        const mid = Math.floor(left + (right - left) / 2);
+        
+        if (mid * mid === x) {
+            return mid;
+        } else if (mid * mid < x) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    
+    return right;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public int MySqrt(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        
+        int left = 1;
+        int right = x;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            // Use division instead of multiplication to avoid overflow
+            if (mid == x / mid) {
+                return mid;
+            } else if (mid < x / mid) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return right;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(log n) using binary search</li>
+                <li><strong>Space Complexity:</strong> O(1) using only constant extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses binary search to find the square root:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Search space is from 1 to x</li>
+                        <li>Binary search to find largest number whose square ≤ x</li>
+                        <li>Handle overflow using division</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Handle base case (x = 0)</li>
+                        <li>Binary search in range [1, x]:
+                            <ul>
+                                <li>Calculate mid point</li>
+                                <li>Compare mid² with x</li>
+                                <li>Adjust search range</li>
+                            </ul>
+                        </li>
+                        <li>Return right pointer (floor value)</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>No built-in functions used</li>
+                <li>Handles integer overflow</li>
+                <li>Efficient logarithmic solution</li>
+                <li>Returns floor value automatically</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
