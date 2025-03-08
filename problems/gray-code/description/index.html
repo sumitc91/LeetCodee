@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gray Code - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 89: Gray Code. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>89. Gray Code</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>An <strong>n-bit gray code sequence</strong> is a sequence of <code>2^n</code> integers where:</p>
+        <ul>
+            <li>Every integer is in the inclusive range <code>[0, 2^n - 1]</code></li>
+            <li>The first integer is <code>0</code></li>
+            <li>An integer appears <strong>no more than once</strong> in the sequence</li>
+            <li>The binary representation of every pair of <strong>adjacent</strong> integers differs by <strong>exactly one bit</strong></li>
+            <li>The binary representation of the <strong>first</strong> and <strong>last</strong> integers differs by <strong>exactly one bit</strong></li>
+        </ul>
+        <p>Given an integer <code>n</code>, return <em>any valid <strong>n-bit gray code sequence</strong></em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: n = 2
+Output: [0,1,3,2]
+Explanation:
+The binary representation of [0,1,3,2] is [00,01,11,10].
+- 00 and 01 differ by one bit
+- 01 and 11 differ by one bit
+- 11 and 10 differ by one bit
+- 10 and 00 differ by one bit
+[0,2,3,1] is also a valid gray code sequence.
+
+Example 2:
+Input: n = 1
+Output: [0,1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def grayCode(n: int) -> List[int]:
+    # Initialize with 0
+    result = [0]
+    
+    for i in range(n):
+        # Add reflected values with 1 at position i
+        size = len(result)
+        for j in range(size - 1, -1, -1):
+            result.append(result[j] | (1 << i))
+    
+    return result</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public List<Integer> grayCode(int n) {
+        List<Integer> result = new ArrayList<>();
+        result.add(0);
+        
+        for (int i = 0; i < n; i++) {
+            int size = result.size();
+            for (int j = size - 1; j >= 0; j--) {
+                result.add(result.get(j) | (1 << i));
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    vector<int> grayCode(int n) {
+        vector<int> result;
+        result.push_back(0);
+        
+        for (int i = 0; i < n; i++) {
+            int size = result.size();
+            for (int j = size - 1; j >= 0; j--) {
+                result.push_back(result[j] | (1 << i));
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {number} n
+ * @return {number[]}
+ */
+var grayCode = function(n) {
+    const result = [0];
+    
+    for (let i = 0; i < n; i++) {
+        const size = result.length;
+        for (let j = size - 1; j >= 0; j--) {
+            result.push(result[j] | (1 << i));
+        }
+    }
+    
+    return result;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public IList<int> GrayCode(int n) {
+        IList<int> result = new List<int>();
+        result.Add(0);
+        
+        for (int i = 0; i < n; i++) {
+            int size = result.Count;
+            for (int j = size - 1; j >= 0; j--) {
+                result.Add(result[j] | (1 << i));
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(2^n) where n is the input number</li>
+                <li><strong>Space Complexity:</strong> O(2^n) to store the result</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the reflected binary code method:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Start with [0]</li>
+                        <li>Reflect current sequence</li>
+                        <li>Add leading bit to reflected values</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Initialize with 0</li>
+                        <li>For each bit position i</li>
+                        <li>Reflect current sequence</li>
+                        <li>Add 1 at position i to reflected values</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Efficient iterative approach</li>
+                <li>Generates valid Gray code</li>
+                <li>No duplicates</li>
+                <li>Adjacent numbers differ by one bit</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

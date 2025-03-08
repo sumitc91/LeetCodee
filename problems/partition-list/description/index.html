@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partition List - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 86: Partition List. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>86. Partition List</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>head</code> of a linked list and a value <code>x</code>, partition it such that all nodes <strong>less than</strong> <code>x</code> come before nodes <strong>greater than or equal</strong> to <code>x</code>.</p>
+        <p>You should <strong>preserve</strong> the original relative order of the nodes in each of the two partitions.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [1,4,3,2,5,2], x = 3
+Output: [1,2,2,4,3,5]
+
+Example 2:
+Input: head = [2,1], x = 2
+Output: [1,2]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+def partition(head: Optional[ListNode], x: int) -> Optional[ListNode]:
+    # Create two dummy nodes for less and greater lists
+    less_head = less = ListNode(0)
+    greater_head = greater = ListNode(0)
+    
+    # Partition the list
+    curr = head
+    while curr:
+        if curr.val < x:
+            less.next = curr
+            less = less.next
+        else:
+            greater.next = curr
+            greater = greater.next
+        curr = curr.next
+    
+    # Connect the two lists
+    greater.next = None
+    less.next = greater_head.next
+    
+    return less_head.next</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+        // Create two dummy nodes for less and greater lists
+        ListNode lessHead = new ListNode(0);
+        ListNode less = lessHead;
+        ListNode greaterHead = new ListNode(0);
+        ListNode greater = greaterHead;
+        
+        // Partition the list
+        ListNode curr = head;
+        while (curr != null) {
+            if (curr.val < x) {
+                less.next = curr;
+                less = less.next;
+            } else {
+                greater.next = curr;
+                greater = greater.next;
+            }
+            curr = curr.next;
+        }
+        
+        // Connect the two lists
+        greater.next = null;
+        less.next = greaterHead.next;
+        
+        return lessHead.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        // Create two dummy nodes for less and greater lists
+        ListNode* lessHead = new ListNode(0);
+        ListNode* less = lessHead;
+        ListNode* greaterHead = new ListNode(0);
+        ListNode* greater = greaterHead;
+        
+        // Partition the list
+        ListNode* curr = head;
+        while (curr) {
+            if (curr->val < x) {
+                less->next = curr;
+                less = less->next;
+            } else {
+                greater->next = curr;
+                greater = greater->next;
+            }
+            curr = curr->next;
+        }
+        
+        // Connect the two lists
+        greater->next = nullptr;
+        less->next = greaterHead->next;
+        
+        ListNode* result = lessHead->next;
+        delete lessHead;
+        delete greaterHead;
+        return result;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} x
+ * @return {ListNode}
+ */
+var partition = function(head, x) {
+    // Create two dummy nodes for less and greater lists
+    const lessHead = new ListNode(0);
+    let less = lessHead;
+    const greaterHead = new ListNode(0);
+    let greater = greaterHead;
+    
+    // Partition the list
+    let curr = head;
+    while (curr) {
+        if (curr.val < x) {
+            less.next = curr;
+            less = less.next;
+        } else {
+            greater.next = curr;
+            greater = greater.next;
+        }
+        curr = curr.next;
+    }
+    
+    // Connect the two lists
+    greater.next = null;
+    less.next = greaterHead.next;
+    
+    return lessHead.next;
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode Partition(ListNode head, int x) {
+        // Create two dummy nodes for less and greater lists
+        ListNode lessHead = new ListNode(0);
+        ListNode less = lessHead;
+        ListNode greaterHead = new ListNode(0);
+        ListNode greater = greaterHead;
+        
+        // Partition the list
+        ListNode curr = head;
+        while (curr != null) {
+            if (curr.val < x) {
+                less.next = curr;
+                less = less.next;
+            } else {
+                greater.next = curr;
+                greater = greater.next;
+            }
+            curr = curr.next;
+        }
+        
+        // Connect the two lists
+        greater.next = null;
+        less.next = greaterHead.next;
+        
+        return lessHead.next;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the linked list</li>
+                <li><strong>Space Complexity:</strong> O(1) using only constant extra space</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses two pointers to create separate lists:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Maintain two separate lists</li>
+                        <li>One for nodes less than x</li>
+                        <li>One for nodes greater or equal to x</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Create dummy nodes</li>
+                        <li>Partition nodes</li>
+                        <li>Connect the lists</li>
+                        <li>Return merged result</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Preserves relative order</li>
+                <li>Single pass solution</li>
+                <li>Constant extra space</li>
+                <li>Handles all edge cases</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
