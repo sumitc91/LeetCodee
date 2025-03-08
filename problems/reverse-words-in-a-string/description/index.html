@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Words in a String - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 151: Reverse Words in a String. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>151. Reverse Words in a String</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an input string <code>s</code>, reverse the order of the <strong>words</strong>.</p>
+        <p>A <strong>word</strong> is defined as a sequence of non-space characters. The <strong>words</strong> in <code>s</code> will be separated by at least one space.</p>
+        <p>Return <em>a string of the words in reverse order concatenated by a single space</em>.</p>
+        <p><strong>Note</strong> that <code>s</code> may contain leading or trailing spaces or multiple spaces between two words. The returned string should only have a single space separating the words. Do not include any extra spaces.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: s = "the sky is blue"
+Output: "blue is sky the"
+
+Example 2:
+Input: s = "  hello world  "
+Output: "world hello"
+Explanation: Your reversed string should not contain leading or trailing spaces.
+
+Example 3:
+Input: s = "a good   example"
+Output: "example good a"
+Explanation: You need to reduce multiple spaces between two words to a single space in the reversed string.</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+def reverseWords(s: str) -> str:
+    # Split string into words and filter out empty strings
+    words = [word for word in s.split() if word]
+    
+    # Reverse the list of words and join with a single space
+    return ' '.join(words[::-1])</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+class Solution {
+    public String reverseWords(String s) {
+        // Split string into words
+        String[] words = s.trim().split("\\s+");
+        
+        // Reverse the array of words
+        StringBuilder result = new StringBuilder();
+        for (int i = words.length - 1; i >= 0; i--) {
+            result.append(words[i]);
+            if (i > 0) {
+                result.append(" ");
+            }
+        }
+        
+        return result.toString();
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+class Solution {
+public:
+    string reverseWords(string s) {
+        // Remove leading and trailing spaces
+        s = trim(s);
+        
+        // Reverse the entire string
+        reverse(s.begin(), s.end());
+        
+        // Reverse each word
+        int start = 0;
+        for (int i = 0; i <= s.length(); i++) {
+            if (i == s.length() || s[i] == ' ') {
+                reverse(s.begin() + start, s.begin() + i);
+                start = i + 1;
+            }
+        }
+        
+        // Remove extra spaces
+        string result;
+        bool space = false;
+        for (char c : s) {
+            if (c != ' ') {
+                result += c;
+                space = false;
+            } else if (!space) {
+                result += ' ';
+                space = true;
+            }
+        }
+        
+        return result;
+    }
+    
+private:
+    string trim(string s) {
+        s.erase(0, s.find_first_not_of(" "));
+        s.erase(s.find_last_not_of(" ") + 1);
+        return s;
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseWords = function(s) {
+    // Split string into words, filter out empty strings, and reverse
+    return s.trim().split(/\s+/).reverse().join(' ');
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+public class Solution {
+    public string ReverseWords(string s) {
+        // Split string into words and filter out empty strings
+        string[] words = s.Trim().Split(new[] { ' ' }, 
+            StringSplitOptions.RemoveEmptyEntries);
+        
+        // Reverse the array of words
+        Array.Reverse(words);
+        
+        // Join words with a single space
+        return string.Join(" ", words);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input string</li>
+                <li><strong>Space Complexity:</strong> O(n) to store the words</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses string manipulation techniques:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>String splitting</li>
+                        <li>Array reversal</li>
+                        <li>String joining</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Split into words</li>
+                        <li>Remove empty strings</li>
+                        <li>Reverse word order</li>
+                        <li>Join with spaces</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Handle leading/trailing spaces</li>
+                <li>Handle multiple spaces</li>
+                <li>Preserve word order</li>
+                <li>Efficient string operations</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
