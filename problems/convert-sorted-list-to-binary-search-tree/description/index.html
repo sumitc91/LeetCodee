@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Sorted List to Binary Search Tree - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 109: Convert Sorted List to Binary Search Tree. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>109. Convert Sorted List to Binary Search Tree</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given the <code>head</code> of a singly linked list where elements are sorted in <strong>ascending order</strong>, convert it to a <strong>height-balanced</strong> binary search tree.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: head = [-10,-3,0,5,9]
+Output: [0,-3,9,-10,null,5]
+Explanation: One possible answer is [0,-3,9,-10,null,5], which represents the shown height balanced BST.
+
+Example 2:
+Input: head = []
+Output: []</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+def sortedListToBST(head: Optional[ListNode]) -> Optional[TreeNode]:
+    def findMiddle(start: Optional[ListNode], end: Optional[ListNode]) -> Optional[ListNode]:
+        slow = fast = start
+        prev = None
+        
+        while fast != end and fast.next != end:
+            prev = slow
+            slow = slow.next
+            fast = fast.next.next
+        
+        if prev:
+            prev.next = None
+        
+        return slow
+    
+    def buildBST(start: Optional[ListNode], end: Optional[ListNode]) -> Optional[TreeNode]:
+        if start == end:
+            return None
+        
+        # Find middle node
+        mid = findMiddle(start, end)
+        if not mid:
+            return None
+        
+        # Create root node
+        root = TreeNode(mid.val)
+        
+        # Recursively build left and right subtrees
+        root.left = buildBST(start, mid)
+        root.right = buildBST(mid.next, end)
+        
+        return root
+    
+    return buildBST(head, None)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    private ListNode findMiddle(ListNode start, ListNode end) {
+        ListNode slow = start;
+        ListNode fast = start;
+        ListNode prev = null;
+        
+        while (fast != end && fast.next != end) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        if (prev != null) {
+            prev.next = null;
+        }
+        
+        return slow;
+    }
+    
+    private TreeNode buildBST(ListNode start, ListNode end) {
+        if (start == end) {
+            return null;
+        }
+        
+        // Find middle node
+        ListNode mid = findMiddle(start, end);
+        if (mid == null) {
+            return null;
+        }
+        
+        // Create root node
+        TreeNode root = new TreeNode(mid.val);
+        
+        // Recursively build left and right subtrees
+        root.left = buildBST(start, mid);
+        root.right = buildBST(mid.next, end);
+        
+        return root;
+    }
+    
+    public TreeNode sortedListToBST(ListNode head) {
+        return buildBST(head, null);
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    ListNode* findMiddle(ListNode* start, ListNode* end) {
+        ListNode* slow = start;
+        ListNode* fast = start;
+        ListNode* prev = nullptr;
+        
+        while (fast != end && fast->next != end) {
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        
+        if (prev) {
+            prev->next = nullptr;
+        }
+        
+        return slow;
+    }
+    
+    TreeNode* buildBST(ListNode* start, ListNode* end) {
+        if (start == end) {
+            return nullptr;
+        }
+        
+        // Find middle node
+        ListNode* mid = findMiddle(start, end);
+        if (!mid) {
+            return nullptr;
+        }
+        
+        // Create root node
+        TreeNode* root = new TreeNode(mid->val);
+        
+        // Recursively build left and right subtrees
+        root->left = buildBST(start, mid);
+        root->right = buildBST(mid->next, end);
+        
+        return root;
+    }
+    
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        return buildBST(head, nullptr);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {TreeNode}
+ */
+var sortedListToBST = function(head) {
+    const findMiddle = (start, end) => {
+        let slow = start;
+        let fast = start;
+        let prev = null;
+        
+        while (fast !== end && fast.next !== end) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        if (prev) {
+            prev.next = null;
+        }
+        
+        return slow;
+    };
+    
+    const buildBST = (start, end) => {
+        if (start === end) {
+            return null;
+        }
+        
+        // Find middle node
+        const mid = findMiddle(start, end);
+        if (!mid) {
+            return null;
+        }
+        
+        // Create root node
+        const root = new TreeNode(mid.val);
+        
+        // Recursively build left and right subtrees
+        root.left = buildBST(start, mid);
+        root.right = buildBST(mid.next, end);
+        
+        return root;
+    };
+    
+    return buildBST(head, null);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private ListNode FindMiddle(ListNode start, ListNode end) {
+        ListNode slow = start;
+        ListNode fast = start;
+        ListNode prev = null;
+        
+        while (fast != end && fast.next != end) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        if (prev != null) {
+            prev.next = null;
+        }
+        
+        return slow;
+    }
+    
+    private TreeNode BuildBST(ListNode start, ListNode end) {
+        if (start == end) {
+            return null;
+        }
+        
+        // Find middle node
+        ListNode mid = FindMiddle(start, end);
+        if (mid == null) {
+            return null;
+        }
+        
+        // Create root node
+        TreeNode root = new TreeNode(mid.val);
+        
+        // Recursively build left and right subtrees
+        root.left = BuildBST(start, mid);
+        root.right = BuildBST(mid.next, end);
+        
+        return root;
+    }
+    
+    public TreeNode SortedListToBST(ListNode head) {
+        return BuildBST(head, null);
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n log n) where n is the length of the linked list</li>
+                <li><strong>Space Complexity:</strong> O(log n) for the recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the divide-and-conquer approach with linked list:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Find middle node</li>
+                        <li>Split list at middle</li>
+                        <li>Recursive construction</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Locate middle node</li>
+                        <li>Create root node</li>
+                        <li>Build subtrees</li>
+                        <li>Return balanced BST</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Sorted list input</li>
+                <li>Height-balanced output</li>
+                <li>List manipulation</li>
+                <li>Efficient middle finding</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

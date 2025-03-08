@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construct Binary Tree from Inorder and Postorder Traversal - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 106: Construct Binary Tree from Inorder and Postorder Traversal. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .medium { background-color: #FFB800; color: #1a1a1a; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>106. Construct Binary Tree from Inorder and Postorder Traversal</h1>
+        <span class="difficulty medium">Medium</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given two integer arrays <code>inorder</code> and <code>postorder</code> where <code>inorder</code> is the inorder traversal of a binary tree and <code>postorder</code> is the postorder traversal of the same tree, construct and return <em>the binary tree</em>.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]
+Output: [3,9,20,null,null,15,7]
+
+Example 2:
+Input: inorder = [-1], postorder = [-1]
+Output: [-1]</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+def buildTree(inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
+    def build(left: int, right: int) -> Optional[TreeNode]:
+        if left > right:
+            return None
+        
+        # Last element in postorder is the root
+        val = postorder[postorder_index[0]]
+        root = TreeNode(val)
+        postorder_index[0] -= 1
+        
+        # Find root's position in inorder
+        mid = inorder_map[val]
+        
+        # Build right subtree first (since we're moving backwards in postorder)
+        root.right = build(mid + 1, right)
+        root.left = build(left, mid - 1)
+        
+        return root
+    
+    # Build map of value -> index for inorder array
+    inorder_map = {val: idx for idx, val in enumerate(inorder)}
+    postorder_index = [len(postorder) - 1]  # Using list to modify in recursive calls
+    
+    return build(0, len(inorder) - 1)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    private Map<Integer, Integer> inorderMap;
+    private int postorderIndex;
+    
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        // Build map of value -> index for inorder array
+        inorderMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inorderMap.put(inorder[i], i);
+        }
+        
+        postorderIndex = postorder.length - 1;
+        return build(postorder, 0, inorder.length - 1);
+    }
+    
+    private TreeNode build(int[] postorder, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        
+        // Last element in postorder is the root
+        int val = postorder[postorderIndex--];
+        TreeNode root = new TreeNode(val);
+        
+        // Find root's position in inorder
+        int mid = inorderMap.get(val);
+        
+        // Build right subtree first (since we're moving backwards in postorder)
+        root.right = build(postorder, mid + 1, right);
+        root.left = build(postorder, left, mid - 1);
+        
+        return root;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    unordered_map<int, int> inorderMap;
+    int postorderIndex;
+    
+    TreeNode* build(vector<int>& postorder, int left, int right) {
+        if (left > right) {
+            return nullptr;
+        }
+        
+        // Last element in postorder is the root
+        int val = postorder[postorderIndex--];
+        TreeNode* root = new TreeNode(val);
+        
+        // Find root's position in inorder
+        int mid = inorderMap[val];
+        
+        // Build right subtree first (since we're moving backwards in postorder)
+        root->right = build(postorder, mid + 1, right);
+        root->left = build(postorder, left, mid - 1);
+        
+        return root;
+    }
+    
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        // Build map of value -> index for inorder array
+        for (int i = 0; i < inorder.size(); i++) {
+            inorderMap[inorder[i]] = i;
+        }
+        
+        postorderIndex = postorder.size() - 1;
+        return build(postorder, 0, inorder.size() - 1);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {number[]} inorder
+ * @param {number[]} postorder
+ * @return {TreeNode}
+ */
+var buildTree = function(inorder, postorder) {
+    // Build map of value -> index for inorder array
+    const inorderMap = new Map();
+    for (let i = 0; i < inorder.length; i++) {
+        inorderMap.set(inorder[i], i);
+    }
+    
+    let postorderIndex = postorder.length - 1;
+    
+    const build = (left, right) => {
+        if (left > right) {
+            return null;
+        }
+        
+        // Last element in postorder is the root
+        const val = postorder[postorderIndex--];
+        const root = new TreeNode(val);
+        
+        // Find root's position in inorder
+        const mid = inorderMap.get(val);
+        
+        // Build right subtree first (since we're moving backwards in postorder)
+        root.right = build(mid + 1, right);
+        root.left = build(left, mid - 1);
+        
+        return root;
+    };
+    
+    return build(0, inorder.length - 1);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private Dictionary<int, int> inorderMap;
+    private int postorderIndex;
+    
+    public TreeNode BuildTree(int[] inorder, int[] postorder) {
+        // Build map of value -> index for inorder array
+        inorderMap = new Dictionary<int, int>();
+        for (int i = 0; i < inorder.Length; i++) {
+            inorderMap[inorder[i]] = i;
+        }
+        
+        postorderIndex = postorder.Length - 1;
+        return Build(postorder, 0, inorder.Length - 1);
+    }
+    
+    private TreeNode Build(int[] postorder, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        
+        // Last element in postorder is the root
+        int val = postorder[postorderIndex--];
+        TreeNode root = new TreeNode(val);
+        
+        // Find root's position in inorder
+        int mid = inorderMap[val];
+        
+        // Build right subtree first (since we're moving backwards in postorder)
+        root.right = Build(postorder, mid + 1, right);
+        root.left = Build(postorder, left, mid - 1);
+        
+        return root;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the number of nodes in the tree</li>
+                <li><strong>Space Complexity:</strong> O(n) for storing the inorder map and recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the properties of inorder and postorder traversals:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Inorder: Left, Root, Right</li>
+                        <li>Postorder: Left, Right, Root</li>
+                        <li>Use root to split subtrees</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Find root from postorder</li>
+                        <li>Locate root in inorder</li>
+                        <li>Split into subtrees</li>
+                        <li>Build recursively</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Use hash map for O(1) lookup</li>
+                <li>Track postorder index</li>
+                <li>Build right first</li>
+                <li>Efficient construction</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

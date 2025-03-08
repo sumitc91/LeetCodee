@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Sorted Array to Binary Search Tree - LeetCodee</title>
+    <meta name="description" content="Detailed solution explanation for LeetCode problem 108: Convert Sorted Array to Binary Search Tree. Solutions in Python, Java, C++, JavaScript, and C#.">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            margin: 0;
+            color: #ffa116;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .easy { background-color: #00B8A3; color: white; }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .solution-nav {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+        .solution-nav a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .solution-nav a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 20px;
+        }
+        .complexity {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>108. Convert Sorted Array to Binary Search Tree</h1>
+        <span class="difficulty easy">Easy</span>
+    </header>
+
+    <div class="content">
+        <h2>Problem Description</h2>
+        <p>Given an integer array <code>nums</code> where the elements are sorted in <strong>ascending order</strong>, convert it to a <strong>height-balanced</strong> binary search tree.</p>
+        <p>A <strong>height-balanced</strong> binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.</p>
+
+        <h3>Examples</h3>
+        <pre>
+Example 1:
+Input: nums = [-10,-3,0,5,9]
+Output: [0,-3,9,-10,null,5]
+Explanation: [0,-10,5,null,-3,null,9] is also accepted
+
+Example 2:
+Input: nums = [1,3]
+Output: [3,1]
+Explanation: [1,null,3] and [3,1] are both height-balanced BSTs</pre>
+
+        <div class="solution-nav">
+            Jump to Solution:
+            <a href="#python">Python</a>
+            <a href="#java">Java</a>
+            <a href="#cpp">C++</a>
+            <a href="#javascript">JavaScript</a>
+            <a href="#csharp">C#</a>
+        </div>
+
+        <div class="solution" id="python">
+            <h3>Python Solution</h3>
+            <pre><code>
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+def sortedArrayToBST(nums: List[int]) -> Optional[TreeNode]:
+    def buildBST(left: int, right: int) -> Optional[TreeNode]:
+        if left > right:
+            return None
+        
+        # Choose middle element as root
+        mid = (left + right) // 2
+        root = TreeNode(nums[mid])
+        
+        # Recursively build left and right subtrees
+        root.left = buildBST(left, mid - 1)
+        root.right = buildBST(mid + 1, right)
+        
+        return root
+    
+    return buildBST(0, len(nums) - 1)</code></pre>
+        </div>
+
+        <div class="solution" id="java">
+            <h3>Java Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return buildBST(nums, 0, nums.length - 1);
+    }
+    
+    private TreeNode buildBST(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        
+        // Choose middle element as root
+        int mid = (left + right) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        
+        // Recursively build left and right subtrees
+        root.left = buildBST(nums, left, mid - 1);
+        root.right = buildBST(nums, mid + 1, right);
+        
+        return root;
+    }
+}</code></pre>
+        </div>
+
+        <div class="solution" id="cpp">
+            <h3>C++ Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    TreeNode* buildBST(vector<int>& nums, int left, int right) {
+        if (left > right) {
+            return nullptr;
+        }
+        
+        // Choose middle element as root
+        int mid = (left + right) / 2;
+        TreeNode* root = new TreeNode(nums[mid]);
+        
+        // Recursively build left and right subtrees
+        root->left = buildBST(nums, left, mid - 1);
+        root->right = buildBST(nums, mid + 1, right);
+        
+        return root;
+    }
+    
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return buildBST(nums, 0, nums.size() - 1);
+    }
+};</code></pre>
+        </div>
+
+        <div class="solution" id="javascript">
+            <h3>JavaScript Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {number[]} nums
+ * @return {TreeNode}
+ */
+var sortedArrayToBST = function(nums) {
+    const buildBST = (left, right) => {
+        if (left > right) {
+            return null;
+        }
+        
+        // Choose middle element as root
+        const mid = Math.floor((left + right) / 2);
+        const root = new TreeNode(nums[mid]);
+        
+        // Recursively build left and right subtrees
+        root.left = buildBST(left, mid - 1);
+        root.right = buildBST(mid + 1, right);
+        
+        return root;
+    };
+    
+    return buildBST(0, nums.length - 1);
+};</code></pre>
+        </div>
+
+        <div class="solution" id="csharp">
+            <h3>C# Solution</h3>
+            <pre><code>
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode SortedArrayToBST(int[] nums) {
+        return BuildBST(nums, 0, nums.Length - 1);
+    }
+    
+    private TreeNode BuildBST(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        
+        // Choose middle element as root
+        int mid = (left + right) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        
+        // Recursively build left and right subtrees
+        root.left = BuildBST(nums, left, mid - 1);
+        root.right = BuildBST(nums, mid + 1, right);
+        
+        return root;
+    }
+}</code></pre>
+        </div>
+
+        <div class="complexity">
+            <h3>Complexity Analysis</h3>
+            <ul>
+                <li><strong>Time Complexity:</strong> O(n) where n is the length of the input array</li>
+                <li><strong>Space Complexity:</strong> O(log n) for the recursion stack</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h3>Solution Explanation</h3>
+            <p>This solution uses the divide-and-conquer approach:</p>
+            <ul>
+                <li>Key concept:
+                    <ul>
+                        <li>Middle element as root</li>
+                        <li>Recursive construction</li>
+                        <li>Balanced tree property</li>
+                    </ul>
+                </li>
+                <li>Algorithm steps:
+                    <ul>
+                        <li>Find middle element</li>
+                        <li>Create root node</li>
+                        <li>Build subtrees</li>
+                        <li>Return balanced BST</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Key points:</p>
+            <ul>
+                <li>Sorted array input</li>
+                <li>Height-balanced output</li>
+                <li>Efficient construction</li>
+                <li>Natural recursion</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
