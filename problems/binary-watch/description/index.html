@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Watch - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">401. Binary Watch</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    A binary watch has 4 LEDs on the top to represent the hours (0-11), and 6 LEDs on the bottom to represent the minutes (0-59). Each LED represents a zero or one, with the least significant bit on the right.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given an integer <code class="bg-gray-100 px-1 rounded">turnedOn</code> which represents the number of LEDs that are currently on, return all possible times the watch could represent. You may return the answer in any order.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The hour must not contain a leading zero.
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>For example, "01:00" is not valid. It should be "1:00".</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    The minute must be consist of two digits and may contain a leading zero.
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>For example, "10:2" is not valid. It should be "10:02".</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: turnedOn = 1
+Output: ["0:01","0:02","0:04","0:08","0:16","0:32","1:00","2:00","4:00","8:00"]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: turnedOn = 9
+Output: []</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= turnedOn <= 10</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def readBinaryWatch(self, turnedOn: int) -> List[str]:
+        def count_bits(n: int) -> int:
+            return bin(n).count('1')
+        
+        result = []
+        # Try all possible hours and minutes
+        for h in range(12):
+            for m in range(60):
+                # If total number of 1s equals turnedOn
+                if count_bits(h) + count_bits(m) == turnedOn:
+                    result.append(f"{h}:{m:02d}")
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only need to check 12 * 60 = 720 possible times.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">The output size is bounded as there are only 720 possible times.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private int countBits(int n) {
+        int count = 0;
+        while (n > 0) {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    }
+    
+    public List<String> readBinaryWatch(int turnedOn) {
+        List<String> result = new ArrayList<>();
+        
+        // Try all possible hours and minutes
+        for (int h = 0; h < 12; h++) {
+            for (int m = 0; m < 60; m++) {
+                // If total number of 1s equals turnedOn
+                if (countBits(h) + countBits(m) == turnedOn) {
+                    result.add(String.format("%d:%02d", h, m));
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only need to check 12 * 60 = 720 possible times.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">The output size is bounded as there are only 720 possible times.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    int countBits(int n) {
+        int count = 0;
+        while (n) {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    }
+    
+public:
+    vector<string> readBinaryWatch(int turnedOn) {
+        vector<string> result;
+        
+        // Try all possible hours and minutes
+        for (int h = 0; h < 12; h++) {
+            for (int m = 0; m < 60; m++) {
+                // If total number of 1s equals turnedOn
+                if (countBits(h) + countBits(m) == turnedOn) {
+                    result.push_back(to_string(h) + ":" + 
+                                   (m < 10 ? "0" : "") + to_string(m));
+                }
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only need to check 12 * 60 = 720 possible times.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">The output size is bounded as there are only 720 possible times.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} turnedOn
+ * @return {string[]}
+ */
+var readBinaryWatch = function(turnedOn) {
+    const countBits = (n) => {
+        let count = 0;
+        while (n > 0) {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    };
+    
+    const result = [];
+    
+    // Try all possible hours and minutes
+    for (let h = 0; h < 12; h++) {
+        for (let m = 0; m < 60; m++) {
+            // If total number of 1s equals turnedOn
+            if (countBits(h) + countBits(m) === turnedOn) {
+                result.push(`${h}:${m.toString().padStart(2, '0')}`);
+            }
+        }
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only need to check 12 * 60 = 720 possible times.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">The output size is bounded as there are only 720 possible times.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private int CountBits(int n) {
+        int count = 0;
+        while (n > 0) {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    }
+    
+    public IList<string> ReadBinaryWatch(int turnedOn) {
+        var result = new List<string>();
+        
+        // Try all possible hours and minutes
+        for (int h = 0; h < 12; h++) {
+            for (int m = 0; m < 60; m++) {
+                // If total number of 1s equals turnedOn
+                if (CountBits(h) + CountBits(m) == turnedOn) {
+                    result.Add($"{h}:{m:D2}");
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only need to check 12 * 60 = 720 possible times.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">The output size is bounded as there are only 720 possible times.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a brute force approach with bit counting:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Bit counting</li>
+                            <li>Time constraints</li>
+                            <li>Format handling</li>
+                            <li>Range checking</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Generate times</li>
+                            <li>Count bits</li>
+                            <li>Format output</li>
+                            <li>Validate ranges</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Bit manipulation</li>
+                        <li>String formatting</li>
+                        <li>Time validation</li>
+                        <li>Range checking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Limited search space</li>
+                        <li>Efficient bit counting</li>
+                        <li>Early termination</li>
+                        <li>Format optimization</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Zero LEDs</li>
+                        <li>Maximum LEDs</li>
+                        <li>Invalid times</li>
+                        <li>Leading zeros</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

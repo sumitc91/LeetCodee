@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trapping Rain Water II - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">407. Trapping Rain Water II</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an <code class="bg-gray-100 px-1 rounded">m x n</code> integer matrix <code class="bg-gray-100 px-1 rounded">heightMap</code> representing the height of each unit cell in a 2D elevation map, return the volume of water it can trap after raining.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]
+Output: 4
+Explanation: After the rain, water is trapped between the blocks.
+We have two small ponds 1 and 3 units trapped.
+The total volume of water trapped is 4.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: heightMap = [[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]
+Output: 10</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">m == heightMap.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == heightMap[i].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m, n <= 200</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= heightMap[i][j] <= 2 * 10⁴</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def trapRainWater(self, heightMap: List[List[int]]) -> int:
+        if not heightMap or not heightMap[0]:
+            return 0
+        
+        m, n = len(heightMap), len(heightMap[0])
+        if m < 3 or n < 3:
+            return 0
+        
+        # Initialize visited array and priority queue
+        visited = [[False] * n for _ in range(m)]
+        heap = []
+        
+        # Add border cells to heap
+        for i in range(m):
+            heapq.heappush(heap, (heightMap[i][0], i, 0))
+            heapq.heappush(heap, (heightMap[i][n-1], i, n-1))
+            visited[i][0] = visited[i][n-1] = True
+        
+        for j in range(1, n-1):
+            heapq.heappush(heap, (heightMap[0][j], 0, j))
+            heapq.heappush(heap, (heightMap[m-1][j], m-1, j))
+            visited[0][j] = visited[m-1][j] = True
+        
+        # Process cells from lowest to highest
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        water = 0
+        max_height = 0
+        
+        while heap:
+            height, i, j = heapq.heappop(heap)
+            max_height = max(max_height, height)
+            
+            # Check all adjacent cells
+            for di, dj in directions:
+                ni, nj = i + di, j + dj
+                if (0 <= ni < m and 0 <= nj < n and not visited[ni][nj]):
+                    visited[ni][nj] = True
+                    if heightMap[ni][nj] < max_height:
+                        water += max_height - heightMap[ni][nj]
+                    heapq.heappush(heap, (heightMap[ni][nj], ni, nj))
+        
+        return water</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(mn log(m+n))</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the heightMap. Each cell is pushed and popped from the heap once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(mn)</h4>
+                    <p class="text-gray-700">For the visited array and the heap.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private static final int[][] DIRECTIONS = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    
+    public int trapRainWater(int[][] heightMap) {
+        if (heightMap == null || heightMap.length < 3 || heightMap[0].length < 3) {
+            return 0;
+        }
+        
+        int m = heightMap.length, n = heightMap[0].length;
+        PriorityQueue<Cell> heap = new PriorityQueue<>((a, b) -> a.height - b.height);
+        boolean[][] visited = new boolean[m][n];
+        
+        // Add border cells
+        for (int i = 0; i < m; i++) {
+            heap.offer(new Cell(i, 0, heightMap[i][0]));
+            heap.offer(new Cell(i, n-1, heightMap[i][n-1]));
+            visited[i][0] = visited[i][n-1] = true;
+        }
+        for (int j = 1; j < n-1; j++) {
+            heap.offer(new Cell(0, j, heightMap[0][j]));
+            heap.offer(new Cell(m-1, j, heightMap[m-1][j]));
+            visited[0][j] = visited[m-1][j] = true;
+        }
+        
+        // Process cells
+        int water = 0;
+        int maxHeight = 0;
+        
+        while (!heap.isEmpty()) {
+            Cell cell = heap.poll();
+            maxHeight = Math.max(maxHeight, cell.height);
+            
+            for (int[] dir : DIRECTIONS) {
+                int ni = cell.row + dir[0];
+                int nj = cell.col + dir[1];
+                
+                if (ni >= 0 && ni < m && nj >= 0 && nj < n && !visited[ni][nj]) {
+                    visited[ni][nj] = true;
+                    if (heightMap[ni][nj] < maxHeight) {
+                        water += maxHeight - heightMap[ni][nj];
+                    }
+                    heap.offer(new Cell(ni, nj, heightMap[ni][nj]));
+                }
+            }
+        }
+        
+        return water;
+    }
+    
+    private static class Cell {
+        int row, col, height;
+        
+        Cell(int row, int col, int height) {
+            this.row = row;
+            this.col = col;
+            this.height = height;
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(mn log(m+n))</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the heightMap. Each cell is pushed and popped from the heap once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(mn)</h4>
+                    <p class="text-gray-700">For the visited array and the heap.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    const vector<pair<int, int>> directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    
+public:
+    int trapRainWater(vector<vector<int>>& heightMap) {
+        if (heightMap.size() < 3 || heightMap[0].size() < 3) {
+            return 0;
+        }
+        
+        int m = heightMap.size(), n = heightMap[0].size();
+        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        
+        // Min heap of {height, row, col}
+        priority_queue<array<int, 3>, vector<array<int, 3>>, greater<>> heap;
+        
+        // Add border cells
+        for (int i = 0; i < m; i++) {
+            heap.push({heightMap[i][0], i, 0});
+            heap.push({heightMap[i][n-1], i, n-1});
+            visited[i][0] = visited[i][n-1] = true;
+        }
+        for (int j = 1; j < n-1; j++) {
+            heap.push({heightMap[0][j], 0, j});
+            heap.push({heightMap[m-1][j], m-1, j});
+            visited[0][j] = visited[m-1][j] = true;
+        }
+        
+        // Process cells
+        int water = 0;
+        int maxHeight = 0;
+        
+        while (!heap.empty()) {
+            auto [height, i, j] = heap.top();
+            heap.pop();
+            maxHeight = max(maxHeight, height);
+            
+            for (const auto& [di, dj] : directions) {
+                int ni = i + di, nj = j + dj;
+                
+                if (ni >= 0 && ni < m && nj >= 0 && nj < n && !visited[ni][nj]) {
+                    visited[ni][nj] = true;
+                    if (heightMap[ni][nj] < maxHeight) {
+                        water += maxHeight - heightMap[ni][nj];
+                    }
+                    heap.push({heightMap[ni][nj], ni, nj});
+                }
+            }
+        }
+        
+        return water;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(mn log(m+n))</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the heightMap. Each cell is pushed and popped from the heap once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(mn)</h4>
+                    <p class="text-gray-700">For the visited array and the heap.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} heightMap
+ * @return {number}
+ */
+var trapRainWater = function(heightMap) {
+    if (heightMap.length < 3 || heightMap[0].length < 3) {
+        return 0;
+    }
+    
+    const m = heightMap.length, n = heightMap[0].length;
+    const visited = Array(m).fill().map(() => Array(n).fill(false));
+    const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+    
+    // Min heap implementation
+    const heap = new MinHeap();
+    
+    // Add border cells
+    for (let i = 0; i < m; i++) {
+        heap.push([heightMap[i][0], i, 0]);
+        heap.push([heightMap[i][n-1], i, n-1]);
+        visited[i][0] = visited[i][n-1] = true;
+    }
+    for (let j = 1; j < n-1; j++) {
+        heap.push([heightMap[0][j], 0, j]);
+        heap.push([heightMap[m-1][j], m-1, j]);
+        visited[0][j] = visited[m-1][j] = true;
+    }
+    
+    // Process cells
+    let water = 0;
+    let maxHeight = 0;
+    
+    while (!heap.isEmpty()) {
+        const [height, i, j] = heap.pop();
+        maxHeight = Math.max(maxHeight, height);
+        
+        for (const [di, dj] of directions) {
+            const ni = i + di, nj = j + dj;
+            
+            if (ni >= 0 && ni < m && nj >= 0 && nj < n && !visited[ni][nj]) {
+                visited[ni][nj] = true;
+                if (heightMap[ni][nj] < maxHeight) {
+                    water += maxHeight - heightMap[ni][nj];
+                }
+                heap.push([heightMap[ni][nj], ni, nj]);
+            }
+        }
+    }
+    
+    return water;
+};
+
+class MinHeap {
+    constructor() {
+        this.heap = [];
+    }
+    
+    push(val) {
+        this.heap.push(val);
+        this.bubbleUp(this.heap.length - 1);
+    }
+    
+    pop() {
+        if (this.heap.length === 0) return null;
+        if (this.heap.length === 1) return this.heap.pop();
+        
+        const result = this.heap[0];
+        this.heap[0] = this.heap.pop();
+        this.bubbleDown(0);
+        return result;
+    }
+    
+    isEmpty() {
+        return this.heap.length === 0;
+    }
+    
+    bubbleUp(index) {
+        while (index > 0) {
+            const parentIndex = Math.floor((index - 1) / 2);
+            if (this.heap[parentIndex][0] <= this.heap[index][0]) break;
+            
+            [this.heap[parentIndex], this.heap[index]] = 
+                [this.heap[index], this.heap[parentIndex]];
+            index = parentIndex;
+        }
+    }
+    
+    bubbleDown(index) {
+        while (true) {
+            let smallest = index;
+            const leftChild = 2 * index + 1;
+            const rightChild = 2 * index + 2;
+            
+            if (leftChild < this.heap.length && 
+                this.heap[leftChild][0] < this.heap[smallest][0]) {
+                smallest = leftChild;
+            }
+            if (rightChild < this.heap.length && 
+                this.heap[rightChild][0] < this.heap[smallest][0]) {
+                smallest = rightChild;
+            }
+            
+            if (smallest === index) break;
+            
+            [this.heap[index], this.heap[smallest]] = 
+                [this.heap[smallest], this.heap[index]];
+            index = smallest;
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(mn log(m+n))</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the heightMap. Each cell is pushed and popped from the heap once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(mn)</h4>
+                    <p class="text-gray-700">For the visited array and the heap.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private static readonly (int, int)[] Directions = {(0, 1), (0, -1), (1, 0), (-1, 0)};
+    
+    public int TrapRainWater(int[][] heightMap) {
+        if (heightMap == null || heightMap.Length < 3 || heightMap[0].Length < 3) {
+            return 0;
+        }
+        
+        int m = heightMap.Length, n = heightMap[0].Length;
+        var visited = new bool[m, n];
+        var heap = new PriorityQueue<(int row, int col, int height)>();
+        
+        // Add border cells
+        for (int i = 0; i < m; i++) {
+            heap.Enqueue((i, 0, heightMap[i][0]));
+            heap.Enqueue((i, n-1, heightMap[i][n-1]));
+            visited[i, 0] = visited[i, n-1] = true;
+        }
+        for (int j = 1; j < n-1; j++) {
+            heap.Enqueue((0, j, heightMap[0][j]));
+            heap.Enqueue((m-1, j, heightMap[m-1][j]));
+            visited[0, j] = visited[m-1, j] = true;
+        }
+        
+        // Process cells
+        int water = 0;
+        int maxHeight = 0;
+        
+        while (heap.Count > 0) {
+            var (i, j, height) = heap.Dequeue();
+            maxHeight = Math.Max(maxHeight, height);
+            
+            foreach (var (di, dj) in Directions) {
+                int ni = i + di, nj = j + dj;
+                
+                if (ni >= 0 && ni < m && nj >= 0 && nj < n && !visited[ni, nj]) {
+                    visited[ni, nj] = true;
+                    if (heightMap[ni][nj] < maxHeight) {
+                        water += maxHeight - heightMap[ni][nj];
+                    }
+                    heap.Enqueue((ni, nj, heightMap[ni][nj]));
+                }
+            }
+        }
+        
+        return water;
+    }
+    
+    private class PriorityQueue<T> where T : struct {
+        private readonly List<T> _heap = new List<T>();
+        
+        public int Count => _heap.Count;
+        
+        public void Enqueue(T item) {
+            _heap.Add(item);
+            BubbleUp(_heap.Count - 1);
+        }
+        
+        public T Dequeue() {
+            var result = _heap[0];
+            _heap[0] = _heap[_heap.Count - 1];
+            _heap.RemoveAt(_heap.Count - 1);
+            if (_heap.Count > 0) BubbleDown(0);
+            return result;
+        }
+        
+        private void BubbleUp(int index) {
+            while (index > 0) {
+                int parent = (index - 1) / 2;
+                if (Compare(_heap[parent], _heap[index]) <= 0) break;
+                Swap(parent, index);
+                index = parent;
+            }
+        }
+        
+        private void BubbleDown(int index) {
+            while (true) {
+                int smallest = index;
+                int left = 2 * index + 1;
+                int right = 2 * index + 2;
+                
+                if (left < _heap.Count && Compare(_heap[left], _heap[smallest]) < 0)
+                    smallest = left;
+                if (right < _heap.Count && Compare(_heap[right], _heap[smallest]) < 0)
+                    smallest = right;
+                
+                if (smallest == index) break;
+                
+                Swap(index, smallest);
+                index = smallest;
+            }
+        }
+        
+        private void Swap(int i, int j) {
+            var temp = _heap[i];
+            _heap[i] = _heap[j];
+            _heap[j] = temp;
+        }
+        
+        private int Compare(T a, T b) {
+            return ((ValueTuple<int, int, int>)a).Item3.CompareTo(((ValueTuple<int, int, int>)b).Item3);
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(mn log(m+n))</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the heightMap. Each cell is pushed and popped from the heap once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(mn)</h4>
+                    <p class="text-gray-700">For the visited array and the heap.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a priority queue (min heap) approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Border processing</li>
+                            <li>Height tracking</li>
+                            <li>Water accumulation</li>
+                            <li>Priority queue</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize borders</li>
+                            <li>Process cells</li>
+                            <li>Track water</li>
+                            <li>Update heights</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Min heap usage</li>
+                        <li>Cell processing</li>
+                        <li>Height tracking</li>
+                        <li>Water calculation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Border handling</li>
+                        <li>Early termination</li>
+                        <li>Memory usage</li>
+                        <li>Efficient traversal</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Small grid</li>
+                        <li>No water</li>
+                        <li>Maximum height</li>
+                        <li>Border conditions</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

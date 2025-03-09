@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Delete GetRandom O(1) - Duplicates allowed - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">381. Insert Delete GetRandom O(1) - Duplicates allowed</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    <code class="bg-gray-100 px-1 rounded">RandomizedCollection</code> is a data structure that contains a collection of numbers, possibly duplicates (i.e., a multiset). It should support inserting and removing specific elements and also removing a random element.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">RandomizedCollection</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">RandomizedCollection()</code> Initializes the empty <code class="bg-gray-100 px-1 rounded">RandomizedCollection</code> object.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">bool insert(int val)</code> Inserts an item <code class="bg-gray-100 px-1 rounded">val</code> into the multiset. Returns <code class="bg-gray-100 px-1 rounded">true</code> if the item was not present, <code class="bg-gray-100 px-1 rounded">false</code> otherwise.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">bool remove(int val)</code> Removes an item <code class="bg-gray-100 px-1 rounded">val</code> from the multiset if present. Returns <code class="bg-gray-100 px-1 rounded">true</code> if the item was present, <code class="bg-gray-100 px-1 rounded">false</code> otherwise. Note that if <code class="bg-gray-100 px-1 rounded">val</code> has multiple occurrences in the multiset, we only remove one of them.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int getRandom()</code> Returns a random element from the current multiset of elements. The probability of each element being returned is linearly related to the number of same values the multiset contains.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    You must implement the functions of the class such that each function works on average O(1) time complexity.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["RandomizedCollection", "insert", "insert", "insert", "getRandom", "remove", "getRandom"]
+[[], [1], [1], [2], [], [1], []]
+Output
+[null, true, false, true, 2, true, 2]
+
+Explanation
+RandomizedCollection randomizedCollection = new RandomizedCollection();
+randomizedCollection.insert(1);   // return true since the collection does not contain 1.
+                                 // Inserts 1 into the collection.
+randomizedCollection.insert(1);   // return false since the collection contains 1.
+                                 // Inserts another 1 into the collection. Collection now contains [1,1].
+randomizedCollection.insert(2);   // return true since the collection does not contain 2.
+                                 // Inserts 2 into the collection. Collection now contains [1,1,2].
+randomizedCollection.getRandom(); // getRandom should return 1 with probability 2/3, and 2 with probability 1/3.
+randomizedCollection.remove(1);   // return true since the collection contains 1.
+                                 // Removes 1 from the collection. Collection now contains [1,2].
+randomizedCollection.getRandom(); // getRandom should return 1 and 2 with equal probability.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">-2³¹ <= val <= 2³¹ - 1</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">2 * 10⁵</code> calls will be made to <code class="bg-gray-100 px-1 rounded">insert</code>, <code class="bg-gray-100 px-1 rounded">remove</code>, and <code class="bg-gray-100 px-1 rounded">getRandom</code>.</li>
+                    <li>There will be at least one element in the data structure when <code class="bg-gray-100 px-1 rounded">getRandom</code> is called.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class RandomizedCollection:
+    def __init__(self):
+        # List to store values
+        self.nums = []
+        # Dictionary to store value -> set of indices mapping
+        self.val_to_indices = defaultdict(set)
+
+    def insert(self, val: int) -> bool:
+        # Add value to the end of list
+        self.nums.append(val)
+        # Store its index in the set
+        self.val_to_indices[val].add(len(self.nums) - 1)
+        # Return true if this is the first occurrence
+        return len(self.val_to_indices[val]) == 1
+
+    def remove(self, val: int) -> bool:
+        if not self.val_to_indices[val]:
+            return False
+        
+        # Get one index of the value to remove
+        remove_idx = self.val_to_indices[val].pop()
+        last_val = self.nums[-1]
+        
+        # If the element to remove is not the last element
+        if remove_idx != len(self.nums) - 1:
+            # Move last element to the position of element to remove
+            self.nums[remove_idx] = last_val
+            # Update the index set of the last value
+            self.val_to_indices[last_val].remove(len(self.nums) - 1)
+            self.val_to_indices[last_val].add(remove_idx)
+        
+        # Remove the last element
+        self.nums.pop()
+        
+        # Remove the value from dictionary if no more occurrences
+        if not self.val_to_indices[val]:
+            del self.val_to_indices[val]
+        
+        return True
+
+    def getRandom(self) -> int:
+        # Return random element from list
+        return random.choice(self.nums)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of elements (including duplicates).</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class RandomizedCollection {
+    private List<Integer> nums;
+    private Map<Integer, Set<Integer>> valToIndices;
+    private Random rand;
+
+    public RandomizedCollection() {
+        nums = new ArrayList<>();
+        valToIndices = new HashMap<>();
+        rand = new Random();
+    }
+    
+    public boolean insert(int val) {
+        nums.add(val);
+        valToIndices.putIfAbsent(val, new HashSet<>());
+        valToIndices.get(val).add(nums.size() - 1);
+        return valToIndices.get(val).size() == 1;
+    }
+    
+    public boolean remove(int val) {
+        if (!valToIndices.containsKey(val) || valToIndices.get(val).isEmpty()) {
+            return false;
+        }
+        
+        int removeIdx = valToIndices.get(val).iterator().next();
+        valToIndices.get(val).remove(removeIdx);
+        
+        int lastVal = nums.get(nums.size() - 1);
+        
+        if (removeIdx != nums.size() - 1) {
+            nums.set(removeIdx, lastVal);
+            valToIndices.get(lastVal).remove(nums.size() - 1);
+            valToIndices.get(lastVal).add(removeIdx);
+        }
+        
+        nums.remove(nums.size() - 1);
+        
+        if (valToIndices.get(val).isEmpty()) {
+            valToIndices.remove(val);
+        }
+        
+        return true;
+    }
+    
+    public int getRandom() {
+        return nums.get(rand.nextInt(nums.size()));
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of elements (including duplicates).</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class RandomizedCollection {
+private:
+    vector<int> nums;
+    unordered_map<int, unordered_set<int>> valToIndices;
+    
+public:
+    RandomizedCollection() {
+        
+    }
+    
+    bool insert(int val) {
+        nums.push_back(val);
+        valToIndices[val].insert(nums.size() - 1);
+        return valToIndices[val].size() == 1;
+    }
+    
+    bool remove(int val) {
+        if (!valToIndices.count(val) || valToIndices[val].empty()) {
+            return false;
+        }
+        
+        auto it = valToIndices[val].begin();
+        int removeIdx = *it;
+        valToIndices[val].erase(it);
+        
+        int lastVal = nums.back();
+        
+        if (removeIdx != nums.size() - 1) {
+            nums[removeIdx] = lastVal;
+            valToIndices[lastVal].erase(nums.size() - 1);
+            valToIndices[lastVal].insert(removeIdx);
+        }
+        
+        nums.pop_back();
+        
+        if (valToIndices[val].empty()) {
+            valToIndices.erase(val);
+        }
+        
+        return true;
+    }
+    
+    int getRandom() {
+        return nums[rand() % nums.size()];
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of elements (including duplicates).</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>class RandomizedCollection {
+    constructor() {
+        this.nums = [];
+        this.valToIndices = new Map();
+    }
+    
+    insert(val) {
+        this.nums.push(val);
+        if (!this.valToIndices.has(val)) {
+            this.valToIndices.set(val, new Set());
+        }
+        this.valToIndices.get(val).add(this.nums.length - 1);
+        return this.valToIndices.get(val).size === 1;
+    }
+    
+    remove(val) {
+        if (!this.valToIndices.has(val) || this.valToIndices.get(val).size === 0) {
+            return false;
+        }
+        
+        const removeIdx = this.valToIndices.get(val).values().next().value;
+        this.valToIndices.get(val).delete(removeIdx);
+        
+        const lastVal = this.nums[this.nums.length - 1];
+        
+        if (removeIdx !== this.nums.length - 1) {
+            this.nums[removeIdx] = lastVal;
+            this.valToIndices.get(lastVal).delete(this.nums.length - 1);
+            this.valToIndices.get(lastVal).add(removeIdx);
+        }
+        
+        this.nums.pop();
+        
+        if (this.valToIndices.get(val).size === 0) {
+            this.valToIndices.delete(val);
+        }
+        
+        return true;
+    }
+    
+    getRandom() {
+        return this.nums[Math.floor(Math.random() * this.nums.length)];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of elements (including duplicates).</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class RandomizedCollection {
+    private List<int> nums;
+    private Dictionary<int, HashSet<int>> valToIndices;
+    private Random rand;
+
+    public RandomizedCollection() {
+        nums = new List<int>();
+        valToIndices = new Dictionary<int, HashSet<int>>();
+        rand = new Random();
+    }
+    
+    public bool Insert(int val) {
+        nums.Add(val);
+        if (!valToIndices.ContainsKey(val)) {
+            valToIndices[val] = new HashSet<int>();
+        }
+        valToIndices[val].Add(nums.Count - 1);
+        return valToIndices[val].Count == 1;
+    }
+    
+    public bool Remove(int val) {
+        if (!valToIndices.ContainsKey(val) || valToIndices[val].Count == 0) {
+            return false;
+        }
+        
+        int removeIdx = valToIndices[val].First();
+        valToIndices[val].Remove(removeIdx);
+        
+        int lastVal = nums[nums.Count - 1];
+        
+        if (removeIdx != nums.Count - 1) {
+            nums[removeIdx] = lastVal;
+            valToIndices[lastVal].Remove(nums.Count - 1);
+            valToIndices[lastVal].Add(removeIdx);
+        }
+        
+        nums.RemoveAt(nums.Count - 1);
+        
+        if (valToIndices[val].Count == 0) {
+            valToIndices.Remove(val);
+        }
+        
+        return true;
+    }
+    
+    public int GetRandom() {
+        return nums[rand.Next(nums.Count)];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of elements (including duplicates).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution extends the previous approach to handle duplicates:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Array for O(1) random access</li>
+                            <li>Hash map with sets for multiple indices</li>
+                            <li>Swap with last element for O(1) removal</li>
+                            <li>Maintain all indices for each value</li>
+                        </ul>
+                    </li>
+                    <li>Data Structure Design:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Array stores all values</li>
+                            <li>Hash map stores value to indices mapping</li>
+                            <li>Set stores multiple indices</li>
+                            <li>Random access via array indices</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>O(1) insertion at end</li>
+                        <li>O(1) removal by swapping</li>
+                        <li>O(1) random selection</li>
+                        <li>Handle duplicate indices</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Efficient index tracking</li>
+                        <li>Minimize set operations</li>
+                        <li>Smart index updates</li>
+                        <li>Space-time tradeoff</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty collection</li>
+                        <li>Single element</li>
+                        <li>Multiple duplicates</li>
+                        <li>Remove last occurrence</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

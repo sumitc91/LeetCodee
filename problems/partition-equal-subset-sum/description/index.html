@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partition Equal Subset Sum - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">416. Partition Equal Subset Sum</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an integer array <code class="bg-gray-100 px-1 rounded">nums</code>, return <code class="bg-gray-100 px-1 rounded">true</code> if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or <code class="bg-gray-100 px-1 rounded">false</code> otherwise.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [1,5,11,5]
+Output: true
+Explanation: The array can be partitioned as [1, 5, 5] and [11].</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [1,2,3,5]
+Output: false
+Explanation: The array cannot be partitioned into equal sum subsets.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums.length <= 200</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums[i] <= 100</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        total_sum = sum(nums)
+        
+        # If total sum is odd, we can't partition into equal subsets
+        if total_sum % 2 != 0:
+            return False
+        
+        target = total_sum // 2
+        dp = set([0])
+        
+        # For each number, check if we can make any new sums
+        for num in nums:
+            # We need to create a new set to avoid modifying while iterating
+            next_dp = dp.copy()
+            for curr_sum in dp:
+                next_sum = curr_sum + num
+                if next_sum == target:
+                    return True
+                if next_sum < target:
+                    next_dp.add(next_sum)
+            dp = next_dp
+        
+        return False</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * sum)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and sum is the total sum of all numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(sum)</h4>
+                    <p class="text-gray-700">For storing all possible sums in the dp set.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean canPartition(int[] nums) {
+        int totalSum = 0;
+        for (int num : nums) {
+            totalSum += num;
+        }
+        
+        // If total sum is odd, we can't partition into equal subsets
+        if (totalSum % 2 != 0) {
+            return false;
+        }
+        
+        int target = totalSum / 2;
+        boolean[] dp = new boolean[target + 1];
+        dp[0] = true;
+        
+        // For each number, check if we can make any new sums
+        for (int num : nums) {
+            for (int i = target; i >= num; i--) {
+                dp[i] = dp[i] || dp[i - num];
+            }
+        }
+        
+        return dp[target];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * sum)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and sum is the total sum of all numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(sum)</h4>
+                    <p class="text-gray-700">For storing the dp array.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int totalSum = accumulate(nums.begin(), nums.end(), 0);
+        
+        // If total sum is odd, we can't partition into equal subsets
+        if (totalSum % 2 != 0) {
+            return false;
+        }
+        
+        int target = totalSum / 2;
+        vector<bool> dp(target + 1, false);
+        dp[0] = true;
+        
+        // For each number, check if we can make any new sums
+        for (int num : nums) {
+            for (int i = target; i >= num; i--) {
+                dp[i] = dp[i] || dp[i - num];
+            }
+        }
+        
+        return dp[target];
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * sum)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and sum is the total sum of all numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(sum)</h4>
+                    <p class="text-gray-700">For storing the dp vector.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function(nums) {
+    const totalSum = nums.reduce((a, b) => a + b, 0);
+    
+    // If total sum is odd, we can't partition into equal subsets
+    if (totalSum % 2 !== 0) {
+        return false;
+    }
+    
+    const target = totalSum / 2;
+    const dp = new Set([0]);
+    
+    // For each number, check if we can make any new sums
+    for (const num of nums) {
+        const nextDp = new Set(dp);
+        for (const currSum of dp) {
+            const nextSum = currSum + num;
+            if (nextSum === target) {
+                return true;
+            }
+            if (nextSum < target) {
+                nextDp.add(nextSum);
+            }
+        }
+        dp = nextDp;
+    }
+    
+    return false;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * sum)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and sum is the total sum of all numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(sum)</h4>
+                    <p class="text-gray-700">For storing all possible sums in the dp set.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool CanPartition(int[] nums) {
+        int totalSum = nums.Sum();
+        
+        // If total sum is odd, we can't partition into equal subsets
+        if (totalSum % 2 != 0) {
+            return false;
+        }
+        
+        int target = totalSum / 2;
+        bool[] dp = new bool[target + 1];
+        dp[0] = true;
+        
+        // For each number, check if we can make any new sums
+        foreach (int num in nums) {
+            for (int i = target; i >= num; i--) {
+                dp[i] = dp[i] || dp[i - num];
+            }
+        }
+        
+        return dp[target];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * sum)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and sum is the total sum of all numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(sum)</h4>
+                    <p class="text-gray-700">For storing the dp array.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses dynamic programming approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sum calculation</li>
+                            <li>Subset problem</li>
+                            <li>DP optimization</li>
+                            <li>State tracking</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Check total sum</li>
+                            <li>Find target sum</li>
+                            <li>Build DP table</li>
+                            <li>Track possible sums</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Sum handling</li>
+                        <li>State management</li>
+                        <li>Memory optimization</li>
+                        <li>Early termination</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Space reduction</li>
+                        <li>Early checks</li>
+                        <li>Efficient storage</li>
+                        <li>Quick validation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty array</li>
+                        <li>Single element</li>
+                        <li>Odd total sum</li>
+                        <li>Large numbers</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

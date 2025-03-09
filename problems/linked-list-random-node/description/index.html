@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List Random Node - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">382. Linked List Random Node</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a singly linked list, return a random node's value from the linked list. Each node must have the same probability of being chosen.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">Solution</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">Solution(ListNode head)</code> Initializes the object with the head of the singly-linked list <code class="bg-gray-100 px-1 rounded">head</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int getRandom()</code> Returns a random node's value from the linked list. Each node must have the same probability of being chosen.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["Solution", "getRandom", "getRandom", "getRandom", "getRandom", "getRandom"]
+[[[1, 2, 3]], [], [], [], [], []]
+Output
+[null, 1, 3, 2, 2, 3]
+
+Explanation
+Solution solution = new Solution([1, 2, 3]);
+solution.getRandom(); // return 1
+solution.getRandom(); // return 3
+solution.getRandom(); // return 2
+solution.getRandom(); // return 2
+solution.getRandom(); // return 3
+// getRandom() should return either 1, 2, or 3 randomly. Each element should have equal probability of returning.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>The number of nodes in the linked list will be in the range <code class="bg-gray-100 px-1 rounded">[1, 10⁴]</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁴ <= Node.val <= 10⁴</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">getRandom</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def __init__(self, head: Optional[ListNode]):
+        self.head = head
+
+    def getRandom(self) -> int:
+        # Reservoir sampling algorithm
+        result = self.head.val
+        current = self.head.next
+        count = 1
+        
+        # For each node, decide whether to replace the result
+        # with probability 1/count
+        while current:
+            count += 1
+            # Generate random number in range [0, count)
+            if random.randrange(count) == 0:
+                result = current.val
+            current = current.next
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the linked list. We need to traverse the entire list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    private ListNode head;
+    private Random rand;
+
+    public Solution(ListNode head) {
+        this.head = head;
+        this.rand = new Random();
+    }
+    
+    public int getRandom() {
+        // Reservoir sampling algorithm
+        int result = head.val;
+        ListNode current = head.next;
+        int count = 1;
+        
+        // For each node, decide whether to replace the result
+        // with probability 1/count
+        while (current != null) {
+            count++;
+            // Generate random number in range [0, count)
+            if (rand.nextInt(count) == 0) {
+                result = current.val;
+            }
+            current = current.next;
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the linked list. We need to traverse the entire list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+private:
+    ListNode* head;
+    
+public:
+    Solution(ListNode* head) {
+        this->head = head;
+    }
+    
+    int getRandom() {
+        // Reservoir sampling algorithm
+        int result = head->val;
+        ListNode* current = head->next;
+        int count = 1;
+        
+        // For each node, decide whether to replace the result
+        // with probability 1/count
+        while (current) {
+            count++;
+            // Generate random number in range [0, count)
+            if (rand() % count == 0) {
+                result = current->val;
+            }
+            current = current->next;
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the linked list. We need to traverse the entire list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ */
+class Solution {
+    constructor(head) {
+        this.head = head;
+    }
+    
+    /** 
+     * @return {number}
+     */
+    getRandom() {
+        // Reservoir sampling algorithm
+        let result = this.head.val;
+        let current = this.head.next;
+        let count = 1;
+        
+        // For each node, decide whether to replace the result
+        // with probability 1/count
+        while (current) {
+            count++;
+            // Generate random number in range [0, count)
+            if (Math.floor(Math.random() * count) === 0) {
+                result = current.val;
+            }
+            current = current.next;
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the linked list. We need to traverse the entire list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    private ListNode head;
+    private Random rand;
+
+    public Solution(ListNode head) {
+        this.head = head;
+        this.rand = new Random();
+    }
+    
+    public int GetRandom() {
+        // Reservoir sampling algorithm
+        int result = head.val;
+        ListNode current = head.next;
+        int count = 1;
+        
+        // For each node, decide whether to replace the result
+        // with probability 1/count
+        while (current != null) {
+            count++;
+            // Generate random number in range [0, count)
+            if (rand.Next(count) == 0) {
+                result = current.val;
+            }
+            current = current.next;
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the linked list. We need to traverse the entire list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses the Reservoir Sampling algorithm:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Cannot store all nodes in memory</li>
+                            <li>Need uniform random selection</li>
+                            <li>Single pass through list</li>
+                            <li>Constant extra space</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Start with first node</li>
+                            <li>For each node i</li>
+                            <li>Replace with probability 1/i</li>
+                            <li>Continue to end</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Track current selection</li>
+                        <li>Generate random numbers</li>
+                        <li>Update selection</li>
+                        <li>Maintain probabilities</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>No extra storage needed</li>
+                        <li>Single traversal</li>
+                        <li>Uniform distribution</li>
+                        <li>Efficient random selection</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single node list</li>
+                        <li>Long lists</li>
+                        <li>Multiple calls</li>
+                        <li>Random seed handling</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Delete GetRandom O(1) - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">380. Insert Delete GetRandom O(1)</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">RandomizedSet</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">RandomizedSet()</code> Initializes the <code class="bg-gray-100 px-1 rounded">RandomizedSet</code> object.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">bool insert(int val)</code> Inserts an item <code class="bg-gray-100 px-1 rounded">val</code> into the set if not present. Returns <code class="bg-gray-100 px-1 rounded">true</code> if the item was not present, <code class="bg-gray-100 px-1 rounded">false</code> otherwise.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">bool remove(int val)</code> Removes an item <code class="bg-gray-100 px-1 rounded">val</code> from the set if present. Returns <code class="bg-gray-100 px-1 rounded">true</code> if the item was present, <code class="bg-gray-100 px-1 rounded">false</code> otherwise.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int getRandom()</code> Returns a random element from the current set of elements (it's guaranteed that at least one element exists when this method is called). Each element must have the same probability of being returned.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    You must implement the functions of the class such that each function works in average O(1) time complexity.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["RandomizedSet", "insert", "remove", "insert", "getRandom", "remove", "insert", "getRandom"]
+[[], [1], [2], [2], [], [1], [2], []]
+Output
+[null, true, false, true, 2, true, false, 2]
+
+Explanation
+RandomizedSet randomizedSet = new RandomizedSet();
+randomizedSet.insert(1); // Inserts 1 to the set. Returns true as 1 was inserted successfully.
+randomizedSet.remove(2); // Returns false as 2 does not exist in the set.
+randomizedSet.insert(2); // Inserts 2 to the set, returns true. Set now contains [1,2].
+randomizedSet.getRandom(); // getRandom() should return either 1 or 2 randomly.
+randomizedSet.remove(1); // Removes 1 from the set, returns true. Set now contains [2].
+randomizedSet.insert(2); // 2 was already in the set, so return false.
+randomizedSet.getRandom(); // Since 2 is the only number in the set, getRandom() will always return 2.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">-2³¹ <= val <= 2³¹ - 1</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">2 * 10⁵</code> calls will be made to <code class="bg-gray-100 px-1 rounded">insert</code>, <code class="bg-gray-100 px-1 rounded">remove</code>, and <code class="bg-gray-100 px-1 rounded">getRandom</code>.</li>
+                    <li>There will be at least one element in the data structure when <code class="bg-gray-100 px-1 rounded">getRandom</code> is called.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class RandomizedSet:
+    def __init__(self):
+        # List to store values
+        self.nums = []
+        # Dictionary to store value -> index mapping
+        self.val_to_index = {}
+
+    def insert(self, val: int) -> bool:
+        if val in self.val_to_index:
+            return False
+        
+        # Add value to the end of list
+        self.nums.append(val)
+        # Store its index in the dictionary
+        self.val_to_index[val] = len(self.nums) - 1
+        return True
+
+    def remove(self, val: int) -> bool:
+        if val not in self.val_to_index:
+            return False
+        
+        # Get index of value to remove
+        index = self.val_to_index[val]
+        last_val = self.nums[-1]
+        
+        # Move last element to the position of element to remove
+        self.nums[index] = last_val
+        self.val_to_index[last_val] = index
+        
+        # Remove the last element
+        self.nums.pop()
+        del self.val_to_index[val]
+        
+        return True
+
+    def getRandom(self) -> int:
+        # Return random element from list
+        return random.choice(self.nums)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the set.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class RandomizedSet {
+    private List<Integer> nums;
+    private Map<Integer, Integer> valToIndex;
+    private Random rand;
+
+    public RandomizedSet() {
+        nums = new ArrayList<>();
+        valToIndex = new HashMap<>();
+        rand = new Random();
+    }
+    
+    public boolean insert(int val) {
+        if (valToIndex.containsKey(val)) {
+            return false;
+        }
+        
+        nums.add(val);
+        valToIndex.put(val, nums.size() - 1);
+        return true;
+    }
+    
+    public boolean remove(int val) {
+        if (!valToIndex.containsKey(val)) {
+            return false;
+        }
+        
+        int index = valToIndex.get(val);
+        int lastVal = nums.get(nums.size() - 1);
+        
+        nums.set(index, lastVal);
+        valToIndex.put(lastVal, index);
+        
+        nums.remove(nums.size() - 1);
+        valToIndex.remove(val);
+        
+        return true;
+    }
+    
+    public int getRandom() {
+        return nums.get(rand.nextInt(nums.size()));
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the set.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class RandomizedSet {
+private:
+    vector<int> nums;
+    unordered_map<int, int> valToIndex;
+    
+public:
+    RandomizedSet() {
+        
+    }
+    
+    bool insert(int val) {
+        if (valToIndex.count(val)) {
+            return false;
+        }
+        
+        nums.push_back(val);
+        valToIndex[val] = nums.size() - 1;
+        return true;
+    }
+    
+    bool remove(int val) {
+        if (!valToIndex.count(val)) {
+            return false;
+        }
+        
+        int index = valToIndex[val];
+        int lastVal = nums.back();
+        
+        nums[index] = lastVal;
+        valToIndex[lastVal] = index;
+        
+        nums.pop_back();
+        valToIndex.erase(val);
+        
+        return true;
+    }
+    
+    int getRandom() {
+        return nums[rand() % nums.size()];
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the set.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>class RandomizedSet {
+    constructor() {
+        this.nums = [];
+        this.valToIndex = new Map();
+    }
+    
+    insert(val) {
+        if (this.valToIndex.has(val)) {
+            return false;
+        }
+        
+        this.nums.push(val);
+        this.valToIndex.set(val, this.nums.length - 1);
+        return true;
+    }
+    
+    remove(val) {
+        if (!this.valToIndex.has(val)) {
+            return false;
+        }
+        
+        const index = this.valToIndex.get(val);
+        const lastVal = this.nums[this.nums.length - 1];
+        
+        this.nums[index] = lastVal;
+        this.valToIndex.set(lastVal, index);
+        
+        this.nums.pop();
+        this.valToIndex.delete(val);
+        
+        return true;
+    }
+    
+    getRandom() {
+        return this.nums[Math.floor(Math.random() * this.nums.length)];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the set.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class RandomizedSet {
+    private List<int> nums;
+    private Dictionary<int, int> valToIndex;
+    private Random rand;
+
+    public RandomizedSet() {
+        nums = new List<int>();
+        valToIndex = new Dictionary<int, int>();
+        rand = new Random();
+    }
+    
+    public bool Insert(int val) {
+        if (valToIndex.ContainsKey(val)) {
+            return false;
+        }
+        
+        nums.Add(val);
+        valToIndex[val] = nums.Count - 1;
+        return true;
+    }
+    
+    public bool Remove(int val) {
+        if (!valToIndex.ContainsKey(val)) {
+            return false;
+        }
+        
+        int index = valToIndex[val];
+        int lastVal = nums[nums.Count - 1];
+        
+        nums[index] = lastVal;
+        valToIndex[lastVal] = index;
+        
+        nums.RemoveAt(nums.Count - 1);
+        valToIndex.Remove(val);
+        
+        return true;
+    }
+    
+    public int GetRandom() {
+        return nums[rand.Next(nums.Count)];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (insert, remove, getRandom) are O(1) on average.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the set.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a combination of array and hash map to achieve O(1) operations:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Array for O(1) random access</li>
+                            <li>Hash map for O(1) lookups</li>
+                            <li>Swap with last element for O(1) removal</li>
+                            <li>Maintain value-to-index mapping</li>
+                        </ul>
+                    </li>
+                    <li>Data Structure Design:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Array stores actual values</li>
+                            <li>Hash map stores value locations</li>
+                            <li>Random access via array indices</li>
+                            <li>Quick lookups via hash map</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>O(1) insertion at end</li>
+                        <li>O(1) removal by swapping</li>
+                        <li>O(1) random selection</li>
+                        <li>Synchronized data structures</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Avoid array shifts</li>
+                        <li>Maintain index mapping</li>
+                        <li>Efficient random access</li>
+                        <li>Space-time tradeoff</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty set</li>
+                        <li>Single element</li>
+                        <li>Duplicate operations</li>
+                        <li>Remove non-existent</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

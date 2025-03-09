@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elimination Game - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">390. Elimination Game</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You have a list <code class="bg-gray-100 px-1 rounded">arr</code> of all integers in the range <code class="bg-gray-100 px-1 rounded">[1, n]</code> sorted in a strictly increasing order. Apply the following algorithm on <code class="bg-gray-100 px-1 rounded">arr</code>:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Starting from left to right, remove the first number and every other number afterward until you reach the end of the list.</li>
+                    <li>Repeat the previous step again, but this time from right to left, remove the rightmost number and every other number from the remaining numbers.</li>
+                    <li>Keep repeating the steps again, alternating left to right and right to left, until a single number remains.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    Given the integer <code class="bg-gray-100 px-1 rounded">n</code>, return the last number that remains in <code class="bg-gray-100 px-1 rounded">arr</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 9
+Output: 6
+Explanation:
+arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+arr = [2, 4, 6, 8]
+arr = [2, 6]
+arr = [6]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 1
+Output: 1</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n <= 10⁹</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def lastRemaining(self, n: int) -> int:
+        # Start with first number
+        remaining = n
+        head = 1
+        step = 1
+        left_to_right = True
+        
+        while remaining > 1:
+            # If moving left to right or remaining count is odd
+            # head will always move
+            if left_to_right or remaining % 2 == 1:
+                head += step
+            
+            # Double step size and halve remaining count
+            step *= 2
+            remaining //= 2
+            
+            # Switch direction
+            left_to_right = not left_to_right
+        
+        return head</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We halve the remaining count in each step.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a few variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int lastRemaining(int n) {
+        // Start with first number
+        int remaining = n;
+        int head = 1;
+        int step = 1;
+        boolean leftToRight = true;
+        
+        while (remaining > 1) {
+            // If moving left to right or remaining count is odd
+            // head will always move
+            if (leftToRight || remaining % 2 == 1) {
+                head += step;
+            }
+            
+            // Double step size and halve remaining count
+            step *= 2;
+            remaining /= 2;
+            
+            // Switch direction
+            leftToRight = !leftToRight;
+        }
+        
+        return head;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We halve the remaining count in each step.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a few variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int lastRemaining(int n) {
+        // Start with first number
+        int remaining = n;
+        int head = 1;
+        int step = 1;
+        bool leftToRight = true;
+        
+        while (remaining > 1) {
+            // If moving left to right or remaining count is odd
+            // head will always move
+            if (leftToRight || remaining % 2 == 1) {
+                head += step;
+            }
+            
+            // Double step size and halve remaining count
+            step *= 2;
+            remaining /= 2;
+            
+            // Switch direction
+            leftToRight = !leftToRight;
+        }
+        
+        return head;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We halve the remaining count in each step.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a few variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} n
+ * @return {number}
+ */
+var lastRemaining = function(n) {
+    // Start with first number
+    let remaining = n;
+    let head = 1;
+    let step = 1;
+    let leftToRight = true;
+    
+    while (remaining > 1) {
+        // If moving left to right or remaining count is odd
+        // head will always move
+        if (leftToRight || remaining % 2 === 1) {
+            head += step;
+        }
+        
+        // Double step size and halve remaining count
+        step *= 2;
+        remaining = Math.floor(remaining / 2);
+        
+        // Switch direction
+        leftToRight = !leftToRight;
+    }
+    
+    return head;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We halve the remaining count in each step.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a few variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int LastRemaining(int n) {
+        // Start with first number
+        int remaining = n;
+        int head = 1;
+        int step = 1;
+        bool leftToRight = true;
+        
+        while (remaining > 1) {
+            // If moving left to right or remaining count is odd
+            // head will always move
+            if (leftToRight || remaining % 2 == 1) {
+                head += step;
+            }
+            
+            // Double step size and halve remaining count
+            step *= 2;
+            remaining /= 2;
+            
+            // Switch direction
+            leftToRight = !leftToRight;
+        }
+        
+        return head;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We halve the remaining count in each step.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a few variables regardless of input size.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a mathematical approach to track the head number:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Pattern recognition</li>
+                            <li>Head tracking</li>
+                            <li>Step doubling</li>
+                            <li>Direction alternation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Track head number</li>
+                            <li>Update step size</li>
+                            <li>Handle direction</li>
+                            <li>Process remaining</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Head movement</li>
+                        <li>Step calculation</li>
+                        <li>Direction switching</li>
+                        <li>Remaining count</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>No array needed</li>
+                        <li>Constant space</li>
+                        <li>Logarithmic time</li>
+                        <li>Pattern utilization</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single number</li>
+                        <li>Even vs odd</li>
+                        <li>Power of two</li>
+                        <li>Large numbers</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

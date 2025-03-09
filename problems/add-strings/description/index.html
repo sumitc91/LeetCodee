@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Strings - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">415. Add Strings</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given two non-negative integers, <code class="bg-gray-100 px-1 rounded">num1</code> and <code class="bg-gray-100 px-1 rounded">num2</code> represented as string, return the sum of <code class="bg-gray-100 px-1 rounded">num1</code> and <code class="bg-gray-100 px-1 rounded">num2</code> as a string.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    You must solve the problem without using any built-in library for handling large integers (such as <code class="bg-gray-100 px-1 rounded">BigInteger</code>). You must also not convert the inputs to integers directly.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num1 = "11", num2 = "123"
+Output: "134"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num1 = "456", num2 = "77"
+Output: "533"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num1 = "0", num2 = "0"
+Output: "0"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= num1.length, num2.length <= 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">num1</code> and <code class="bg-gray-100 px-1 rounded">num2</code> consist of only digits.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">num1</code> and <code class="bg-gray-100 px-1 rounded">num2</code> don't have any leading zeros except for the zero itself.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def addStrings(self, num1: str, num2: str) -> str:
+        # Initialize pointers and carry
+        i = len(num1) - 1
+        j = len(num2) - 1
+        carry = 0
+        result = []
+        
+        # Process digits from right to left
+        while i >= 0 or j >= 0 or carry:
+            # Get digits or use 0 if exhausted
+            x = int(num1[i]) if i >= 0 else 0
+            y = int(num2[j]) if j >= 0 else 0
+            
+            # Calculate sum and carry
+            total = x + y + carry
+            carry = total // 10
+            digit = total % 10
+            
+            # Add digit to result
+            result.append(str(digit))
+            
+            # Move pointers
+            i -= 1
+            j -= 1
+        
+        # Reverse and join the result
+        return ''.join(result[::-1])</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of num1 and num2 respectively.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">For storing the result string.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public String addStrings(String num1, String num2) {
+        // Initialize pointers and carry
+        int i = num1.length() - 1;
+        int j = num2.length() - 1;
+        int carry = 0;
+        StringBuilder result = new StringBuilder();
+        
+        // Process digits from right to left
+        while (i >= 0 || j >= 0 || carry > 0) {
+            // Get digits or use 0 if exhausted
+            int x = i >= 0 ? num1.charAt(i) - '0' : 0;
+            int y = j >= 0 ? num2.charAt(j) - '0' : 0;
+            
+            // Calculate sum and carry
+            int total = x + y + carry;
+            carry = total / 10;
+            int digit = total % 10;
+            
+            // Add digit to result
+            result.append(digit);
+            
+            // Move pointers
+            i--;
+            j--;
+        }
+        
+        // Reverse and return the result
+        return result.reverse().toString();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of num1 and num2 respectively.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">For storing the result string.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    string addStrings(string num1, string num2) {
+        // Initialize pointers and carry
+        int i = num1.length() - 1;
+        int j = num2.length() - 1;
+        int carry = 0;
+        string result;
+        
+        // Process digits from right to left
+        while (i >= 0 || j >= 0 || carry) {
+            // Get digits or use 0 if exhausted
+            int x = i >= 0 ? num1[i] - '0' : 0;
+            int y = j >= 0 ? num2[j] - '0' : 0;
+            
+            // Calculate sum and carry
+            int total = x + y + carry;
+            carry = total / 10;
+            int digit = total % 10;
+            
+            // Add digit to result
+            result.push_back(digit + '0');
+            
+            // Move pointers
+            i--;
+            j--;
+        }
+        
+        // Reverse and return the result
+        reverse(result.begin(), result.end());
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of num1 and num2 respectively.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">For storing the result string.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} num1
+ * @param {string} num2
+ * @return {string}
+ */
+var addStrings = function(num1, num2) {
+    // Initialize pointers and carry
+    let i = num1.length - 1;
+    let j = num2.length - 1;
+    let carry = 0;
+    let result = [];
+    
+    // Process digits from right to left
+    while (i >= 0 || j >= 0 || carry) {
+        // Get digits or use 0 if exhausted
+        const x = i >= 0 ? Number(num1[i]) : 0;
+        const y = j >= 0 ? Number(num2[j]) : 0;
+        
+        // Calculate sum and carry
+        const total = x + y + carry;
+        carry = Math.floor(total / 10);
+        const digit = total % 10;
+        
+        // Add digit to result
+        result.push(digit);
+        
+        // Move pointers
+        i--;
+        j--;
+    }
+    
+    // Reverse and join the result
+    return result.reverse().join('');
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of num1 and num2 respectively.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">For storing the result array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public string AddStrings(string num1, string num2) {
+        // Initialize pointers and carry
+        int i = num1.Length - 1;
+        int j = num2.Length - 1;
+        int carry = 0;
+        StringBuilder result = new StringBuilder();
+        
+        // Process digits from right to left
+        while (i >= 0 || j >= 0 || carry > 0) {
+            // Get digits or use 0 if exhausted
+            int x = i >= 0 ? num1[i] - '0' : 0;
+            int y = j >= 0 ? num2[j] - '0' : 0;
+            
+            // Calculate sum and carry
+            int total = x + y + carry;
+            carry = total / 10;
+            int digit = total % 10;
+            
+            // Add digit to result
+            result.Append(digit);
+            
+            // Move pointers
+            i--;
+            j--;
+        }
+        
+        // Get the characters and reverse them
+        char[] chars = result.ToString().ToCharArray();
+        Array.Reverse(chars);
+        return new string(chars);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of num1 and num2 respectively.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(n, m))</h4>
+                    <p class="text-gray-700">For storing the result string.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a digit-by-digit addition approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>String processing</li>
+                            <li>Carry handling</li>
+                            <li>Digit conversion</li>
+                            <li>Result building</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Process digits</li>
+                            <li>Handle carry</li>
+                            <li>Build result</li>
+                            <li>Reverse string</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Pointer tracking</li>
+                        <li>Digit extraction</li>
+                        <li>Sum calculation</li>
+                        <li>String building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>In-place addition</li>
+                        <li>Minimal conversion</li>
+                        <li>Efficient storage</li>
+                        <li>Single pass</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Different lengths</li>
+                        <li>Zero values</li>
+                        <li>Large numbers</li>
+                        <li>Carry overflow</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacific Atlantic Water Flow - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">417. Pacific Atlantic Water Flow</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    There is an <code class="bg-gray-100 px-1 rounded">m x n</code> rectangular island that borders both the Pacific Ocean and Atlantic Ocean. The Pacific Ocean touches the island's left and top edges, and the Atlantic Ocean touches the island's right and bottom edges.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The island is partitioned into a grid of square cells. You are given an <code class="bg-gray-100 px-1 rounded">m x n</code> integer matrix <code class="bg-gray-100 px-1 rounded">heights</code> where <code class="bg-gray-100 px-1 rounded">heights[r][c]</code> represents the height above sea level of the cell at coordinate <code class="bg-gray-100 px-1 rounded">(r, c)</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The island receives a lot of rain, and the rain water can flow to neighboring cells directly north, south, east, and west if the neighboring cell's height is less than or equal to the current cell's height. Water can flow from any cell adjacent to an ocean into the ocean.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return a 2D list of grid coordinates <code class="bg-gray-100 px-1 rounded">result</code> where <code class="bg-gray-100 px-1 rounded">result[i] = [ri, ci]</code> denotes that rain water can flow from cell <code class="bg-gray-100 px-1 rounded">(ri, ci)</code> to both the Pacific and Atlantic oceans.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+Output: [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: heights = [[2,1],[1,2]]
+Output: [[0,0],[0,1],[1,0],[1,1]]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">m == heights.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == heights[r].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m, n <= 200</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= heights[r][c] <= 10⁵</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        if not heights:
+            return []
+        
+        m, n = len(heights), len(heights[0])
+        pacific = set()
+        atlantic = set()
+        
+        def dfs(r: int, c: int, visited: set, prev_height: int) -> None:
+            if (r, c) in visited or r < 0 or c < 0 or r >= m or c >= n or heights[r][c] < prev_height:
+                return
+            
+            visited.add((r, c))
+            curr_height = heights[r][c]
+            
+            for nr, nc in [(r+1,c), (r-1,c), (r,c+1), (r,c-1)]:
+                dfs(nr, nc, visited, curr_height)
+        
+        # DFS from Pacific edges
+        for i in range(m):
+            dfs(i, 0, pacific, heights[i][0])
+        for j in range(n):
+            dfs(0, j, pacific, heights[0][j])
+        
+        # DFS from Atlantic edges
+        for i in range(m):
+            dfs(i, n-1, atlantic, heights[i][n-1])
+        for j in range(n):
+            dfs(m-1, j, atlantic, heights[m-1][j])
+        
+        # Find cells that can reach both oceans
+        return list(pacific & atlantic)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each cell at most twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the visited sets and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private int m, n;
+    private int[][] heights;
+    private Set<Pair<Integer, Integer>> pacific;
+    private Set<Pair<Integer, Integer>> atlantic;
+    
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        if (heights == null || heights.length == 0) {
+            return new ArrayList<>();
+        }
+        
+        this.heights = heights;
+        this.m = heights.length;
+        this.n = heights[0].length;
+        this.pacific = new HashSet<>();
+        this.atlantic = new HashSet<>();
+        
+        // DFS from Pacific edges
+        for (int i = 0; i < m; i++) {
+            dfs(i, 0, pacific, heights[i][0]);
+        }
+        for (int j = 0; j < n; j++) {
+            dfs(0, j, pacific, heights[0][j]);
+        }
+        
+        // DFS from Atlantic edges
+        for (int i = 0; i < m; i++) {
+            dfs(i, n-1, atlantic, heights[i][n-1]);
+        }
+        for (int j = 0; j < n; j++) {
+            dfs(m-1, j, atlantic, heights[m-1][j]);
+        }
+        
+        // Find cells that can reach both oceans
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (pacific.contains(new Pair<>(i, j)) && 
+                    atlantic.contains(new Pair<>(i, j))) {
+                    result.add(Arrays.asList(i, j));
+                }
+            }
+        }
+        return result;
+    }
+    
+    private void dfs(int r, int c, Set<Pair<Integer, Integer>> visited, int prevHeight) {
+        if (r < 0 || c < 0 || r >= m || c >= n || 
+            heights[r][c] < prevHeight || 
+            visited.contains(new Pair<>(r, c))) {
+            return;
+        }
+        
+        visited.add(new Pair<>(r, c));
+        int currHeight = heights[r][c];
+        
+        dfs(r+1, c, visited, currHeight);
+        dfs(r-1, c, visited, currHeight);
+        dfs(r, c+1, visited, currHeight);
+        dfs(r, c-1, visited, currHeight);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each cell at most twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the visited sets and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    int m, n;
+    vector<vector<int>> heights;
+    set<pair<int, int>> pacific;
+    set<pair<int, int>> atlantic;
+    
+    void dfs(int r, int c, set<pair<int, int>>& visited, int prevHeight) {
+        if (r < 0 || c < 0 || r >= m || c >= n || 
+            heights[r][c] < prevHeight || 
+            visited.count({r, c})) {
+            return;
+        }
+        
+        visited.insert({r, c});
+        int currHeight = heights[r][c];
+        
+        dfs(r+1, c, visited, currHeight);
+        dfs(r-1, c, visited, currHeight);
+        dfs(r, c+1, visited, currHeight);
+        dfs(r, c-1, visited, currHeight);
+    }
+    
+public:
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        if (heights.empty()) {
+            return {};
+        }
+        
+        this->heights = heights;
+        this->m = heights.size();
+        this->n = heights[0].size();
+        
+        // DFS from Pacific edges
+        for (int i = 0; i < m; i++) {
+            dfs(i, 0, pacific, heights[i][0]);
+        }
+        for (int j = 0; j < n; j++) {
+            dfs(0, j, pacific, heights[0][j]);
+        }
+        
+        // DFS from Atlantic edges
+        for (int i = 0; i < m; i++) {
+            dfs(i, n-1, atlantic, heights[i][n-1]);
+        }
+        for (int j = 0; j < n; j++) {
+            dfs(m-1, j, atlantic, heights[m-1][j]);
+        }
+        
+        // Find cells that can reach both oceans
+        vector<vector<int>> result;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (pacific.count({i, j}) && atlantic.count({i, j})) {
+                    result.push_back({i, j});
+                }
+            }
+        }
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each cell at most twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the visited sets and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} heights
+ * @return {number[][]}
+ */
+var pacificAtlantic = function(heights) {
+    if (!heights.length) return [];
+    
+    const m = heights.length;
+    const n = heights[0].length;
+    const pacific = new Set();
+    const atlantic = new Set();
+    
+    const dfs = (r, c, visited, prevHeight) => {
+        const key = `${r},${c}`;
+        if (r < 0 || c < 0 || r >= m || c >= n || 
+            heights[r][c] < prevHeight || 
+            visited.has(key)) {
+            return;
+        }
+        
+        visited.add(key);
+        const currHeight = heights[r][c];
+        
+        dfs(r+1, c, visited, currHeight);
+        dfs(r-1, c, visited, currHeight);
+        dfs(r, c+1, visited, currHeight);
+        dfs(r, c-1, visited, currHeight);
+    };
+    
+    // DFS from Pacific edges
+    for (let i = 0; i < m; i++) {
+        dfs(i, 0, pacific, heights[i][0]);
+    }
+    for (let j = 0; j < n; j++) {
+        dfs(0, j, pacific, heights[0][j]);
+    }
+    
+    // DFS from Atlantic edges
+    for (let i = 0; i < m; i++) {
+        dfs(i, n-1, atlantic, heights[i][n-1]);
+    }
+    for (let j = 0; j < n; j++) {
+        dfs(m-1, j, atlantic, heights[m-1][j]);
+    }
+    
+    // Find cells that can reach both oceans
+    const result = [];
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            const key = `${i},${j}`;
+            if (pacific.has(key) && atlantic.has(key)) {
+                result.push([i, j]);
+            }
+        }
+    }
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each cell at most twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the visited sets and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private int m, n;
+    private int[][] heights;
+    private HashSet<(int, int)> pacific;
+    private HashSet<(int, int)> atlantic;
+    
+    public IList<IList<int>> PacificAtlantic(int[][] heights) {
+        if (heights == null || heights.Length == 0) {
+            return new List<IList<int>>();
+        }
+        
+        this.heights = heights;
+        this.m = heights.Length;
+        this.n = heights[0].Length;
+        this.pacific = new HashSet<(int, int)>();
+        this.atlantic = new HashSet<(int, int)>();
+        
+        // DFS from Pacific edges
+        for (int i = 0; i < m; i++) {
+            DFS(i, 0, pacific, heights[i][0]);
+        }
+        for (int j = 0; j < n; j++) {
+            DFS(0, j, pacific, heights[0][j]);
+        }
+        
+        // DFS from Atlantic edges
+        for (int i = 0; i < m; i++) {
+            DFS(i, n-1, atlantic, heights[i][n-1]);
+        }
+        for (int j = 0; j < n; j++) {
+            DFS(m-1, j, atlantic, heights[m-1][j]);
+        }
+        
+        // Find cells that can reach both oceans
+        var result = new List<IList<int>>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (pacific.Contains((i, j)) && atlantic.Contains((i, j))) {
+                    result.Add(new List<int> { i, j });
+                }
+            }
+        }
+        return result;
+    }
+    
+    private void DFS(int r, int c, HashSet<(int, int)> visited, int prevHeight) {
+        if (r < 0 || c < 0 || r >= m || c >= n || 
+            heights[r][c] < prevHeight || 
+            visited.Contains((r, c))) {
+            return;
+        }
+        
+        visited.Add((r, c));
+        int currHeight = heights[r][c];
+        
+        DFS(r+1, c, visited, currHeight);
+        DFS(r-1, c, visited, currHeight);
+        DFS(r, c+1, visited, currHeight);
+        DFS(r, c-1, visited, currHeight);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each cell at most twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the visited sets and recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a DFS approach from ocean edges:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Reverse flow</li>
+                            <li>Edge traversal</li>
+                            <li>Set intersection</li>
+                            <li>Height comparison</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>DFS from edges</li>
+                            <li>Track visited cells</li>
+                            <li>Compare heights</li>
+                            <li>Find common cells</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>DFS implementation</li>
+                        <li>Set operations</li>
+                        <li>Boundary checks</li>
+                        <li>Result building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Reverse flow</li>
+                        <li>Early termination</li>
+                        <li>Set usage</li>
+                        <li>Memory efficiency</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty matrix</li>
+                        <li>Single cell</li>
+                        <li>Equal heights</li>
+                        <li>No valid paths</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

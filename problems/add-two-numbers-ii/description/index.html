@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Two Numbers II - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">445. Add Two Numbers II</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: l1 = [7,2,4,3], l2 = [5,6,4]
+Output: [7,8,0,7]
+Explanation: 7243 + 564 = 7807.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: l1 = [2,4,3], l2 = [5,6,4]
+Output: [8,0,7]
+Explanation: 243 + 564 = 807.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: l1 = [0], l2 = [0]
+Output: [0]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>The number of nodes in each linked list is in the range <code class="bg-gray-100 px-1 rounded">[1, 100]</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= Node.val <= 9</code></li>
+                    <li>It is guaranteed that the list represents a number that does not have leading zeros.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        # Convert linked lists to stacks
+        s1, s2 = [], []
+        while l1:
+            s1.append(l1.val)
+            l1 = l1.next
+        while l2:
+            s2.append(l2.val)
+            l2 = l2.next
+        
+        # Add numbers from right to left
+        carry = 0
+        head = None
+        
+        while s1 or s2 or carry:
+            # Get digits from stacks or use 0 if empty
+            d1 = s1.pop() if s1 else 0
+            d2 = s2.pop() if s2 else 0
+            
+            # Calculate sum and carry
+            curr_sum = d1 + d2 + carry
+            carry = curr_sum // 10
+            digit = curr_sum % 10
+            
+            # Create new node and link it
+            new_node = ListNode(digit)
+            new_node.next = head
+            head = new_node
+        
+        return head</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">Where N and M are the lengths of the input linked lists.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">For storing the digits in stacks.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // Convert linked lists to stacks
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+        
+        while (l1 != null) {
+            s1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            s2.push(l2.val);
+            l2 = l2.next;
+        }
+        
+        // Add numbers from right to left
+        int carry = 0;
+        ListNode head = null;
+        
+        while (!s1.empty() || !s2.empty() || carry > 0) {
+            // Get digits from stacks or use 0 if empty
+            int d1 = !s1.empty() ? s1.pop() : 0;
+            int d2 = !s2.empty() ? s2.pop() : 0;
+            
+            // Calculate sum and carry
+            int currSum = d1 + d2 + carry;
+            carry = currSum / 10;
+            int digit = currSum % 10;
+            
+            // Create new node and link it
+            ListNode newNode = new ListNode(digit);
+            newNode.next = head;
+            head = newNode;
+        }
+        
+        return head;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">Where N and M are the lengths of the input linked lists.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">For storing the digits in stacks.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        // Convert linked lists to stacks
+        stack<int> s1, s2;
+        
+        while (l1) {
+            s1.push(l1->val);
+            l1 = l1->next;
+        }
+        while (l2) {
+            s2.push(l2->val);
+            l2 = l2->next;
+        }
+        
+        // Add numbers from right to left
+        int carry = 0;
+        ListNode* head = nullptr;
+        
+        while (!s1.empty() || !s2.empty() || carry) {
+            // Get digits from stacks or use 0 if empty
+            int d1 = !s1.empty() ? s1.top() : 0;
+            int d2 = !s2.empty() ? s2.top() : 0;
+            
+            if (!s1.empty()) s1.pop();
+            if (!s2.empty()) s2.pop();
+            
+            // Calculate sum and carry
+            int currSum = d1 + d2 + carry;
+            carry = currSum / 10;
+            int digit = currSum % 10;
+            
+            // Create new node and link it
+            ListNode* newNode = new ListNode(digit);
+            newNode->next = head;
+            head = newNode;
+        }
+        
+        return head;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">Where N and M are the lengths of the input linked lists.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">For storing the digits in stacks.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {ListNode} l1
+ * @param {ListNode} l2
+ * @return {ListNode}
+ */
+var addTwoNumbers = function(l1, l2) {
+    // Convert linked lists to arrays
+    const s1 = [];
+    const s2 = [];
+    
+    while (l1) {
+        s1.push(l1.val);
+        l1 = l1.next;
+    }
+    while (l2) {
+        s2.push(l2.val);
+        l2 = l2.next;
+    }
+    
+    // Add numbers from right to left
+    let carry = 0;
+    let head = null;
+    
+    while (s1.length || s2.length || carry) {
+        // Get digits from arrays or use 0 if empty
+        const d1 = s1.length ? s1.pop() : 0;
+        const d2 = s2.length ? s2.pop() : 0;
+        
+        // Calculate sum and carry
+        const currSum = d1 + d2 + carry;
+        carry = Math.floor(currSum / 10);
+        const digit = currSum % 10;
+        
+        // Create new node and link it
+        const newNode = new ListNode(digit);
+        newNode.next = head;
+        head = newNode;
+    }
+    
+    return head;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">Where N and M are the lengths of the input linked lists.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">For storing the digits in arrays.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public ListNode AddTwoNumbers(ListNode l1, ListNode l2) {
+        // Convert linked lists to stacks
+        Stack<int> s1 = new Stack<int>();
+        Stack<int> s2 = new Stack<int>();
+        
+        while (l1 != null) {
+            s1.Push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            s2.Push(l2.val);
+            l2 = l2.next;
+        }
+        
+        // Add numbers from right to left
+        int carry = 0;
+        ListNode head = null;
+        
+        while (s1.Count > 0 || s2.Count > 0 || carry > 0) {
+            // Get digits from stacks or use 0 if empty
+            int d1 = s1.Count > 0 ? s1.Pop() : 0;
+            int d2 = s2.Count > 0 ? s2.Pop() : 0;
+            
+            // Calculate sum and carry
+            int currSum = d1 + d2 + carry;
+            carry = currSum / 10;
+            int digit = currSum % 10;
+            
+            // Create new node and link it
+            ListNode newNode = new ListNode(digit);
+            newNode.next = head;
+            head = newNode;
+        }
+        
+        return head;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">Where N and M are the lengths of the input linked lists.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(max(N, M))</h4>
+                    <p class="text-gray-700">For storing the digits in stacks.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses stacks to handle the reversed order addition:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Stack usage</li>
+                            <li>Carry handling</li>
+                            <li>Reverse building</li>
+                            <li>Node creation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Convert to stacks</li>
+                            <li>Process digits</li>
+                            <li>Handle carry</li>
+                            <li>Build result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Stack operations</li>
+                        <li>Digit addition</li>
+                        <li>List building</li>
+                        <li>Carry propagation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Stack efficiency</li>
+                        <li>Memory usage</li>
+                        <li>Early termination</li>
+                        <li>Result building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Different lengths</li>
+                        <li>Single digit</li>
+                        <li>Zero values</li>
+                        <li>Large carry</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

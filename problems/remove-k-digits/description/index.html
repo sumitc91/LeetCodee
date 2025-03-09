@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove K Digits - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">402. Remove K Digits</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given string <code class="bg-gray-100 px-1 rounded">num</code> representing a non-negative integer <code class="bg-gray-100 px-1 rounded">num</code>, and an integer <code class="bg-gray-100 px-1 rounded">k</code>, return the smallest possible integer after removing <code class="bg-gray-100 px-1 rounded">k</code> digits from <code class="bg-gray-100 px-1 rounded">num</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num = "1432219", k = 3
+Output: "1219"
+Explanation: Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num = "10200", k = 1
+Output: "200"
+Explanation: Remove the leading 1 and the number is 200. Note that the output must not contain leading zeroes.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num = "10", k = 2
+Output: "0"
+Explanation: Remove all the digits from the number and it is left with nothing which is 0.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= k <= num.length <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">num</code> consists of only digits.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">num</code> does not have any leading zeros except for the zero itself.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def removeKdigits(self, num: str, k: int) -> str:
+        stack = []
+        
+        # Build monotonic increasing stack
+        for digit in num:
+            while k > 0 and stack and stack[-1] > digit:
+                stack.pop()
+                k -= 1
+            stack.append(digit)
+        
+        # If k > 0, remove remaining digits from end
+        while k > 0:
+            stack.pop()
+            k -= 1
+        
+        # Build result string
+        result = ''.join(stack).lstrip('0')
+        
+        return result if result else '0'</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. Each digit is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack to store digits.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public String removeKdigits(String num, int k) {
+        Stack<Character> stack = new Stack<>();
+        
+        // Build monotonic increasing stack
+        for (char digit : num.toCharArray()) {
+            while (k > 0 && !stack.isEmpty() && stack.peek() > digit) {
+                stack.pop();
+                k--;
+            }
+            stack.push(digit);
+        }
+        
+        // If k > 0, remove remaining digits from end
+        while (k > 0) {
+            stack.pop();
+            k--;
+        }
+        
+        // Build result string
+        StringBuilder result = new StringBuilder();
+        while (!stack.isEmpty()) {
+            result.insert(0, stack.pop());
+        }
+        
+        // Remove leading zeros
+        while (result.length() > 0 && result.charAt(0) == '0') {
+            result.deleteCharAt(0);
+        }
+        
+        return result.length() == 0 ? "0" : result.toString();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. Each digit is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack to store digits.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        string stack;
+        
+        // Build monotonic increasing stack
+        for (char digit : num) {
+            while (k > 0 && !stack.empty() && stack.back() > digit) {
+                stack.pop_back();
+                k--;
+            }
+            stack.push_back(digit);
+        }
+        
+        // If k > 0, remove remaining digits from end
+        while (k > 0) {
+            stack.pop_back();
+            k--;
+        }
+        
+        // Remove leading zeros
+        int start = 0;
+        while (start < stack.length() && stack[start] == '0') {
+            start++;
+        }
+        
+        string result = stack.substr(start);
+        return result.empty() ? "0" : result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. Each digit is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack to store digits.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} num
+ * @param {number} k
+ * @return {string}
+ */
+var removeKdigits = function(num, k) {
+    const stack = [];
+    
+    // Build monotonic increasing stack
+    for (const digit of num) {
+        while (k > 0 && stack.length && stack[stack.length - 1] > digit) {
+            stack.pop();
+            k--;
+        }
+        stack.push(digit);
+    }
+    
+    // If k > 0, remove remaining digits from end
+    while (k > 0) {
+        stack.pop();
+        k--;
+    }
+    
+    // Build result string and remove leading zeros
+    const result = stack.join('').replace(/^0+/, '');
+    
+    return result || '0';
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. Each digit is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack to store digits.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public string RemoveKdigits(string num, int k) {
+        var stack = new Stack<char>();
+        
+        // Build monotonic increasing stack
+        foreach (char digit in num) {
+            while (k > 0 && stack.Count > 0 && stack.Peek() > digit) {
+                stack.Pop();
+                k--;
+            }
+            stack.Push(digit);
+        }
+        
+        // If k > 0, remove remaining digits from end
+        while (k > 0) {
+            stack.Pop();
+            k--;
+        }
+        
+        // Build result string
+        var result = new string(stack.Reverse().ToArray());
+        
+        // Remove leading zeros
+        result = result.TrimStart('0');
+        
+        return string.IsNullOrEmpty(result) ? "0" : result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. Each digit is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack to store digits.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a monotonic stack approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Monotonic stack</li>
+                            <li>Greedy approach</li>
+                            <li>Leading zeros</li>
+                            <li>Digit removal</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Build stack</li>
+                            <li>Remove digits</li>
+                            <li>Handle zeros</li>
+                            <li>Format result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Stack operations</li>
+                        <li>String handling</li>
+                        <li>Zero removal</li>
+                        <li>Result building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient removal</li>
+                        <li>Space optimization</li>
+                        <li>String building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty string</li>
+                        <li>All zeros</li>
+                        <li>Remove all digits</li>
+                        <li>Leading zeros</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

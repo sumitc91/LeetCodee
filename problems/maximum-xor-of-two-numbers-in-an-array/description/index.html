@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximum XOR of Two Numbers in an Array - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">421. Maximum XOR of Two Numbers in an Array</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an integer array <code class="bg-gray-100 px-1 rounded">nums</code>, return the maximum result of <code class="bg-gray-100 px-1 rounded">nums[i] XOR nums[j]</code>, where <code class="bg-gray-100 px-1 rounded">0 ≤ i ≤ j < n</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [3,10,5,25,2,8]
+Output: 28
+Explanation: The maximum result is 5 XOR 25 = 28.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [14,70,53,83,49,91,36,80,92,51,66,70]
+Output: 127</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums.length <= 2 * 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= nums[i] <= 2³¹ - 1</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findMaximumXOR(self, nums: List[int]) -> int:
+        # Length of max number in binary
+        L = len(bin(max(nums))) - 2
+        max_xor = 0
+        
+        # Try to find the maximum XOR for each bit position
+        for i in range(L-1, -1, -1):
+            # Go to the next bit by shifting
+            max_xor <<= 1
+            curr_xor = max_xor | 1
+            
+            # Compute all possible prefixes
+            prefixes = {num >> i for num in nums}
+            
+            # Check if we can get curr_xor
+            for p in prefixes:
+                if p ^ (curr_xor >> 1) in prefixes:
+                    max_xor = curr_xor
+                    break
+                    
+        return max_xor</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(N * L)</h4>
+                    <p class="text-gray-700">Where N is the length of nums and L is the length of the longest number in binary.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">For storing the prefixes set.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int findMaximumXOR(int[] nums) {
+        int maxNum = 0;
+        for (int num : nums) {
+            maxNum = Math.max(maxNum, num);
+        }
+        
+        // Length of max number in binary
+        int L = Integer.toBinaryString(maxNum).length();
+        int maxXor = 0;
+        
+        // Try to find the maximum XOR for each bit position
+        for (int i = L - 1; i >= 0; i--) {
+            // Go to the next bit by shifting
+            maxXor <<= 1;
+            int currXor = maxXor | 1;
+            
+            // Compute all possible prefixes
+            Set<Integer> prefixes = new HashSet<>();
+            for (int num : nums) {
+                prefixes.add(num >> i);
+            }
+            
+            // Check if we can get currXor
+            for (int p : prefixes) {
+                if (prefixes.contains(p ^ (currXor >> 1))) {
+                    maxXor = currXor;
+                    break;
+                }
+            }
+        }
+        
+        return maxXor;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(N * L)</h4>
+                    <p class="text-gray-700">Where N is the length of nums and L is the length of the longest number in binary.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">For storing the prefixes set.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int findMaximumXOR(vector<int>& nums) {
+        int maxNum = 0;
+        for (int num : nums) {
+            maxNum = max(maxNum, num);
+        }
+        
+        // Length of max number in binary
+        int L = 0;
+        while (maxNum > 0) {
+            maxNum >>= 1;
+            L++;
+        }
+        
+        int maxXor = 0;
+        
+        // Try to find the maximum XOR for each bit position
+        for (int i = L - 1; i >= 0; i--) {
+            // Go to the next bit by shifting
+            maxXor <<= 1;
+            int currXor = maxXor | 1;
+            
+            // Compute all possible prefixes
+            unordered_set<int> prefixes;
+            for (int num : nums) {
+                prefixes.insert(num >> i);
+            }
+            
+            // Check if we can get currXor
+            for (int p : prefixes) {
+                if (prefixes.count(p ^ (currXor >> 1))) {
+                    maxXor = currXor;
+                    break;
+                }
+            }
+        }
+        
+        return maxXor;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(N * L)</h4>
+                    <p class="text-gray-700">Where N is the length of nums and L is the length of the longest number in binary.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">For storing the prefixes set.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMaximumXOR = function(nums) {
+    const maxNum = Math.max(...nums);
+    
+    // Length of max number in binary
+    const L = maxNum.toString(2).length;
+    let maxXor = 0;
+    
+    // Try to find the maximum XOR for each bit position
+    for (let i = L - 1; i >= 0; i--) {
+        // Go to the next bit by shifting
+        maxXor <<= 1;
+        const currXor = maxXor | 1;
+        
+        // Compute all possible prefixes
+        const prefixes = new Set();
+        for (const num of nums) {
+            prefixes.add(num >> i);
+        }
+        
+        // Check if we can get currXor
+        for (const p of prefixes) {
+            if (prefixes.has(p ^ (currXor >> 1))) {
+                maxXor = currXor;
+                break;
+            }
+        }
+    }
+    
+    return maxXor;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(N * L)</h4>
+                    <p class="text-gray-700">Where N is the length of nums and L is the length of the longest number in binary.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">For storing the prefixes set.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int FindMaximumXOR(int[] nums) {
+        int maxNum = nums.Max();
+        
+        // Length of max number in binary
+        int L = Convert.ToString(maxNum, 2).Length;
+        int maxXor = 0;
+        
+        // Try to find the maximum XOR for each bit position
+        for (int i = L - 1; i >= 0; i--) {
+            // Go to the next bit by shifting
+            maxXor <<= 1;
+            int currXor = maxXor | 1;
+            
+            // Compute all possible prefixes
+            HashSet<int> prefixes = new HashSet<int>();
+            foreach (int num in nums) {
+                prefixes.Add(num >> i);
+            }
+            
+            // Check if we can get currXor
+            foreach (int p in prefixes) {
+                if (prefixes.Contains(p ^ (currXor >> 1))) {
+                    maxXor = currXor;
+                    break;
+                }
+            }
+        }
+        
+        return maxXor;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(N * L)</h4>
+                    <p class="text-gray-700">Where N is the length of nums and L is the length of the longest number in binary.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">For storing the prefixes set.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a bit manipulation approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Bit manipulation</li>
+                            <li>Prefix matching</li>
+                            <li>Greedy approach</li>
+                            <li>Binary properties</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Find max length</li>
+                            <li>Process each bit</li>
+                            <li>Build prefixes</li>
+                            <li>Check possibilities</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Bit operations</li>
+                        <li>Set operations</li>
+                        <li>Binary conversion</li>
+                        <li>Prefix tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient storage</li>
+                        <li>Bit-by-bit processing</li>
+                        <li>Hash set usage</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single element</li>
+                        <li>All zeros</li>
+                        <li>Large numbers</li>
+                        <li>Same numbers</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

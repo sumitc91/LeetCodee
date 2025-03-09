@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Reconstruction by Height - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">406. Queue Reconstruction by Height</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given an array of people, <code class="bg-gray-100 px-1 rounded">people</code>, which are the attributes of some people in a queue (not necessarily in order). Each <code class="bg-gray-100 px-1 rounded">people[i] = [h<sub>i</sub>, k<sub>i</sub>]</code> represents the <code class="bg-gray-100 px-1 rounded">i<sup>th</sup></code> person of height <code class="bg-gray-100 px-1 rounded">h<sub>i</sub></code> with exactly <code class="bg-gray-100 px-1 rounded">k<sub>i</sub></code> other people in front who have a height greater than or equal to <code class="bg-gray-100 px-1 rounded">h<sub>i</sub></code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Reconstruct and return the queue that is represented by the input array <code class="bg-gray-100 px-1 rounded">people</code>. The returned queue should be formatted as an array <code class="bg-gray-100 px-1 rounded">queue</code>, where <code class="bg-gray-100 px-1 rounded">queue[j] = [h<sub>j</sub>, k<sub>j</sub>]</code> is the attributes of the <code class="bg-gray-100 px-1 rounded">j<sup>th</sup></code> person in the queue (<code class="bg-gray-100 px-1 rounded">queue[0]</code> is the person at the front of the queue).
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: people = [[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]
+Output: [[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]]
+Explanation:
+Person 0 has height 5 with no one taller in front.
+Person 1 has height 7 with no one taller in front.
+Person 2 has height 5 with two persons taller in front.
+Person 3 has height 6 with one person taller in front.
+Person 4 has height 4 with four persons taller in front.
+Person 5 has height 7 with one person taller in front.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: people = [[6,0],[5,0],[4,0],[3,2],[2,2],[1,4]]
+Output: [[4,0],[5,0],[2,2],[3,2],[1,4],[6,0]]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= people.length <= 2000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= h<sub>i</sub> <= 10⁶</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= k<sub>i</sub> < people.length</code></li>
+                    <li>It is guaranteed that the queue can be reconstructed.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
+        # Sort by height in descending order and k in ascending order
+        people.sort(key=lambda x: (-x[0], x[1]))
+        
+        result = []
+        # Insert each person at their k index
+        for person in people:
+            result.insert(person[1], person)
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of people. Sorting takes O(n log n) and insertion takes O(n) for each person.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the result array.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int[][] reconstructQueue(int[][] people) {
+        // Sort by height in descending order and k in ascending order
+        Arrays.sort(people, (a, b) -> a[0] != b[0] ? b[0] - a[0] : a[1] - b[1]);
+        
+        List<int[]> result = new ArrayList<>();
+        // Insert each person at their k index
+        for (int[] person : people) {
+            result.add(person[1], person);
+        }
+        
+        return result.toArray(new int[people.length][]);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of people. Sorting takes O(n log n) and insertion takes O(n) for each person.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the result array.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        // Sort by height in descending order and k in ascending order
+        sort(people.begin(), people.end(), [](const vector<int>& a, const vector<int>& b) {
+            return a[0] > b[0] || (a[0] == b[0] && a[1] < b[1]);
+        });
+        
+        vector<vector<int>> result;
+        // Insert each person at their k index
+        for (const auto& person : people) {
+            result.insert(result.begin() + person[1], person);
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of people. Sorting takes O(n log n) and insertion takes O(n) for each person.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the result array.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} people
+ * @return {number[][]}
+ */
+var reconstructQueue = function(people) {
+    // Sort by height in descending order and k in ascending order
+    people.sort((a, b) => a[0] !== b[0] ? b[0] - a[0] : a[1] - b[1]);
+    
+    const result = [];
+    // Insert each person at their k index
+    for (const person of people) {
+        result.splice(person[1], 0, person);
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of people. Sorting takes O(n log n) and insertion takes O(n) for each person.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the result array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int[][] ReconstructQueue(int[][] people) {
+        // Sort by height in descending order and k in ascending order
+        Array.Sort(people, (a, b) => a[0] != b[0] ? b[0].CompareTo(a[0]) : a[1].CompareTo(b[1]));
+        
+        var result = new List<int[]>();
+        // Insert each person at their k index
+        foreach (var person in people) {
+            result.Insert(person[1], person);
+        }
+        
+        return result.ToArray();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of people. Sorting takes O(n log n) and insertion takes O(n) for each person.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the result array.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a greedy approach with sorting:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Height ordering</li>
+                            <li>Position insertion</li>
+                            <li>Greedy approach</li>
+                            <li>Sorting strategy</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sort people</li>
+                            <li>Process order</li>
+                            <li>Insert positions</li>
+                            <li>Build result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Custom sorting</li>
+                        <li>List insertion</li>
+                        <li>Index tracking</li>
+                        <li>Array building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Sort criteria</li>
+                        <li>Insertion order</li>
+                        <li>Space usage</li>
+                        <li>Time efficiency</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single person</li>
+                        <li>Same heights</li>
+                        <li>Same positions</li>
+                        <li>Maximum size</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

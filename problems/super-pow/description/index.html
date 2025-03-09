@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Pow - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">372. Super Pow</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Your task is to calculate <code class="bg-gray-100 px-1 rounded">a^b</code> mod <code class="bg-gray-100 px-1 rounded">1337</code> where <code class="bg-gray-100 px-1 rounded">a</code> is a positive integer and <code class="bg-gray-100 px-1 rounded">b</code> is an extremely large positive integer given in the form of an array.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: a = 2, b = [3]
+Output: 8</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: a = 2, b = [1,0]
+Output: 1024</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: a = 1, b = [4,3,3,8,5,2]
+Output: 1</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= a <= 2³¹ - 1</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= b.length <= 2000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= b[i] <= 9</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">b</code> doesn't contain leading zeros.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def superPow(self, a: int, b: List[int]) -> int:
+        MOD = 1337
+        
+        def powmod(x: int, n: int) -> int:
+            # Calculate (x^n) % MOD
+            result = 1
+            x %= MOD
+            while n > 0:
+                if n & 1:
+                    result = (result * x) % MOD
+                x = (x * x) % MOD
+                n >>= 1
+            return result
+        
+        # Handle base case
+        if not b:
+            return 1
+        
+        # Use the property: (a^b) % m = ((a % m)^b) % m
+        a %= MOD
+        
+        # Process each digit from left to right
+        result = 1
+        for digit in b:
+            # For each new digit, we need to:
+            # 1. Raise previous result to power of 10
+            # 2. Multiply by a^digit
+            result = (powmod(result, 10) * powmod(a, digit)) % MOD
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of array b. Each powmod operation is O(log k) where k is the exponent.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private static final int MOD = 1337;
+    
+    public int superPow(int a, int[] b) {
+        // Handle base case
+        if (b == null || b.length == 0) {
+            return 1;
+        }
+        
+        // Use the property: (a^b) % m = ((a % m)^b) % m
+        a %= MOD;
+        
+        // Process each digit from left to right
+        int result = 1;
+        for (int digit : b) {
+            // For each new digit, we need to:
+            // 1. Raise previous result to power of 10
+            // 2. Multiply by a^digit
+            result = (powmod(result, 10) * powmod(a, digit)) % MOD;
+        }
+        
+        return result;
+    }
+    
+    private int powmod(int x, int n) {
+        // Calculate (x^n) % MOD
+        int result = 1;
+        x %= MOD;
+        while (n > 0) {
+            if ((n & 1) == 1) {
+                result = (int)((long)result * x % MOD);
+            }
+            x = (int)((long)x * x % MOD);
+            n >>= 1;
+        }
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of array b. Each powmod operation is O(log k) where k is the exponent.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    static const int MOD = 1337;
+    
+    int powmod(int x, int n) {
+        // Calculate (x^n) % MOD
+        int result = 1;
+        x %= MOD;
+        while (n > 0) {
+            if (n & 1) {
+                result = (1LL * result * x) % MOD;
+            }
+            x = (1LL * x * x) % MOD;
+            n >>= 1;
+        }
+        return result;
+    }
+    
+public:
+    int superPow(int a, vector<int>& b) {
+        // Handle base case
+        if (b.empty()) {
+            return 1;
+        }
+        
+        // Use the property: (a^b) % m = ((a % m)^b) % m
+        a %= MOD;
+        
+        // Process each digit from left to right
+        int result = 1;
+        for (int digit : b) {
+            // For each new digit, we need to:
+            // 1. Raise previous result to power of 10
+            // 2. Multiply by a^digit
+            result = (1LL * powmod(result, 10) * powmod(a, digit)) % MOD;
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of array b. Each powmod operation is O(log k) where k is the exponent.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} a
+ * @param {number[]} b
+ * @return {number}
+ */
+var superPow = function(a, b) {
+    const MOD = 1337;
+    
+    const powmod = (x, n) => {
+        // Calculate (x^n) % MOD
+        let result = 1;
+        x %= MOD;
+        while (n > 0) {
+            if (n & 1) {
+                result = (result * x) % MOD;
+            }
+            x = (x * x) % MOD;
+            n >>= 1;
+        }
+        return result;
+    };
+    
+    // Handle base case
+    if (!b || b.length === 0) {
+        return 1;
+    }
+    
+    // Use the property: (a^b) % m = ((a % m)^b) % m
+    a %= MOD;
+    
+    // Process each digit from left to right
+    let result = 1;
+    for (const digit of b) {
+        // For each new digit, we need to:
+        // 1. Raise previous result to power of 10
+        // 2. Multiply by a^digit
+        result = (powmod(result, 10) * powmod(a, digit)) % MOD;
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of array b. Each powmod operation is O(log k) where k is the exponent.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private const int MOD = 1337;
+    
+    private int Powmod(int x, int n) {
+        // Calculate (x^n) % MOD
+        int result = 1;
+        x %= MOD;
+        while (n > 0) {
+            if ((n & 1) == 1) {
+                result = (int)((long)result * x % MOD);
+            }
+            x = (int)((long)x * x % MOD);
+            n >>= 1;
+        }
+        return result;
+    }
+    
+    public int SuperPow(int a, int[] b) {
+        // Handle base case
+        if (b == null || b.Length == 0) {
+            return 1;
+        }
+        
+        // Use the property: (a^b) % m = ((a % m)^b) % m
+        a %= MOD;
+        
+        // Process each digit from left to right
+        int result = 1;
+        foreach (int digit in b) {
+            // For each new digit, we need to:
+            // 1. Raise previous result to power of 10
+            // 2. Multiply by a^digit
+            result = (int)((long)Powmod(result, 10) * Powmod(a, digit) % MOD);
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of array b. Each powmod operation is O(log k) where k is the exponent.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses modular exponentiation and properties of modular arithmetic:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Modular arithmetic properties</li>
+                            <li>Fast exponentiation</li>
+                            <li>Digit-by-digit processing</li>
+                            <li>Overflow handling</li>
+                        </ul>
+                    </li>
+                    <li>Mathematical Properties:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>(a^b) % m = ((a % m)^b) % m</li>
+                            <li>(a * b) % m = ((a % m) * (b % m)) % m</li>
+                            <li>Fast modular exponentiation</li>
+                            <li>Euler's theorem</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Handle overflow</li>
+                        <li>Process digits sequentially</li>
+                        <li>Use binary exponentiation</li>
+                        <li>Apply modular arithmetic</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early modulo</li>
+                        <li>Fast exponentiation</li>
+                        <li>Integer overflow prevention</li>
+                        <li>Efficient digit processing</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty array</li>
+                        <li>Large numbers</li>
+                        <li>Integer overflow</li>
+                        <li>Base cases</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

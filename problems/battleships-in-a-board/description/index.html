@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleships in a Board - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">419. Battleships in a Board</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an <code class="bg-gray-100 px-1 rounded">m x n</code> matrix <code class="bg-gray-100 px-1 rounded">board</code> where each cell is a battleship <code class="bg-gray-100 px-1 rounded">'X'</code> or empty <code class="bg-gray-100 px-1 rounded">'.'</code>, return the number of the battleships on <code class="bg-gray-100 px-1 rounded">board</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Battleships can only be placed horizontally or vertically on <code class="bg-gray-100 px-1 rounded">board</code>. In other words, they can only be made of the shape <code class="bg-gray-100 px-1 rounded">1 x k</code> (<code class="bg-gray-100 px-1 rounded">1</code> row, <code class="bg-gray-100 px-1 rounded">k</code> columns) or <code class="bg-gray-100 px-1 rounded">k x 1</code> (<code class="bg-gray-100 px-1 rounded">k</code> rows, <code class="bg-gray-100 px-1 rounded">1</code> column) where <code class="bg-gray-100 px-1 rounded">k</code> can be of any size. At least one horizontal or vertical cell separates between two battleships (i.e., there are no adjacent battleships).
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: board = [["X",".",".","X"],[".",".",".","X"],[".",".",".","X"]]
+Output: 2</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: board = [["."]]
+Output: 0</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">m == board.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == board[i].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m, n <= 200</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">board[i][j]</code> is either <code class="bg-gray-100 px-1 rounded">'.'</code> or <code class="bg-gray-100 px-1 rounded">'X'</code>.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Follow up:</h2>
+                <p class="text-gray-700">Could you do it in one-pass, using only O(1) extra memory and without modifying the values <code class="bg-gray-100 px-1 rounded">board</code>?</p>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def countBattleships(self, board: List[List[str]]) -> int:
+        # One-pass solution with O(1) extra memory
+        count = 0
+        m, n = len(board), len(board[0])
+        
+        for i in range(m):
+            for j in range(n):
+                # Only count the first cell of each battleship
+                if board[i][j] == 'X':
+                    # Check if it's the start of a battleship
+                    if (i == 0 or board[i-1][j] == '.') and (j == 0 or board[i][j-1] == '.'):
+                        count += 1
+        
+        return count</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. We need to visit each cell once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int countBattleships(char[][] board) {
+        // One-pass solution with O(1) extra memory
+        int count = 0;
+        int m = board.length;
+        int n = board[0].length;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // Only count the first cell of each battleship
+                if (board[i][j] == 'X') {
+                    // Check if it's the start of a battleship
+                    if ((i == 0 || board[i-1][j] == '.') && 
+                        (j == 0 || board[i][j-1] == '.')) {
+                        count++;
+                    }
+                }
+            }
+        }
+        
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. We need to visit each cell once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int countBattleships(vector<vector<char>>& board) {
+        // One-pass solution with O(1) extra memory
+        int count = 0;
+        int m = board.size();
+        int n = board[0].size();
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // Only count the first cell of each battleship
+                if (board[i][j] == 'X') {
+                    // Check if it's the start of a battleship
+                    if ((i == 0 || board[i-1][j] == '.') && 
+                        (j == 0 || board[i][j-1] == '.')) {
+                        count++;
+                    }
+                }
+            }
+        }
+        
+        return count;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. We need to visit each cell once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {character[][]} board
+ * @return {number}
+ */
+var countBattleships = function(board) {
+    // One-pass solution with O(1) extra memory
+    let count = 0;
+    const m = board.length;
+    const n = board[0].length;
+    
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            // Only count the first cell of each battleship
+            if (board[i][j] === 'X') {
+                // Check if it's the start of a battleship
+                if ((i === 0 || board[i-1][j] === '.') && 
+                    (j === 0 || board[i][j-1] === '.')) {
+                    count++;
+                }
+            }
+        }
+    }
+    
+    return count;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. We need to visit each cell once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int CountBattleships(char[][] board) {
+        // One-pass solution with O(1) extra memory
+        int count = 0;
+        int m = board.Length;
+        int n = board[0].Length;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // Only count the first cell of each battleship
+                if (board[i][j] == 'X') {
+                    // Check if it's the start of a battleship
+                    if ((i == 0 || board[i-1][j] == '.') && 
+                        (j == 0 || board[i][j-1] == '.')) {
+                        count++;
+                    }
+                }
+            }
+        }
+        
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. We need to visit each cell once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a clever one-pass approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Ship placement rules</li>
+                            <li>No adjacent ships</li>
+                            <li>First cell detection</li>
+                            <li>Boundary handling</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Traverse board</li>
+                            <li>Check boundaries</li>
+                            <li>Detect ship starts</li>
+                            <li>Count ships</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Grid traversal</li>
+                        <li>Cell checking</li>
+                        <li>Boundary handling</li>
+                        <li>Count tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single pass</li>
+                        <li>No extra space</li>
+                        <li>No modification</li>
+                        <li>Early detection</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty board</li>
+                        <li>Single cell</li>
+                        <li>Board edges</li>
+                        <li>Single battleship</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number of Boomerangs - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">447. Number of Boomerangs</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given <code class="bg-gray-100 px-1 rounded">n</code> points in the plane that are all distinct, where <code class="bg-gray-100 px-1 rounded">points[i] = [x<sub>i</sub>, y<sub>i</sub>]</code>. A boomerang is a tuple of points <code class="bg-gray-100 px-1 rounded">(i, j, k)</code> such that the distance between <code class="bg-gray-100 px-1 rounded">i</code> and <code class="bg-gray-100 px-1 rounded">j</code> equals the distance between <code class="bg-gray-100 px-1 rounded">i</code> and <code class="bg-gray-100 px-1 rounded">k</code> (the order of the tuple matters).
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return the number of boomerangs.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: points = [[0,0],[1,0],[2,0]]
+Output: 2
+Explanation: The two boomerangs are [[1,0],[0,0],[2,0]] and [[1,0],[2,0],[0,0]].</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: points = [[1,1],[2,2],[3,3]]
+Output: 2</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: points = [[1,1]]
+Output: 0</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">n == points.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n <= 500</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">points[i].length == 2</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁴ <= x<sub>i</sub>, y<sub>i</sub> <= 10⁴</code></li>
+                    <li>All the points are unique.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def numberOfBoomerangs(self, points: List[List[int]]) -> int:
+        result = 0
+        
+        for p1 in points:
+            # Store distances from p1 to all other points
+            distances = {}
+            
+            for p2 in points:
+                if p1 != p2:
+                    # Calculate squared distance to avoid floating point precision issues
+                    dx = p1[0] - p2[0]
+                    dy = p1[1] - p2[1]
+                    dist = dx * dx + dy * dy
+                    
+                    # Count points at this distance
+                    distances[dist] = distances.get(dist, 0) + 1
+            
+            # For each distance, calculate number of boomerangs
+            for count in distances.values():
+                # If we have n points at same distance, we can make n * (n-1) boomerangs
+                result += count * (count - 1)
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of points.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the distances from each point.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int numberOfBoomerangs(int[][] points) {
+        int result = 0;
+        
+        for (int[] p1 : points) {
+            // Store distances from p1 to all other points
+            Map<Integer, Integer> distances = new HashMap<>();
+            
+            for (int[] p2 : points) {
+                if (p1 != p2) {
+                    // Calculate squared distance to avoid floating point precision issues
+                    int dx = p1[0] - p2[0];
+                    int dy = p1[1] - p2[1];
+                    int dist = dx * dx + dy * dy;
+                    
+                    // Count points at this distance
+                    distances.put(dist, distances.getOrDefault(dist, 0) + 1);
+                }
+            }
+            
+            // For each distance, calculate number of boomerangs
+            for (int count : distances.values()) {
+                // If we have n points at same distance, we can make n * (n-1) boomerangs
+                result += count * (count - 1);
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of points.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the distances from each point.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int numberOfBoomerangs(vector<vector<int>>& points) {
+        int result = 0;
+        
+        for (const auto& p1 : points) {
+            // Store distances from p1 to all other points
+            unordered_map<int, int> distances;
+            
+            for (const auto& p2 : points) {
+                if (p1 != p2) {
+                    // Calculate squared distance to avoid floating point precision issues
+                    int dx = p1[0] - p2[0];
+                    int dy = p1[1] - p2[1];
+                    int dist = dx * dx + dy * dy;
+                    
+                    // Count points at this distance
+                    distances[dist]++;
+                }
+            }
+            
+            // For each distance, calculate number of boomerangs
+            for (const auto& pair : distances) {
+                int count = pair.second;
+                // If we have n points at same distance, we can make n * (n-1) boomerangs
+                result += count * (count - 1);
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of points.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the distances from each point.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} points
+ * @return {number}
+ */
+var numberOfBoomerangs = function(points) {
+    let result = 0;
+    
+    for (const p1 of points) {
+        // Store distances from p1 to all other points
+        const distances = new Map();
+        
+        for (const p2 of points) {
+            if (p1 !== p2) {
+                // Calculate squared distance to avoid floating point precision issues
+                const dx = p1[0] - p2[0];
+                const dy = p1[1] - p2[1];
+                const dist = dx * dx + dy * dy;
+                
+                // Count points at this distance
+                distances.set(dist, (distances.get(dist) || 0) + 1);
+            }
+        }
+        
+        // For each distance, calculate number of boomerangs
+        for (const count of distances.values()) {
+            // If we have n points at same distance, we can make n * (n-1) boomerangs
+            result += count * (count - 1);
+        }
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of points.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the distances from each point.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int NumberOfBoomerangs(int[][] points) {
+        int result = 0;
+        
+        foreach (var p1 in points) {
+            // Store distances from p1 to all other points
+            Dictionary<int, int> distances = new Dictionary<int, int>();
+            
+            foreach (var p2 in points) {
+                if (p1 != p2) {
+                    // Calculate squared distance to avoid floating point precision issues
+                    int dx = p1[0] - p2[0];
+                    int dy = p1[1] - p2[1];
+                    int dist = dx * dx + dy * dy;
+                    
+                    // Count points at this distance
+                    if (!distances.ContainsKey(dist)) {
+                        distances[dist] = 0;
+                    }
+                    distances[dist]++;
+                }
+            }
+            
+            // For each distance, calculate number of boomerangs
+            foreach (var count in distances.Values) {
+                // If we have n points at same distance, we can make n * (n-1) boomerangs
+                result += count * (count - 1);
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of points.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the distances from each point.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a hash map to store distances:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Distance calculation</li>
+                            <li>Hash map usage</li>
+                            <li>Permutation counting</li>
+                            <li>Point grouping</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Calculate distances</li>
+                            <li>Group by distance</li>
+                            <li>Count permutations</li>
+                            <li>Sum results</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Distance formula</li>
+                        <li>Hash map handling</li>
+                        <li>Point comparison</li>
+                        <li>Result accumulation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Squared distance</li>
+                        <li>Memory reuse</li>
+                        <li>Early pruning</li>
+                        <li>Efficient counting</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single point</li>
+                        <li>Collinear points</li>
+                        <li>Duplicate distances</li>
+                        <li>Large coordinates</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

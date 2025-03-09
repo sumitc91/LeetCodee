@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Repeating Character Replacement - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">424. Longest Repeating Character Replacement</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given a string <code class="bg-gray-100 px-1 rounded">s</code> and an integer <code class="bg-gray-100 px-1 rounded">k</code>. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most <code class="bg-gray-100 px-1 rounded">k</code> times.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return the length of the longest substring containing the same letter you can get after performing the above operations.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "ABAB", k = 2
+Output: 4
+Explanation: Replace the two 'A's with two 'B's or vice versa.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "AABABBA", k = 1
+Output: 4
+Explanation: Replace the one 'A' in the middle with 'B' and form "AABBBBA".
+The substring "BBBB" has the longest repeating letters, which is 4.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= s.length <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">s</code> consists of only uppercase English letters.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= k <= s.length</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        # Initialize window pointers and character count
+        left = 0
+        count = {}
+        max_count = 0
+        max_length = 0
+        
+        # Slide the window
+        for right in range(len(s)):
+            # Add the right character to count
+            count[s[right]] = count.get(s[right], 0) + 1
+            max_count = max(max_count, count[s[right]])
+            
+            # If window is invalid, shrink it
+            window_size = right - left + 1
+            if window_size - max_count > k:
+                count[s[left]] -= 1
+                left += 1
+            
+            # Update max length
+            max_length = max(max_length, right - left + 1)
+        
+        return max_length</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Since we only store counts for uppercase English letters (26 characters).</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int characterReplacement(String s, int k) {
+        // Initialize window pointers and character count
+        int left = 0;
+        int[] count = new int[26];
+        int maxCount = 0;
+        int maxLength = 0;
+        
+        // Slide the window
+        for (int right = 0; right < s.length(); right++) {
+            // Add the right character to count
+            count[s.charAt(right) - 'A']++;
+            maxCount = Math.max(maxCount, count[s.charAt(right) - 'A']);
+            
+            // If window is invalid, shrink it
+            int windowSize = right - left + 1;
+            if (windowSize - maxCount > k) {
+                count[s.charAt(left) - 'A']--;
+                left++;
+            }
+            
+            // Update max length
+            maxLength = Math.max(maxLength, right - left + 1);
+        }
+        
+        return maxLength;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Since we only store counts for uppercase English letters (26 characters).</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        // Initialize window pointers and character count
+        int left = 0;
+        vector<int> count(26, 0);
+        int maxCount = 0;
+        int maxLength = 0;
+        
+        // Slide the window
+        for (int right = 0; right < s.length(); right++) {
+            // Add the right character to count
+            count[s[right] - 'A']++;
+            maxCount = max(maxCount, count[s[right] - 'A']);
+            
+            // If window is invalid, shrink it
+            int windowSize = right - left + 1;
+            if (windowSize - maxCount > k) {
+                count[s[left] - 'A']--;
+                left++;
+            }
+            
+            // Update max length
+            maxLength = max(maxLength, right - left + 1);
+        }
+        
+        return maxLength;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Since we only store counts for uppercase English letters (26 characters).</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var characterReplacement = function(s, k) {
+    // Initialize window pointers and character count
+    let left = 0;
+    const count = new Map();
+    let maxCount = 0;
+    let maxLength = 0;
+    
+    // Slide the window
+    for (let right = 0; right < s.length; right++) {
+        // Add the right character to count
+        count.set(s[right], (count.get(s[right]) || 0) + 1);
+        maxCount = Math.max(maxCount, count.get(s[right]));
+        
+        // If window is invalid, shrink it
+        const windowSize = right - left + 1;
+        if (windowSize - maxCount > k) {
+            count.set(s[left], count.get(s[left]) - 1);
+            left++;
+        }
+        
+        // Update max length
+        maxLength = Math.max(maxLength, right - left + 1);
+    }
+    
+    return maxLength;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Since we only store counts for uppercase English letters (26 characters).</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int CharacterReplacement(string s, int k) {
+        // Initialize window pointers and character count
+        int left = 0;
+        int[] count = new int[26];
+        int maxCount = 0;
+        int maxLength = 0;
+        
+        // Slide the window
+        for (int right = 0; right < s.Length; right++) {
+            // Add the right character to count
+            count[s[right] - 'A']++;
+            maxCount = Math.Max(maxCount, count[s[right] - 'A']);
+            
+            // If window is invalid, shrink it
+            int windowSize = right - left + 1;
+            if (windowSize - maxCount > k) {
+                count[s[left] - 'A']--;
+                left++;
+            }
+            
+            // Update max length
+            maxLength = Math.Max(maxLength, right - left + 1);
+        }
+        
+        return maxLength;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Since we only store counts for uppercase English letters (26 characters).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a sliding window approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Window sliding</li>
+                            <li>Character counting</li>
+                            <li>Maximum frequency</li>
+                            <li>Window validity</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Maintain window</li>
+                            <li>Count characters</li>
+                            <li>Track max count</li>
+                            <li>Update result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Window pointers</li>
+                        <li>Character frequency</li>
+                        <li>Window validation</li>
+                        <li>Length tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single pass</li>
+                        <li>Constant space</li>
+                        <li>Early validation</li>
+                        <li>Efficient counting</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty string</li>
+                        <li>Single character</li>
+                        <li>No replacements</li>
+                        <li>All replacements</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

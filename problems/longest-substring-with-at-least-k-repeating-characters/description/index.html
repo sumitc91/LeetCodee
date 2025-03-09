@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Substring with At Least K Repeating Characters - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">395. Longest Substring with At Least K Repeating Characters</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">s</code> and an integer <code class="bg-gray-100 px-1 rounded">k</code>, return the length of the longest substring of <code class="bg-gray-100 px-1 rounded">s</code> such that the frequency of each character in this substring is greater than or equal to <code class="bg-gray-100 px-1 rounded">k</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    If no such substring exists, return 0.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "aaabb", k = 3
+Output: 3
+Explanation: The longest substring is "aaa", as 'a' is repeated 3 times.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "ababbc", k = 2
+Output: 5
+Explanation: The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated 3 times.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= s.length <= 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">s</code> consists of only lowercase English letters.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= k <= 10⁵</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def longestSubstring(self, s: str, k: int) -> int:
+        # Base cases
+        if not s or k > len(s):
+            return 0
+        if k <= 1:
+            return len(s)
+        
+        # Count character frequencies
+        char_count = Counter(s)
+        
+        # Find first character with frequency < k
+        for i, char in enumerate(s):
+            if char_count[char] < k:
+                # Split string at this character and solve recursively
+                return max(self.longestSubstring(substr, k) 
+                         for substr in s.split(char))
+        
+        # If we reach here, all characters have frequency >= k
+        return len(s)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. In worst case, we split at each character.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursive call stack and character counting.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int longestSubstring(String s, int k) {
+        // Base cases
+        if (s == null || s.length() == 0 || k > s.length()) {
+            return 0;
+        }
+        if (k <= 1) {
+            return s.length();
+        }
+        
+        // Count character frequencies
+        int[] counts = new int[26];
+        for (char c : s.toCharArray()) {
+            counts[c - 'a']++;
+        }
+        
+        // Find first character with frequency < k
+        boolean allValid = true;
+        int splitIndex = 0;
+        for (int i = 0; i < s.length() && allValid; i++) {
+            if (counts[s.charAt(i) - 'a'] < k) {
+                allValid = false;
+                splitIndex = i;
+            }
+        }
+        
+        // If all characters have frequency >= k
+        if (allValid) {
+            return s.length();
+        }
+        
+        // Split and solve recursively
+        return Math.max(
+            longestSubstring(s.substring(0, splitIndex), k),
+            longestSubstring(s.substring(splitIndex + 1), k)
+        );
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. In worst case, we split at each character.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursive call stack and character counting.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int longestSubstring(string s, int k) {
+        // Base cases
+        if (s.empty() || k > s.length()) {
+            return 0;
+        }
+        if (k <= 1) {
+            return s.length();
+        }
+        
+        // Count character frequencies
+        vector<int> counts(26, 0);
+        for (char c : s) {
+            counts[c - 'a']++;
+        }
+        
+        // Find first character with frequency < k
+        bool allValid = true;
+        int splitIndex = 0;
+        for (int i = 0; i < s.length() && allValid; i++) {
+            if (counts[s[i] - 'a'] < k) {
+                allValid = false;
+                splitIndex = i;
+            }
+        }
+        
+        // If all characters have frequency >= k
+        if (allValid) {
+            return s.length();
+        }
+        
+        // Split and solve recursively
+        return max(
+            longestSubstring(s.substr(0, splitIndex), k),
+            longestSubstring(s.substr(splitIndex + 1), k)
+        );
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. In worst case, we split at each character.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursive call stack and character counting.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var longestSubstring = function(s, k) {
+    // Base cases
+    if (!s || k > s.length) {
+        return 0;
+    }
+    if (k <= 1) {
+        return s.length;
+    }
+    
+    // Count character frequencies
+    const counts = new Map();
+    for (const char of s) {
+        counts.set(char, (counts.get(char) || 0) + 1);
+    }
+    
+    // Find first character with frequency < k
+    let allValid = true;
+    let splitIndex = 0;
+    for (let i = 0; i < s.length && allValid; i++) {
+        if (counts.get(s[i]) < k) {
+            allValid = false;
+            splitIndex = i;
+        }
+    }
+    
+    // If all characters have frequency >= k
+    if (allValid) {
+        return s.length;
+    }
+    
+    // Split and solve recursively
+    return Math.max(
+        longestSubstring(s.slice(0, splitIndex), k),
+        longestSubstring(s.slice(splitIndex + 1), k)
+    );
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. In worst case, we split at each character.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursive call stack and character counting.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int LongestSubstring(string s, int k) {
+        // Base cases
+        if (string.IsNullOrEmpty(s) || k > s.Length) {
+            return 0;
+        }
+        if (k <= 1) {
+            return s.Length;
+        }
+        
+        // Count character frequencies
+        int[] counts = new int[26];
+        foreach (char c in s) {
+            counts[c - 'a']++;
+        }
+        
+        // Find first character with frequency < k
+        bool allValid = true;
+        int splitIndex = 0;
+        for (int i = 0; i < s.Length && allValid; i++) {
+            if (counts[s[i] - 'a'] < k) {
+                allValid = false;
+                splitIndex = i;
+            }
+        }
+        
+        // If all characters have frequency >= k
+        if (allValid) {
+            return s.Length;
+        }
+        
+        // Split and solve recursively
+        return Math.Max(
+            LongestSubstring(s.Substring(0, splitIndex), k),
+            LongestSubstring(s.Substring(splitIndex + 1), k)
+        );
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. In worst case, we split at each character.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursive call stack and character counting.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a divide-and-conquer approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Character frequency</li>
+                            <li>Divide and conquer</li>
+                            <li>Recursive solution</li>
+                            <li>Split strategy</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Count frequencies</li>
+                            <li>Find split point</li>
+                            <li>Recursive calls</li>
+                            <li>Combine results</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Frequency counting</li>
+                        <li>String splitting</li>
+                        <li>Recursive handling</li>
+                        <li>Base cases</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient splitting</li>
+                        <li>Memory reuse</li>
+                        <li>Base case handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty string</li>
+                        <li>Single character</li>
+                        <li>All same characters</li>
+                        <li>No valid substring</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

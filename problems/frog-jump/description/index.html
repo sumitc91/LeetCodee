@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frog Jump - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">403. Frog Jump</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    A frog is crossing a river. The river is divided into some number of units, and at each unit, there may or may not exist a stone. The frog can jump on a stone, but it must not jump into the water.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given a list of <code class="bg-gray-100 px-1 rounded">stones</code>' positions (in units) in sorted ascending order, determine if the frog can cross the river by landing on the last stone. Initially, the frog is on the first stone and assumes the first jump must be 1 unit.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    If the frog's last jump was <code class="bg-gray-100 px-1 rounded">k</code> units, its next jump must be either <code class="bg-gray-100 px-1 rounded">k - 1</code>, <code class="bg-gray-100 px-1 rounded">k</code>, or <code class="bg-gray-100 px-1 rounded">k + 1</code> units. The frog can only jump in the forward direction.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: stones = [0,1,3,5,6,8,12,17]
+Output: true
+Explanation: The frog can jump to the last stone by jumping 1 unit to the 2nd stone, then 2 units to the 3rd stone, then 2 units to the 4th stone, then 3 units to the 6th stone, 4 units to the 7th stone, and 5 units to the 8th stone.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: stones = [0,1,2,3,4,8,9,11]
+Output: false
+Explanation: There is no way to jump to the last stone as the gap between the 5th and 6th stone is too large.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">2 <= stones.length <= 2000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= stones[i] <= 2³¹ - 1</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">stones[0] == 0</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">stones</code> is sorted in a strictly increasing order.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def canCross(self, stones: List[int]) -> bool:
+        # Create a dictionary to store possible jumps at each stone
+        dp = {stone: set() for stone in stones}
+        dp[0].add(0)  # Initial position with 0 jump
+        
+        for stone in stones:
+            for jump in dp[stone]:
+                # Try all possible next jumps
+                for next_jump in [jump - 1, jump, jump + 1]:
+                    if next_jump > 0 and stone + next_jump in dp:
+                        dp[stone + next_jump].add(next_jump)
+        
+        # Check if last stone has any possible jumps
+        return len(dp[stones[-1]]) > 0</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of stones. For each stone, we try up to 3 jumps for each previous jump.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n²)</h4>
+                    <p class="text-gray-700">For storing possible jumps at each stone.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean canCross(int[] stones) {
+        Map<Integer, Set<Integer>> dp = new HashMap<>();
+        
+        // Initialize the dp map
+        for (int stone : stones) {
+            dp.put(stone, new HashSet<>());
+        }
+        dp.get(0).add(0);
+        
+        // Process each stone
+        for (int stone : stones) {
+            for (int jump : dp.get(stone)) {
+                // Try all possible next jumps
+                for (int next_jump = jump - 1; next_jump <= jump + 1; next_jump++) {
+                    if (next_jump > 0 && dp.containsKey(stone + next_jump)) {
+                        dp.get(stone + next_jump).add(next_jump);
+                    }
+                }
+            }
+        }
+        
+        // Check if last stone has any possible jumps
+        return !dp.get(stones[stones.length - 1]).isEmpty();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of stones. For each stone, we try up to 3 jumps for each previous jump.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n²)</h4>
+                    <p class="text-gray-700">For storing possible jumps at each stone.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool canCross(vector<int>& stones) {
+        unordered_map<int, unordered_set<int>> dp;
+        
+        // Initialize the dp map
+        for (int stone : stones) {
+            dp[stone] = unordered_set<int>();
+        }
+        dp[0].insert(0);
+        
+        // Process each stone
+        for (int stone : stones) {
+            for (int jump : dp[stone]) {
+                // Try all possible next jumps
+                for (int next_jump = jump - 1; next_jump <= jump + 1; next_jump++) {
+                    if (next_jump > 0 && dp.count(stone + next_jump)) {
+                        dp[stone + next_jump].insert(next_jump);
+                    }
+                }
+            }
+        }
+        
+        // Check if last stone has any possible jumps
+        return !dp[stones.back()].empty();
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of stones. For each stone, we try up to 3 jumps for each previous jump.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n²)</h4>
+                    <p class="text-gray-700">For storing possible jumps at each stone.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} stones
+ * @return {boolean}
+ */
+var canCross = function(stones) {
+    const dp = new Map();
+    
+    // Initialize the dp map
+    for (const stone of stones) {
+        dp.set(stone, new Set());
+    }
+    dp.get(0).add(0);
+    
+    // Process each stone
+    for (const stone of stones) {
+        for (const jump of dp.get(stone)) {
+            // Try all possible next jumps
+            for (let next_jump = jump - 1; next_jump <= jump + 1; next_jump++) {
+                if (next_jump > 0 && dp.has(stone + next_jump)) {
+                    dp.get(stone + next_jump).add(next_jump);
+                }
+            }
+        }
+    }
+    
+    // Check if last stone has any possible jumps
+    return dp.get(stones[stones.length - 1]).size > 0;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of stones. For each stone, we try up to 3 jumps for each previous jump.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n²)</h4>
+                    <p class="text-gray-700">For storing possible jumps at each stone.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool CanCross(int[] stones) {
+        var dp = new Dictionary<int, HashSet<int>>();
+        
+        // Initialize the dp dictionary
+        foreach (int stone in stones) {
+            dp[stone] = new HashSet<int>();
+        }
+        dp[0].Add(0);
+        
+        // Process each stone
+        foreach (int stone in stones) {
+            foreach (int jump in dp[stone].ToList()) {
+                // Try all possible next jumps
+                for (int next_jump = jump - 1; next_jump <= jump + 1; next_jump++) {
+                    if (next_jump > 0 && dp.ContainsKey(stone + next_jump)) {
+                        dp[stone + next_jump].Add(next_jump);
+                    }
+                }
+            }
+        }
+        
+        // Check if last stone has any possible jumps
+        return dp[stones[stones.Length - 1]].Count > 0;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of stones. For each stone, we try up to 3 jumps for each previous jump.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n²)</h4>
+                    <p class="text-gray-700">For storing possible jumps at each stone.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses dynamic programming with a hash map:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Dynamic programming</li>
+                            <li>State tracking</li>
+                            <li>Jump possibilities</li>
+                            <li>Forward movement</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize DP</li>
+                            <li>Process stones</li>
+                            <li>Track jumps</li>
+                            <li>Check reachability</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Hash map usage</li>
+                        <li>Set operations</li>
+                        <li>Jump tracking</li>
+                        <li>State management</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Space optimization</li>
+                        <li>Jump pruning</li>
+                        <li>State reduction</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Minimum stones</li>
+                        <li>Large gaps</li>
+                        <li>Single jump</li>
+                        <li>Maximum distance</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

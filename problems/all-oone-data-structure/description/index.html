@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All O`one Data Structure - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">432. All O`one Data Structure</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Design a data structure to store the strings' count with the ability to return the strings with minimum and maximum counts.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">AllOne</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">AllOne()</code> Initializes the object of the data structure.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">inc(String key)</code> Increments the count of the string <code class="bg-gray-100 px-1 rounded">key</code> by 1. If <code class="bg-gray-100 px-1 rounded">key</code> doesn't exist, insert it with count 1.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">dec(String key)</code> Decrements the count of the string <code class="bg-gray-100 px-1 rounded">key</code> by 1. If the count of <code class="bg-gray-100 px-1 rounded">key</code> is 0 after the decrement, remove it from the data structure. It is guaranteed that <code class="bg-gray-100 px-1 rounded">key</code> exists.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">getMaxKey()</code> Returns one of the keys with the maximal count. If no element exists, return an empty string <code class="bg-gray-100 px-1 rounded">""</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">getMinKey()</code> Returns one of the keys with the minimum count. If no element exists, return an empty string <code class="bg-gray-100 px-1 rounded">""</code>.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    Note that each function must run in O(1) average time complexity.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["AllOne", "inc", "inc", "getMaxKey", "getMinKey", "inc", "getMaxKey", "getMinKey"]
+[[], ["hello"], ["hello"], [], [], ["leet"], [], []]
+Output
+[null, null, null, "hello", "hello", null, "hello", "leet"]
+
+Explanation
+AllOne allOne = new AllOne();
+allOne.inc("hello");
+allOne.inc("hello");
+allOne.getMaxKey(); // return "hello"
+allOne.getMinKey(); // return "hello"
+allOne.inc("leet");
+allOne.getMaxKey(); // return "hello"
+allOne.getMinKey(); // return "leet"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= key.length <= 10</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">key</code> consists of lowercase English letters.</li>
+                    <li>It is guaranteed that for each call to <code class="bg-gray-100 px-1 rounded">dec</code>, <code class="bg-gray-100 px-1 rounded">key</code> exists in the data structure.</li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">5 * 10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">inc</code>, <code class="bg-gray-100 px-1 rounded">dec</code>, <code class="bg-gray-100 px-1 rounded">getMaxKey</code>, and <code class="bg-gray-100 px-1 rounded">getMinKey</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Node:
+    def __init__(self, count=0):
+        self.count = count
+        self.keys = set()
+        self.prev = None
+        self.next = None
+
+class AllOne:
+    def __init__(self):
+        self.head = Node()  # Dummy head
+        self.tail = Node()  # Dummy tail
+        self.head.next = self.tail
+        self.tail.prev = self.head
+        self.key_node = {}  # Maps key to Node
+        
+    def inc(self, key: str) -> None:
+        if key not in self.key_node:
+            # If key doesn't exist, insert with count 1
+            if self.head.next.count != 1:
+                self._add_node(Node(1), self.head)
+            self.head.next.keys.add(key)
+            self.key_node[key] = self.head.next
+        else:
+            # If key exists, increment its count
+            curr = self.key_node[key]
+            next_count = curr.count + 1
+            curr.keys.remove(key)
+            
+            if curr.next.count != next_count:
+                self._add_node(Node(next_count), curr)
+            curr.next.keys.add(key)
+            self.key_node[key] = curr.next
+            
+            if not curr.keys:
+                self._remove_node(curr)
+                
+    def dec(self, key: str) -> None:
+        curr = self.key_node[key]
+        curr.keys.remove(key)
+        
+        if curr.count > 1:
+            prev_count = curr.count - 1
+            if curr.prev.count != prev_count:
+                self._add_node(Node(prev_count), curr.prev)
+            curr.prev.keys.add(key)
+            self.key_node[key] = curr.prev
+        else:
+            del self.key_node[key]
+            
+        if not curr.keys:
+            self._remove_node(curr)
+            
+    def getMaxKey(self) -> str:
+        if self.tail.prev == self.head:
+            return ""
+        return next(iter(self.tail.prev.keys))
+        
+    def getMinKey(self) -> str:
+        if self.head.next == self.tail:
+            return ""
+        return next(iter(self.head.next.keys))
+        
+    def _add_node(self, node: Node, prev: Node) -> None:
+        node.next = prev.next
+        node.prev = prev
+        prev.next.prev = node
+        prev.next = node
+        
+    def _remove_node(self, node: Node) -> None:
+        node.prev.next = node.next
+        node.next.prev = node.prev</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations run in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of unique keys stored.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Node {
+    int count;
+    Set<String> keys;
+    Node prev, next;
+    
+    Node(int count) {
+        this.count = count;
+        this.keys = new HashSet<>();
+    }
+}
+
+class AllOne {
+    private Node head;  // Dummy head
+    private Node tail;  // Dummy tail
+    private Map<String, Node> keyNode;
+    
+    public AllOne() {
+        head = new Node(0);
+        tail = new Node(0);
+        head.next = tail;
+        tail.prev = head;
+        keyNode = new HashMap<>();
+    }
+    
+    public void inc(String key) {
+        if (!keyNode.containsKey(key)) {
+            // If key doesn't exist, insert with count 1
+            if (head.next.count != 1) {
+                addNode(new Node(1), head);
+            }
+            head.next.keys.add(key);
+            keyNode.put(key, head.next);
+        } else {
+            // If key exists, increment its count
+            Node curr = keyNode.get(key);
+            int nextCount = curr.count + 1;
+            curr.keys.remove(key);
+            
+            if (curr.next.count != nextCount) {
+                addNode(new Node(nextCount), curr);
+            }
+            curr.next.keys.add(key);
+            keyNode.put(key, curr.next);
+            
+            if (curr.keys.isEmpty()) {
+                removeNode(curr);
+            }
+        }
+    }
+    
+    public void dec(String key) {
+        Node curr = keyNode.get(key);
+        curr.keys.remove(key);
+        
+        if (curr.count > 1) {
+            int prevCount = curr.count - 1;
+            if (curr.prev.count != prevCount) {
+                addNode(new Node(prevCount), curr.prev);
+            }
+            curr.prev.keys.add(key);
+            keyNode.put(key, curr.prev);
+        } else {
+            keyNode.remove(key);
+        }
+        
+        if (curr.keys.isEmpty()) {
+            removeNode(curr);
+        }
+    }
+    
+    public String getMaxKey() {
+        if (tail.prev == head) {
+            return "";
+        }
+        return tail.prev.keys.iterator().next();
+    }
+    
+    public String getMinKey() {
+        if (head.next == tail) {
+            return "";
+        }
+        return head.next.keys.iterator().next();
+    }
+    
+    private void addNode(Node node, Node prev) {
+        node.next = prev.next;
+        node.prev = prev;
+        prev.next.prev = node;
+        prev.next = node;
+    }
+    
+    private void removeNode(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations run in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of unique keys stored.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Node {
+public:
+    int count;
+    unordered_set<string> keys;
+    Node* prev;
+    Node* next;
+    
+    Node(int count = 0) : count(count), prev(nullptr), next(nullptr) {}
+};
+
+class AllOne {
+private:
+    Node* head;  // Dummy head
+    Node* tail;  // Dummy tail
+    unordered_map<string, Node*> keyNode;
+    
+    void addNode(Node* node, Node* prev) {
+        node->next = prev->next;
+        node->prev = prev;
+        prev->next->prev = node;
+        prev->next = node;
+    }
+    
+    void removeNode(Node* node) {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        delete node;
+    }
+    
+public:
+    AllOne() {
+        head = new Node();
+        tail = new Node();
+        head->next = tail;
+        tail->prev = head;
+    }
+    
+    ~AllOne() {
+        Node* curr = head;
+        while (curr) {
+            Node* next = curr->next;
+            delete curr;
+            curr = next;
+        }
+    }
+    
+    void inc(string key) {
+        if (keyNode.find(key) == keyNode.end()) {
+            // If key doesn't exist, insert with count 1
+            if (head->next->count != 1) {
+                addNode(new Node(1), head);
+            }
+            head->next->keys.insert(key);
+            keyNode[key] = head->next;
+        } else {
+            // If key exists, increment its count
+            Node* curr = keyNode[key];
+            int nextCount = curr->count + 1;
+            curr->keys.erase(key);
+            
+            if (curr->next->count != nextCount) {
+                addNode(new Node(nextCount), curr);
+            }
+            curr->next->keys.insert(key);
+            keyNode[key] = curr->next;
+            
+            if (curr->keys.empty()) {
+                removeNode(curr);
+            }
+        }
+    }
+    
+    void dec(string key) {
+        Node* curr = keyNode[key];
+        curr->keys.erase(key);
+        
+        if (curr->count > 1) {
+            int prevCount = curr->count - 1;
+            if (curr->prev->count != prevCount) {
+                addNode(new Node(prevCount), curr->prev);
+            }
+            curr->prev->keys.insert(key);
+            keyNode[key] = curr->prev;
+        } else {
+            keyNode.erase(key);
+        }
+        
+        if (curr->keys.empty()) {
+            removeNode(curr);
+        }
+    }
+    
+    string getMaxKey() {
+        if (tail->prev == head) {
+            return "";
+        }
+        return *tail->prev->keys.begin();
+    }
+    
+    string getMinKey() {
+        if (head->next == tail) {
+            return "";
+        }
+        return *head->next->keys.begin();
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations run in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of unique keys stored.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>class Node {
+    constructor(count = 0) {
+        this.count = count;
+        this.keys = new Set();
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class AllOne {
+    constructor() {
+        this.head = new Node();  // Dummy head
+        this.tail = new Node();  // Dummy tail
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+        this.keyNode = new Map();  // Maps key to Node
+    }
+    
+    inc(key) {
+        if (!this.keyNode.has(key)) {
+            // If key doesn't exist, insert with count 1
+            if (this.head.next.count !== 1) {
+                this._addNode(new Node(1), this.head);
+            }
+            this.head.next.keys.add(key);
+            this.keyNode.set(key, this.head.next);
+        } else {
+            // If key exists, increment its count
+            const curr = this.keyNode.get(key);
+            const nextCount = curr.count + 1;
+            curr.keys.delete(key);
+            
+            if (curr.next.count !== nextCount) {
+                this._addNode(new Node(nextCount), curr);
+            }
+            curr.next.keys.add(key);
+            this.keyNode.set(key, curr.next);
+            
+            if (curr.keys.size === 0) {
+                this._removeNode(curr);
+            }
+        }
+    }
+    
+    dec(key) {
+        const curr = this.keyNode.get(key);
+        curr.keys.delete(key);
+        
+        if (curr.count > 1) {
+            const prevCount = curr.count - 1;
+            if (curr.prev.count !== prevCount) {
+                this._addNode(new Node(prevCount), curr.prev);
+            }
+            curr.prev.keys.add(key);
+            this.keyNode.set(key, curr.prev);
+        } else {
+            this.keyNode.delete(key);
+        }
+        
+        if (curr.keys.size === 0) {
+            this._removeNode(curr);
+        }
+    }
+    
+    getMaxKey() {
+        if (this.tail.prev === this.head) {
+            return "";
+        }
+        return Array.from(this.tail.prev.keys)[0];
+    }
+    
+    getMinKey() {
+        if (this.head.next === this.tail) {
+            return "";
+        }
+        return Array.from(this.head.next.keys)[0];
+    }
+    
+    _addNode(node, prev) {
+        node.next = prev.next;
+        node.prev = prev;
+        prev.next.prev = node;
+        prev.next = node;
+    }
+    
+    _removeNode(node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations run in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of unique keys stored.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Node {
+    public int Count;
+    public HashSet<string> Keys;
+    public Node Prev;
+    public Node Next;
+    
+    public Node(int count = 0) {
+        Count = count;
+        Keys = new HashSet<string>();
+    }
+}
+
+public class AllOne {
+    private Node head;  // Dummy head
+    private Node tail;  // Dummy tail
+    private Dictionary<string, Node> keyNode;
+    
+    public AllOne() {
+        head = new Node();
+        tail = new Node();
+        head.Next = tail;
+        tail.Prev = head;
+        keyNode = new Dictionary<string, Node>();
+    }
+    
+    public void Inc(string key) {
+        if (!keyNode.ContainsKey(key)) {
+            // If key doesn't exist, insert with count 1
+            if (head.Next.Count != 1) {
+                AddNode(new Node(1), head);
+            }
+            head.Next.Keys.Add(key);
+            keyNode[key] = head.Next;
+        } else {
+            // If key exists, increment its count
+            Node curr = keyNode[key];
+            int nextCount = curr.Count + 1;
+            curr.Keys.Remove(key);
+            
+            if (curr.Next.Count != nextCount) {
+                AddNode(new Node(nextCount), curr);
+            }
+            curr.Next.Keys.Add(key);
+            keyNode[key] = curr.Next;
+            
+            if (curr.Keys.Count == 0) {
+                RemoveNode(curr);
+            }
+        }
+    }
+    
+    public void Dec(string key) {
+        Node curr = keyNode[key];
+        curr.Keys.Remove(key);
+        
+        if (curr.Count > 1) {
+            int prevCount = curr.Count - 1;
+            if (curr.Prev.Count != prevCount) {
+                AddNode(new Node(prevCount), curr.Prev);
+            }
+            curr.Prev.Keys.Add(key);
+            keyNode[key] = curr.Prev;
+        } else {
+            keyNode.Remove(key);
+        }
+        
+        if (curr.Keys.Count == 0) {
+            RemoveNode(curr);
+        }
+    }
+    
+    public string GetMaxKey() {
+        if (tail.Prev == head) {
+            return "";
+        }
+        return tail.Prev.Keys.First();
+    }
+    
+    public string GetMinKey() {
+        if (head.Next == tail) {
+            return "";
+        }
+        return head.Next.Keys.First();
+    }
+    
+    private void AddNode(Node node, Node prev) {
+        node.Next = prev.Next;
+        node.Prev = prev;
+        prev.Next.Prev = node;
+        prev.Next = node;
+    }
+    
+    private void RemoveNode(Node node) {
+        node.Prev.Next = node.Next;
+        node.Next.Prev = node.Prev;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations run in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of unique keys stored.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a doubly linked list with buckets:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Bucket organization</li>
+                            <li>Constant time operations</li>
+                            <li>Linked list structure</li>
+                            <li>Hash map usage</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize structure</li>
+                            <li>Handle increments</li>
+                            <li>Handle decrements</li>
+                            <li>Track min/max</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Node structure</li>
+                        <li>Pointer management</li>
+                        <li>Set operations</li>
+                        <li>Key tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Constant time ops</li>
+                        <li>Memory efficiency</li>
+                        <li>Bucket reuse</li>
+                        <li>Quick access</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty structure</li>
+                        <li>Single element</li>
+                        <li>Multiple same count</li>
+                        <li>Zero count removal</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

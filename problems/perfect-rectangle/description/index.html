@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfect Rectangle - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">391. Perfect Rectangle</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an array <code class="bg-gray-100 px-1 rounded">rectangles</code> where <code class="bg-gray-100 px-1 rounded">rectangles[i] = [xi, yi, ai, bi]</code> represents an axis-aligned rectangle. The bottom-left point of the rectangle is <code class="bg-gray-100 px-1 rounded">(xi, yi)</code> and the top-right point of it is <code class="bg-gray-100 px-1 rounded">(ai, bi)</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return <code class="bg-gray-100 px-1 rounded">true</code> if all the rectangles together form an exact cover of a rectangular region.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: rectangles = [[1,1,3,3],[3,1,4,2],[3,2,4,4],[1,3,2,4],[2,3,3,4]]
+Output: true
+Explanation: All 5 rectangles together form an exact cover of a rectangular region.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: rectangles = [[1,1,2,3],[1,3,2,4],[3,1,4,2],[3,2,4,4]]
+Output: false
+Explanation: Because there is a gap between the two rectangular regions.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: rectangles = [[1,1,3,3],[3,1,4,2],[1,3,2,4],[2,2,4,4]]
+Output: false
+Explanation: Because two of the rectangles overlap with each other.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= rectangles.length <= 2 * 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">rectangles[i].length == 4</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁵ <= xi, yi, ai, bi <= 10⁵</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def isRectangleCover(self, rectangles: List[List[int]]) -> bool:
+        # Set to store corners
+        corners = set()
+        
+        # Calculate area and find corners
+        area = 0
+        min_x = min_y = float('inf')
+        max_x = max_y = float('-inf')
+        
+        for x, y, a, b in rectangles:
+            # Update boundaries
+            min_x = min(min_x, x)
+            min_y = min(min_y, y)
+            max_x = max(max_x, a)
+            max_y = max(max_y, b)
+            
+            # Calculate area
+            area += (a - x) * (b - y)
+            
+            # Add/remove corners
+            for corner in [(x, y), (x, b), (a, y), (a, b)]:
+                if corner in corners:
+                    corners.remove(corner)
+                else:
+                    corners.add(corner)
+        
+        # Check if remaining corners are the four corners of the perfect rectangle
+        if len(corners) != 4:
+            return False
+            
+        # Check if corners match the boundaries
+        if not {(min_x, min_y), (min_x, max_y), (max_x, min_y), (max_x, max_y)} == corners:
+            return False
+            
+        # Check if area matches
+        return area == (max_x - min_x) * (max_y - min_y)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of rectangles. We process each rectangle once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the corners in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean isRectangleCover(int[][] rectangles) {
+        // Set to store corners
+        Set<String> corners = new HashSet<>();
+        
+        // Calculate area and find corners
+        long area = 0;
+        int min_x = Integer.MAX_VALUE;
+        int min_y = Integer.MAX_VALUE;
+        int max_x = Integer.MIN_VALUE;
+        int max_y = Integer.MIN_VALUE;
+        
+        for (int[] rect : rectangles) {
+            // Update boundaries
+            min_x = Math.min(min_x, rect[0]);
+            min_y = Math.min(min_y, rect[1]);
+            max_x = Math.max(max_x, rect[2]);
+            max_y = Math.max(max_y, rect[3]);
+            
+            // Calculate area
+            area += (long)(rect[2] - rect[0]) * (rect[3] - rect[1]);
+            
+            // Add/remove corners
+            String[] corners_arr = {
+                rect[0] + "," + rect[1],
+                rect[0] + "," + rect[3],
+                rect[2] + "," + rect[1],
+                rect[2] + "," + rect[3]
+            };
+            
+            for (String corner : corners_arr) {
+                if (!corners.add(corner)) {
+                    corners.remove(corner);
+                }
+            }
+        }
+        
+        // Check if remaining corners are the four corners of the perfect rectangle
+        if (corners.size() != 4) {
+            return false;
+        }
+        
+        // Check if corners match the boundaries
+        Set<String> expected = new HashSet<>(Arrays.asList(
+            min_x + "," + min_y,
+            min_x + "," + max_y,
+            max_x + "," + min_y,
+            max_x + "," + max_y
+        ));
+        
+        if (!corners.equals(expected)) {
+            return false;
+        }
+        
+        // Check if area matches
+        return area == (long)(max_x - min_x) * (max_y - min_y);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of rectangles. We process each rectangle once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the corners in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool isRectangleCover(vector<vector<int>>& rectangles) {
+        // Set to store corners
+        set<pair<int, int>> corners;
+        
+        // Calculate area and find corners
+        long long area = 0;
+        int min_x = INT_MAX;
+        int min_y = INT_MAX;
+        int max_x = INT_MIN;
+        int max_y = INT_MIN;
+        
+        for (const auto& rect : rectangles) {
+            // Update boundaries
+            min_x = min(min_x, rect[0]);
+            min_y = min(min_y, rect[1]);
+            max_x = max(max_x, rect[2]);
+            max_y = max(max_y, rect[3]);
+            
+            // Calculate area
+            area += (long long)(rect[2] - rect[0]) * (rect[3] - rect[1]);
+            
+            // Add/remove corners
+            vector<pair<int, int>> corner_points = {
+                {rect[0], rect[1]},
+                {rect[0], rect[3]},
+                {rect[2], rect[1]},
+                {rect[2], rect[3]}
+            };
+            
+            for (const auto& corner : corner_points) {
+                auto it = corners.find(corner);
+                if (it != corners.end()) {
+                    corners.erase(it);
+                } else {
+                    corners.insert(corner);
+                }
+            }
+        }
+        
+        // Check if remaining corners are the four corners of the perfect rectangle
+        if (corners.size() != 4) {
+            return false;
+        }
+        
+        // Check if corners match the boundaries
+        set<pair<int, int>> expected = {
+            {min_x, min_y},
+            {min_x, max_y},
+            {max_x, min_y},
+            {max_x, max_y}
+        };
+        
+        if (corners != expected) {
+            return false;
+        }
+        
+        // Check if area matches
+        return area == (long long)(max_x - min_x) * (max_y - min_y);
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of rectangles. We process each rectangle once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the corners in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} rectangles
+ * @return {boolean}
+ */
+var isRectangleCover = function(rectangles) {
+    // Set to store corners
+    const corners = new Set();
+    
+    // Calculate area and find corners
+    let area = 0;
+    let min_x = Infinity;
+    let min_y = Infinity;
+    let max_x = -Infinity;
+    let max_y = -Infinity;
+    
+    for (const [x, y, a, b] of rectangles) {
+        // Update boundaries
+        min_x = Math.min(min_x, x);
+        min_y = Math.min(min_y, y);
+        max_x = Math.max(max_x, a);
+        max_y = Math.max(max_y, b);
+        
+        // Calculate area
+        area += (a - x) * (b - y);
+        
+        // Add/remove corners
+        const corner_points = [
+            `${x},${y}`,
+            `${x},${b}`,
+            `${a},${y}`,
+            `${a},${b}`
+        ];
+        
+        for (const corner of corner_points) {
+            if (corners.has(corner)) {
+                corners.delete(corner);
+            } else {
+                corners.add(corner);
+            }
+        }
+    }
+    
+    // Check if remaining corners are the four corners of the perfect rectangle
+    if (corners.size !== 4) {
+        return false;
+    }
+    
+    // Check if corners match the boundaries
+    const expected = new Set([
+        `${min_x},${min_y}`,
+        `${min_x},${max_y}`,
+        `${max_x},${min_y}`,
+        `${max_x},${max_y}`
+    ]);
+    
+    for (const corner of corners) {
+        if (!expected.has(corner)) {
+            return false;
+        }
+    }
+    
+    // Check if area matches
+    return area === (max_x - min_x) * (max_y - min_y);
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of rectangles. We process each rectangle once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the corners in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool IsRectangleCover(int[][] rectangles) {
+        // Set to store corners
+        HashSet<string> corners = new HashSet<string>();
+        
+        // Calculate area and find corners
+        long area = 0;
+        int min_x = int.MaxValue;
+        int min_y = int.MaxValue;
+        int max_x = int.MinValue;
+        int max_y = int.MinValue;
+        
+        foreach (var rect in rectangles) {
+            // Update boundaries
+            min_x = Math.Min(min_x, rect[0]);
+            min_y = Math.Min(min_y, rect[1]);
+            max_x = Math.Max(max_x, rect[2]);
+            max_y = Math.Max(max_y, rect[3]);
+            
+            // Calculate area
+            area += (long)(rect[2] - rect[0]) * (rect[3] - rect[1]);
+            
+            // Add/remove corners
+            string[] corners_arr = {
+                $"{rect[0]},{rect[1]}",
+                $"{rect[0]},{rect[3]}",
+                $"{rect[2]},{rect[1]}",
+                $"{rect[2]},{rect[3]}"
+            };
+            
+            foreach (var corner in corners_arr) {
+                if (!corners.Add(corner)) {
+                    corners.Remove(corner);
+                }
+            }
+        }
+        
+        // Check if remaining corners are the four corners of the perfect rectangle
+        if (corners.Count != 4) {
+            return false;
+        }
+        
+        // Check if corners match the boundaries
+        HashSet<string> expected = new HashSet<string> {
+            $"{min_x},{min_y}",
+            $"{min_x},{max_y}",
+            $"{max_x},{min_y}",
+            $"{max_x},{max_y}"
+        };
+        
+        if (!corners.SetEquals(expected)) {
+            return false;
+        }
+        
+        // Check if area matches
+        return area == (long)(max_x - min_x) * (max_y - min_y);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of rectangles. We process each rectangle once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the corners in the worst case.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a corner-counting approach with area verification:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Corner properties</li>
+                            <li>Area calculation</li>
+                            <li>Boundary tracking</li>
+                            <li>Overlap detection</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Track corners</li>
+                            <li>Calculate total area</li>
+                            <li>Find boundaries</li>
+                            <li>Verify coverage</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Corner handling</li>
+                        <li>Area computation</li>
+                        <li>Boundary checks</li>
+                        <li>Set operations</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient storage</li>
+                        <li>Integer overflow</li>
+                        <li>Set operations</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single rectangle</li>
+                        <li>Overlapping rectangles</li>
+                        <li>Gaps between rectangles</li>
+                        <li>Large coordinates</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 
