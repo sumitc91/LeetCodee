@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert BST to Greater Tree - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">538. Convert BST to Greater Tree</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given the <code class="bg-gray-100 px-1 rounded">root</code> of a Binary Search Tree (BST), convert it to a Greater Tree such that every key of the original BST is changed to the original key plus the sum of all keys greater than the original key in BST.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    As a reminder, a <em>binary search tree</em> is a tree that satisfies these constraints:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>The left subtree of a node contains only nodes with keys <strong>less than</strong> the node's key.</li>
+                    <li>The right subtree of a node contains only nodes with keys <strong>greater than</strong> the node's key.</li>
+                    <li>Both the left and right subtrees must also be binary search trees.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: root = [4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]
+Output: [30,36,21,36,35,26,15,null,null,null,33,null,null,null,8]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: root = [0,null,1]
+Output: [1,null,1]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>The number of nodes in the tree is in the range <code class="bg-gray-100 px-1 rounded">[0, 10⁴]</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁴ <= Node.val <= 10⁴</code></li>
+                    <li>All the values in the tree are <strong>unique</strong></li>
+                    <li><code class="bg-gray-100 px-1 rounded">root</code> is guaranteed to be a valid binary search tree</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def convertBST(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        def reverse_inorder(node: Optional[TreeNode]) -> None:
+            if not node:
+                return
+            
+            # First visit right subtree
+            reverse_inorder(node.right)
+            
+            # Update current node
+            nonlocal running_sum
+            running_sum += node.val
+            node.val = running_sum
+            
+            # Then visit left subtree
+            reverse_inorder(node.left)
+        
+        running_sum = 0
+        reverse_inorder(root)
+        return root</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree. We visit each node exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private int sum = 0;
+    
+    public TreeNode convertBST(TreeNode root) {
+        if (root != null) {
+            // First visit right subtree
+            convertBST(root.right);
+            
+            // Update current node
+            sum += root.val;
+            root.val = sum;
+            
+            // Then visit left subtree
+            convertBST(root.left);
+        }
+        return root;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree. We visit each node exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    int sum = 0;
+    
+    void reverseInorder(TreeNode* node) {
+        if (!node) {
+            return;
+        }
+        
+        // First visit right subtree
+        reverseInorder(node->right);
+        
+        // Update current node
+        sum += node->val;
+        node->val = sum;
+        
+        // Then visit left subtree
+        reverseInorder(node->left);
+    }
+    
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        sum = 0;
+        reverseInorder(root);
+        return root;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree. We visit each node exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var convertBST = function(root) {
+    let sum = 0;
+    
+    const reverseInorder = (node) => {
+        if (!node) {
+            return;
+        }
+        
+        // First visit right subtree
+        reverseInorder(node.right);
+        
+        // Update current node
+        sum += node.val;
+        node.val = sum;
+        
+        // Then visit left subtree
+        reverseInorder(node.left);
+    };
+    
+    reverseInorder(root);
+    return root;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree. We visit each node exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private int sum = 0;
+    
+    public TreeNode ConvertBST(TreeNode root) {
+        if (root != null) {
+            // First visit right subtree
+            ConvertBST(root.right);
+            
+            // Update current node
+            sum += root.val;
+            root.val = sum;
+            
+            // Then visit left subtree
+            ConvertBST(root.left);
+        }
+        return root;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree. We visit each node exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses reverse inorder traversal:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>BST property</li>
+                            <li>Reverse inorder</li>
+                            <li>Running sum</li>
+                            <li>Node updates</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Visit right subtree</li>
+                            <li>Process current node</li>
+                            <li>Update running sum</li>
+                            <li>Visit left subtree</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Recursive traversal</li>
+                        <li>Sum maintenance</li>
+                        <li>Node modification</li>
+                        <li>BST properties</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single traversal</li>
+                        <li>In-place updates</li>
+                        <li>BST property usage</li>
+                        <li>Memory efficiency</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty tree</li>
+                        <li>Single node</li>
+                        <li>Skewed tree</li>
+                        <li>Balanced tree</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

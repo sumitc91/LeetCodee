@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number of Provinces - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">547. Number of Provinces</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    There are <code class="bg-gray-100 px-1 rounded">n</code> cities. Some of them are connected, while some are not. If city <code class="bg-gray-100 px-1 rounded">a</code> is connected directly with city <code class="bg-gray-100 px-1 rounded">b</code>, and city <code class="bg-gray-100 px-1 rounded">b</code> is connected directly with city <code class="bg-gray-100 px-1 rounded">c</code>, then city <code class="bg-gray-100 px-1 rounded">a</code> is connected indirectly with city <code class="bg-gray-100 px-1 rounded">c</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A <strong>province</strong> is a group of directly or indirectly connected cities and no other cities outside of the group.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    You are given an <code class="bg-gray-100 px-1 rounded">n x n</code> matrix <code class="bg-gray-100 px-1 rounded">isConnected</code> where <code class="bg-gray-100 px-1 rounded">isConnected[i][j] = 1</code> if the <code class="bg-gray-100 px-1 rounded">i<sup>th</sup></code> city and the <code class="bg-gray-100 px-1 rounded">j<sup>th</sup></code> city are directly connected, and <code class="bg-gray-100 px-1 rounded">isConnected[i][j] = 0</code> otherwise.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return <em>the total number of <strong>provinces</strong></em>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: isConnected = [[1,1,0],[1,1,0],[0,0,1]]
+Output: 2</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: isConnected = [[1,0,0],[0,1,0],[0,0,1]]
+Output: 3</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n <= 200</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == isConnected.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == isConnected[i].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">isConnected[i][j]</code> is <code class="bg-gray-100 px-1 rounded">1</code> or <code class="bg-gray-100 px-1 rounded">0</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">isConnected[i][i] == 1</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">isConnected[i][j] == isConnected[j][i]</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        n = len(isConnected)
+        visited = set()
+        provinces = 0
+        
+        def dfs(city: int) -> None:
+            visited.add(city)
+            for neighbor in range(n):
+                if isConnected[city][neighbor] == 1 and neighbor not in visited:
+                    dfs(neighbor)
+        
+        for city in range(n):
+            if city not in visited:
+                dfs(city)
+                provinces += 1
+        
+        return provinces</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of cities. We need to visit each city and check its connections.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the visited set and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private void dfs(int[][] isConnected, boolean[] visited, int city) {
+        visited[city] = true;
+        for (int neighbor = 0; neighbor < isConnected.length; neighbor++) {
+            if (isConnected[city][neighbor] == 1 && !visited[neighbor]) {
+                dfs(isConnected, visited, neighbor);
+            }
+        }
+    }
+    
+    public int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        boolean[] visited = new boolean[n];
+        int provinces = 0;
+        
+        for (int city = 0; city < n; city++) {
+            if (!visited[city]) {
+                dfs(isConnected, visited, city);
+                provinces++;
+            }
+        }
+        
+        return provinces;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of cities. We need to visit each city and check its connections.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the visited array and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    void dfs(vector<vector<int>>& isConnected, vector<bool>& visited, int city) {
+        visited[city] = true;
+        for (int neighbor = 0; neighbor < isConnected.size(); neighbor++) {
+            if (isConnected[city][neighbor] == 1 && !visited[neighbor]) {
+                dfs(isConnected, visited, neighbor);
+            }
+        }
+    }
+    
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int n = isConnected.size();
+        vector<bool> visited(n, false);
+        int provinces = 0;
+        
+        for (int city = 0; city < n; city++) {
+            if (!visited[city]) {
+                dfs(isConnected, visited, city);
+                provinces++;
+            }
+        }
+        
+        return provinces;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of cities. We need to visit each city and check its connections.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the visited vector and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} isConnected
+ * @return {number}
+ */
+var findCircleNum = function(isConnected) {
+    const n = isConnected.length;
+    const visited = new Set();
+    let provinces = 0;
+    
+    const dfs = (city) => {
+        visited.add(city);
+        for (let neighbor = 0; neighbor < n; neighbor++) {
+            if (isConnected[city][neighbor] === 1 && !visited.has(neighbor)) {
+                dfs(neighbor);
+            }
+        }
+    };
+    
+    for (let city = 0; city < n; city++) {
+        if (!visited.has(city)) {
+            dfs(city);
+            provinces++;
+        }
+    }
+    
+    return provinces;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of cities. We need to visit each city and check its connections.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the visited set and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private void DFS(int[][] isConnected, bool[] visited, int city) {
+        visited[city] = true;
+        for (int neighbor = 0; neighbor < isConnected.Length; neighbor++) {
+            if (isConnected[city][neighbor] == 1 && !visited[neighbor]) {
+                DFS(isConnected, visited, neighbor);
+            }
+        }
+    }
+    
+    public int FindCircleNum(int[][] isConnected) {
+        int n = isConnected.Length;
+        bool[] visited = new bool[n];
+        int provinces = 0;
+        
+        for (int city = 0; city < n; city++) {
+            if (!visited[city]) {
+                DFS(isConnected, visited, city);
+                provinces++;
+            }
+        }
+        
+        return provinces;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²)</h4>
+                    <p class="text-gray-700">Where n is the number of cities. We need to visit each city and check its connections.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the visited array and recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses Depth-First Search (DFS) to find connected components:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Graph representation</li>
+                            <li>Connected components</li>
+                            <li>DFS traversal</li>
+                            <li>Component counting</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize visited</li>
+                            <li>DFS each unvisited</li>
+                            <li>Mark connected</li>
+                            <li>Count provinces</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Adjacency matrix</li>
+                        <li>Visited tracking</li>
+                        <li>Recursive DFS</li>
+                        <li>Province counting</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Matrix symmetry</li>
+                        <li>Early termination</li>
+                        <li>Space efficiency</li>
+                        <li>Visit tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single city</li>
+                        <li>All connected</li>
+                        <li>No connections</li>
+                        <li>Diagonal elements</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smallest Good Base - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">483. Smallest Good Base</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">n</code> representing an integer, return <em>the smallest <strong>good base</strong> of</em> <code class="bg-gray-100 px-1 rounded">n</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    We call <code class="bg-gray-100 px-1 rounded">k >= 2</code> a <strong>good base</strong> of <code class="bg-gray-100 px-1 rounded">n</code>, if all digits of <code class="bg-gray-100 px-1 rounded">n</code> base <code class="bg-gray-100 px-1 rounded">k</code> are <code class="bg-gray-100 px-1 rounded">1</code>'s.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = "13"
+Output: "3"
+Explanation: 13 base 3 is 111.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = "4681"
+Output: "8"
+Explanation: 4681 base 8 is 11111.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = "1000000000000000000"
+Output: "999999999999999999"
+Explanation: 1000000000000000000 base 999999999999999999 is 11.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">n</code> is an integer in the range <code class="bg-gray-100 px-1 rounded">[3, 10¹⁸]</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">n</code> does not contain any leading zeros.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def smallestGoodBase(self, n: str) -> str:
+        n = int(n)
+        max_m = len(bin(n)) - 2  # Maximum possible length in any base
+        
+        # Try each possible length m
+        for m in range(max_m, 1, -1):
+            # For length m, solve (k^m - 1) = n*(k - 1)
+            # Use binary search to find k
+            left = 2
+            right = n - 1
+            
+            while left <= right:
+                k = (left + right) // 2
+                value = (pow(k, m) - 1) // (k - 1)
+                
+                if value == n:
+                    return str(k)
+                elif value < n:
+                    left = k + 1
+                else:
+                    right = k - 1
+        
+        return str(n - 1)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n × log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We try O(log n) possible lengths and for each length, binary search takes O(log n) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public String smallestGoodBase(String n) {
+        long num = Long.parseLong(n);
+        int maxM = (int)(Math.log(num) / Math.log(2));  // Maximum possible length in any base
+        
+        // Try each possible length m
+        for (int m = maxM; m > 1; m--) {
+            // For length m, solve (k^m - 1) = n*(k - 1)
+            // Use binary search to find k
+            long left = 2;
+            long right = num - 1;
+            
+            while (left <= right) {
+                long k = left + (right - left) / 2;
+                long value = 0;
+                long curr = 1;
+                boolean overflow = false;
+                
+                // Calculate k^m - 1
+                for (int i = 0; i <= m && !overflow; i++) {
+                    value += curr;
+                    if (i < m) {
+                        if (curr > num / k) {
+                            overflow = true;
+                        }
+                        curr *= k;
+                    }
+                }
+                
+                if (!overflow && value == num) {
+                    return String.valueOf(k);
+                }
+                
+                if (overflow || value > num) {
+                    right = k - 1;
+                } else {
+                    left = k + 1;
+                }
+            }
+        }
+        
+        return String.valueOf(num - 1);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n × log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We try O(log n) possible lengths and for each length, binary search takes O(log n) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    string smallestGoodBase(string n) {
+        long long num = stoll(n);
+        int maxM = log2(num);  // Maximum possible length in any base
+        
+        // Try each possible length m
+        for (int m = maxM; m > 1; m--) {
+            // For length m, solve (k^m - 1) = n*(k - 1)
+            // Use binary search to find k
+            long long left = 2;
+            long long right = num - 1;
+            
+            while (left <= right) {
+                long long k = left + (right - left) / 2;
+                long long value = 0;
+                long long curr = 1;
+                bool overflow = false;
+                
+                // Calculate k^m - 1
+                for (int i = 0; i <= m && !overflow; i++) {
+                    value += curr;
+                    if (i < m) {
+                        if (curr > num / k) {
+                            overflow = true;
+                        }
+                        curr *= k;
+                    }
+                }
+                
+                if (!overflow && value == num) {
+                    return to_string(k);
+                }
+                
+                if (overflow || value > num) {
+                    right = k - 1;
+                } else {
+                    left = k + 1;
+                }
+            }
+        }
+        
+        return to_string(num - 1);
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n × log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We try O(log n) possible lengths and for each length, binary search takes O(log n) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} n
+ * @return {string}
+ */
+var smallestGoodBase = function(n) {
+    n = BigInt(n);
+    const maxM = Math.floor(Math.log2(Number(n)));  // Maximum possible length in any base
+    
+    // Try each possible length m
+    for (let m = maxM; m > 1; m--) {
+        // For length m, solve (k^m - 1) = n*(k - 1)
+        // Use binary search to find k
+        let left = 2n;
+        let right = n - 1n;
+        
+        while (left <= right) {
+            const k = left + (right - left) / 2n;
+            let value = 0n;
+            let curr = 1n;
+            let overflow = false;
+            
+            // Calculate k^m - 1
+            for (let i = 0; i <= m && !overflow; i++) {
+                value += curr;
+                if (i < m) {
+                    if (curr > n / k) {
+                        overflow = true;
+                    }
+                    curr *= k;
+                }
+            }
+            
+            if (!overflow && value === n) {
+                return k.toString();
+            }
+            
+            if (overflow || value > n) {
+                right = k - 1n;
+            } else {
+                left = k + 1n;
+            }
+        }
+    }
+    
+    return (n - 1n).toString();
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n × log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We try O(log n) possible lengths and for each length, binary search takes O(log n) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public string SmallestGoodBase(string n) {
+        long num = long.Parse(n);
+        int maxM = (int)(Math.Log(num) / Math.Log(2));  // Maximum possible length in any base
+        
+        // Try each possible length m
+        for (int m = maxM; m > 1; m--) {
+            // For length m, solve (k^m - 1) = n*(k - 1)
+            // Use binary search to find k
+            long left = 2;
+            long right = num - 1;
+            
+            while (left <= right) {
+                long k = left + (right - left) / 2;
+                long value = 0;
+                long curr = 1;
+                bool overflow = false;
+                
+                // Calculate k^m - 1
+                for (int i = 0; i <= m && !overflow; i++) {
+                    value += curr;
+                    if (i < m) {
+                        if (curr > num / k) {
+                            overflow = true;
+                        }
+                        curr *= k;
+                    }
+                }
+                
+                if (!overflow && value == num) {
+                    return k.ToString();
+                }
+                
+                if (overflow || value > num) {
+                    right = k - 1;
+                } else {
+                    left = k + 1;
+                }
+            }
+        }
+        
+        return (num - 1).ToString();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n × log n)</h4>
+                    <p class="text-gray-700">Where n is the input number. We try O(log n) possible lengths and for each length, binary search takes O(log n) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses binary search and mathematical properties:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Binary search</li>
+                            <li>Base conversion</li>
+                            <li>Geometric series</li>
+                            <li>Overflow handling</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Calculate max length</li>
+                            <li>Try each length</li>
+                            <li>Binary search base</li>
+                            <li>Verify solution</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Large number handling</li>
+                        <li>Overflow prevention</li>
+                        <li>Binary search</li>
+                        <li>Base conversion</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Length bounds</li>
+                        <li>Efficient calculation</li>
+                        <li>Search space reduction</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Small numbers</li>
+                        <li>Large numbers</li>
+                        <li>Power of two</li>
+                        <li>Overflow cases</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

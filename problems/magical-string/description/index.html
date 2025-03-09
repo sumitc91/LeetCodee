@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical String - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">481. Magical String</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    A magical string <code class="bg-gray-100 px-1 rounded">s</code> consists of only '1' and '2' and obeys the following rules:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>The string s is magical because concatenating the number of contiguous occurrences of characters '1' and '2' generates the string s itself.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    The first few elements of string <code class="bg-gray-100 px-1 rounded">s</code> is <code class="bg-gray-100 px-1 rounded">s = "1221121221221121122……"</code>
+                </p>
+                <p class="text-gray-700 mb-4">
+                    If we group the consecutive '1's and '2's in s, it will be <code class="bg-gray-100 px-1 rounded">"1 22 11 2 1 22 1 22 11 2 11 22 ......"</code> and the occurrences of '1's or '2's in each group are <code class="bg-gray-100 px-1 rounded">"1 2 2 1 1 2 1 2 2 1 2 2 ......"</code>
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given an integer <code class="bg-gray-100 px-1 rounded">n</code>, return the number of '1's in the first <code class="bg-gray-100 px-1 rounded">n</code> number in the magical string <code class="bg-gray-100 px-1 rounded">s</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 6
+Output: 3
+Explanation: The first 6 elements of magical string s is "122112" and it contains three 1's, so return 3.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 1
+Output: 1</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n <= 10⁵</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def magicalString(self, n: int) -> int:
+        if n <= 0:
+            return 0
+        if n <= 3:
+            return 1
+            
+        # Initialize the magical string with first 3 elements
+        s = [1, 2, 2]
+        count = 1  # Count of 1's
+        i = 2  # Index for generating next numbers
+        
+        # Generate magical string until length n
+        while len(s) < n:
+            # Current number to append (alternate between 1 and 2)
+            num = 3 - s[-1]  # If last is 1, append 2; if last is 2, append 1
+            
+            # Append the number s[i] times
+            for _ in range(s[i]):
+                s.append(num)
+                if num == 1 and len(s) <= n:
+                    count += 1
+            
+            i += 1
+        
+        return count</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate the string up to length n.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We store the generated string of length n.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int magicalString(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        if (n <= 3) {
+            return 1;
+        }
+        
+        // Initialize the magical string with first 3 elements
+        int[] s = new int[n];
+        s[0] = 1;
+        s[1] = 2;
+        s[2] = 2;
+        
+        int count = 1;  // Count of 1's
+        int i = 2;      // Index for generating next numbers
+        int end = 3;    // Current end of the array
+        
+        // Generate magical string until length n
+        while (end < n) {
+            // Current number to append (alternate between 1 and 2)
+            int num = 3 - s[end - 1];  // If last is 1, append 2; if last is 2, append 1
+            
+            // Append the number s[i] times
+            for (int j = 0; j < s[i] && end < n; j++) {
+                s[end] = num;
+                if (num == 1) {
+                    count++;
+                }
+                end++;
+            }
+            
+            i++;
+        }
+        
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate the string up to length n.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We store the generated string of length n.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int magicalString(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        if (n <= 3) {
+            return 1;
+        }
+        
+        // Initialize the magical string with first 3 elements
+        vector<int> s(n);
+        s[0] = 1;
+        s[1] = 2;
+        s[2] = 2;
+        
+        int count = 1;  // Count of 1's
+        int i = 2;      // Index for generating next numbers
+        int end = 3;    // Current end of the array
+        
+        // Generate magical string until length n
+        while (end < n) {
+            // Current number to append (alternate between 1 and 2)
+            int num = 3 - s[end - 1];  // If last is 1, append 2; if last is 2, append 1
+            
+            // Append the number s[i] times
+            for (int j = 0; j < s[i] && end < n; j++) {
+                s[end] = num;
+                if (num == 1) {
+                    count++;
+                }
+                end++;
+            }
+            
+            i++;
+        }
+        
+        return count;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate the string up to length n.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We store the generated string of length n.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} n
+ * @return {number}
+ */
+var magicalString = function(n) {
+    if (n <= 0) {
+        return 0;
+    }
+    if (n <= 3) {
+        return 1;
+    }
+    
+    // Initialize the magical string with first 3 elements
+    const s = [1, 2, 2];
+    let count = 1;  // Count of 1's
+    let i = 2;      // Index for generating next numbers
+    
+    // Generate magical string until length n
+    while (s.length < n) {
+        // Current number to append (alternate between 1 and 2)
+        const num = 3 - s[s.length - 1];  // If last is 1, append 2; if last is 2, append 1
+        
+        // Append the number s[i] times
+        for (let j = 0; j < s[i] && s.length < n; j++) {
+            s.push(num);
+            if (num === 1) {
+                count++;
+            }
+        }
+        
+        i++;
+    }
+    
+    return count;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate the string up to length n.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We store the generated string of length n.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int MagicalString(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        if (n <= 3) {
+            return 1;
+        }
+        
+        // Initialize the magical string with first 3 elements
+        int[] s = new int[n];
+        s[0] = 1;
+        s[1] = 2;
+        s[2] = 2;
+        
+        int count = 1;  // Count of 1's
+        int i = 2;      // Index for generating next numbers
+        int end = 3;    // Current end of the array
+        
+        // Generate magical string until length n
+        while (end < n) {
+            // Current number to append (alternate between 1 and 2)
+            int num = 3 - s[end - 1];  // If last is 1, append 2; if last is 2, append 1
+            
+            // Append the number s[i] times
+            for (int j = 0; j < s[i] && end < n; j++) {
+                s[end] = num;
+                if (num == 1) {
+                    count++;
+                }
+                end++;
+            }
+            
+            i++;
+        }
+        
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate the string up to length n.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We store the generated string of length n.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses string generation and counting:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Pattern recognition</li>
+                            <li>String generation</li>
+                            <li>Count tracking</li>
+                            <li>Base cases</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Handle base cases</li>
+                            <li>Initialize string</li>
+                            <li>Generate sequence</li>
+                            <li>Count ones</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Array manipulation</li>
+                        <li>Number alternation</li>
+                        <li>Length tracking</li>
+                        <li>Count maintenance</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient counting</li>
+                        <li>Memory usage</li>
+                        <li>Linear time</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Zero input</li>
+                        <li>Small inputs</li>
+                        <li>Large inputs</li>
+                        <li>Pattern boundaries</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Greater Element I - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">496. Next Greater Element I</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    The <strong>next greater element</strong> of some element <code class="bg-gray-100 px-1 rounded">x</code> in an array is the <strong>first greater</strong> element that is <strong>to the right</strong> of <code class="bg-gray-100 px-1 rounded">x</code> in the same array.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    You are given two <strong>distinct 0-indexed</strong> integer arrays <code class="bg-gray-100 px-1 rounded">nums1</code> and <code class="bg-gray-100 px-1 rounded">nums2</code>, where <code class="bg-gray-100 px-1 rounded">nums1</code> is a subset of <code class="bg-gray-100 px-1 rounded">nums2</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    For each <code class="bg-gray-100 px-1 rounded">0 <= i < nums1.length</code>, find the index <code class="bg-gray-100 px-1 rounded">j</code> such that <code class="bg-gray-100 px-1 rounded">nums1[i] == nums2[j]</code> and determine the <strong>next greater element</strong> of <code class="bg-gray-100 px-1 rounded">nums2[j]</code> in <code class="bg-gray-100 px-1 rounded">nums2</code>. If there is no next greater element, then the answer for this query is <code class="bg-gray-100 px-1 rounded">-1</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return <em>an array</em> <code class="bg-gray-100 px-1 rounded">ans</code> <em>of length</em> <code class="bg-gray-100 px-1 rounded">nums1.length</code> <em>such that</em> <code class="bg-gray-100 px-1 rounded">ans[i]</code> <em>is the <strong>next greater element</strong> as described above</em>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums1 = [4,1,2], nums2 = [1,3,4,2]
+Output: [-1,3,-1]
+Explanation: The next greater element for each value of nums1 is as follows:
+- 4 is underlined in nums2 = [1,3,4,2]. There is no next greater element, so the answer is -1.
+- 1 is underlined in nums2 = [1,3,4,2]. The next greater element is 3.
+- 2 is underlined in nums2 = [1,3,4,2]. There is no next greater element, so the answer is -1.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums1 = [2,4], nums2 = [1,2,3,4]
+Output: [3,-1]
+Explanation: The next greater element for each value of nums1 is as follows:
+- 2 is underlined in nums2 = [1,2,3,4]. The next greater element is 3.
+- 4 is underlined in nums2 = [1,2,3,4]. There is no next greater element, so the answer is -1.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums1.length <= nums2.length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= nums1[i], nums2[i] <= 10⁴</code></li>
+                    <li>All integers in <code class="bg-gray-100 px-1 rounded">nums1</code> and <code class="bg-gray-100 px-1 rounded">nums2</code> are <strong>unique</strong>.</li>
+                    <li>All the integers of <code class="bg-gray-100 px-1 rounded">nums1</code> also appear in <code class="bg-gray-100 px-1 rounded">nums2</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        stack = []
+        next_greater = {}
+        
+        # Find next greater element for each number in nums2
+        for num in nums2:
+            while stack and stack[-1] < num:
+                next_greater[stack.pop()] = num
+            stack.append(num)
+        
+        # For remaining elements in stack, no greater element exists
+        for num in stack:
+            next_greater[num] = -1
+        
+        # Build result array using the map
+        return [next_greater[num] for num in nums1]</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of nums2. Each element is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack and hash map.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Stack<Integer> stack = new Stack<>();
+        Map<Integer, Integer> nextGreater = new HashMap<>();
+        
+        // Find next greater element for each number in nums2
+        for (int num : nums2) {
+            while (!stack.isEmpty() && stack.peek() < num) {
+                nextGreater.put(stack.pop(), num);
+            }
+            stack.push(num);
+        }
+        
+        // For remaining elements in stack, no greater element exists
+        while (!stack.isEmpty()) {
+            nextGreater.put(stack.pop(), -1);
+        }
+        
+        // Build result array using the map
+        int[] result = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            result[i] = nextGreater.get(nums1[i]);
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of nums2. Each element is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack and hash map.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        stack<int> st;
+        unordered_map<int, int> nextGreater;
+        
+        // Find next greater element for each number in nums2
+        for (int num : nums2) {
+            while (!st.empty() && st.top() < num) {
+                nextGreater[st.top()] = num;
+                st.pop();
+            }
+            st.push(num);
+        }
+        
+        // For remaining elements in stack, no greater element exists
+        while (!st.empty()) {
+            nextGreater[st.top()] = -1;
+            st.pop();
+        }
+        
+        // Build result array using the map
+        vector<int> result;
+        for (int num : nums1) {
+            result.push_back(nextGreater[num]);
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of nums2. Each element is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack and hash map.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+var nextGreaterElement = function(nums1, nums2) {
+    const stack = [];
+    const nextGreater = new Map();
+    
+    // Find next greater element for each number in nums2
+    for (const num of nums2) {
+        while (stack.length && stack[stack.length - 1] < num) {
+            nextGreater.set(stack.pop(), num);
+        }
+        stack.push(num);
+    }
+    
+    // For remaining elements in stack, no greater element exists
+    for (const num of stack) {
+        nextGreater.set(num, -1);
+    }
+    
+    // Build result array using the map
+    return nums1.map(num => nextGreater.get(num));
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of nums2. Each element is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack and hash map.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int[] NextGreaterElement(int[] nums1, int[] nums2) {
+        var stack = new Stack<int>();
+        var nextGreater = new Dictionary<int, int>();
+        
+        // Find next greater element for each number in nums2
+        foreach (int num in nums2) {
+            while (stack.Count > 0 && stack.Peek() < num) {
+                nextGreater[stack.Pop()] = num;
+            }
+            stack.Push(num);
+        }
+        
+        // For remaining elements in stack, no greater element exists
+        while (stack.Count > 0) {
+            nextGreater[stack.Pop()] = -1;
+        }
+        
+        // Build result array using the map
+        var result = new int[nums1.Length];
+        for (int i = 0; i < nums1.Length; i++) {
+            result[i] = nextGreater[nums1[i]];
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of nums2. Each element is pushed and popped at most once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the stack and dictionary.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a monotonic stack approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Monotonic stack</li>
+                            <li>Hash map usage</li>
+                            <li>Single pass</li>
+                            <li>Element tracking</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Process nums2</li>
+                            <li>Maintain stack</li>
+                            <li>Build mapping</li>
+                            <li>Create result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Stack operations</li>
+                        <li>Map operations</li>
+                        <li>Array traversal</li>
+                        <li>Result building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single iteration</li>
+                        <li>Efficient lookup</li>
+                        <li>Space reuse</li>
+                        <li>Early pruning</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty arrays</li>
+                        <li>Single element</li>
+                        <li>No greater element</li>
+                        <li>All decreasing</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

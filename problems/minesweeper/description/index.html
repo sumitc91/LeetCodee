@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">529. Minesweeper</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Let's play the minesweeper game! You are given an <code class="bg-gray-100 px-1 rounded">m x n</code> char matrix <code class="bg-gray-100 px-1 rounded">board</code> representing the game board where:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">'M'</code> represents an unrevealed mine</li>
+                    <li><code class="bg-gray-100 px-1 rounded">'E'</code> represents an unrevealed empty square</li>
+                    <li><code class="bg-gray-100 px-1 rounded">'B'</code> represents a revealed blank square that has no adjacent mines (i.e., above, below, left, right, and all 4 diagonals)</li>
+                    <li>digit (<code class="bg-gray-100 px-1 rounded">'1'</code> to <code class="bg-gray-100 px-1 rounded">'8'</code>) represents how many mines are adjacent to this revealed square</li>
+                    <li><code class="bg-gray-100 px-1 rounded">'X'</code> represents a revealed mine</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    You are also given an integer array <code class="bg-gray-100 px-1 rounded">click</code> where <code class="bg-gray-100 px-1 rounded">click = [clickr, clickc]</code> represents the next click position among all the unrevealed squares (<code class="bg-gray-100 px-1 rounded">'M'</code> or <code class="bg-gray-100 px-1 rounded">'E'</code>).
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return the board after revealing this position according to the following rules:
+                </p>
+                <ol class="list-decimal list-inside text-gray-700 mb-4">
+                    <li>If a mine (<code class="bg-gray-100 px-1 rounded">'M'</code>) is revealed, then the game is over - change it to <code class="bg-gray-100 px-1 rounded">'X'</code>.</li>
+                    <li>If an empty square (<code class="bg-gray-100 px-1 rounded">'E'</code>) with no adjacent mines is revealed, then change it to revealed blank (<code class="bg-gray-100 px-1 rounded">'B'</code>) and all of its adjacent unrevealed squares should be revealed recursively.</li>
+                    <li>If an empty square (<code class="bg-gray-100 px-1 rounded">'E'</code>) with at least one adjacent mine is revealed, then change it to a digit (<code class="bg-gray-100 px-1 rounded">'1'</code> to <code class="bg-gray-100 px-1 rounded">'8'</code>) representing the number of adjacent mines.</li>
+                    <li>Return the board when no more squares will be revealed.</li>
+                </ol>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: board = [["E","E","E","E","E"],["E","E","M","E","E"],["E","E","E","E","E"],["E","E","E","E","E"]], click = [3,0]
+Output: [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: board = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]], click = [1,2]
+Output: [["B","1","E","1","B"],["B","1","X","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">m == board.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == board[i].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m, n <= 50</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">board[i][j]</code> is either <code class="bg-gray-100 px-1 rounded">'M'</code>, <code class="bg-gray-100 px-1 rounded">'E'</code>, <code class="bg-gray-100 px-1 rounded">'B'</code>, or a digit from <code class="bg-gray-100 px-1 rounded">'1'</code> to <code class="bg-gray-100 px-1 rounded">'8'</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">click.length == 2</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= clickr < m</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= clickc < n</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">board[clickr][clickc]</code> is either <code class="bg-gray-100 px-1 rounded">'M'</code> or <code class="bg-gray-100 px-1 rounded">'E'</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def updateBoard(self, board: List[List[str]], click: List[int]) -> List[List[str]]:
+        if not board:
+            return board
+        
+        m, n = len(board), len(board[0])
+        row, col = click[0], click[1]
+        
+        # If a mine is revealed, game over
+        if board[row][col] == 'M':
+            board[row][col] = 'X'
+            return board
+        
+        def countMines(r: int, c: int) -> int:
+            count = 0
+            for i in range(max(0, r-1), min(m, r+2)):
+                for j in range(max(0, c-1), min(n, c+2)):
+                    if board[i][j] == 'M':
+                        count += 1
+            return count
+        
+        def dfs(r: int, c: int):
+            if r < 0 or r >= m or c < 0 or c >= n or board[r][c] != 'E':
+                return
+            
+            mines = countMines(r, c)
+            if mines == 0:
+                board[r][c] = 'B'
+                for i in range(max(0, r-1), min(m, r+2)):
+                    for j in range(max(0, c-1), min(n, c+2)):
+                        dfs(i, j)
+            else:
+                board[r][c] = str(mines)
+        
+        dfs(row, col)
+        return board</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. In worst case, we might need to reveal all cells.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">For the recursion stack in worst case when revealing all cells.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private int m, n;
+    
+    public char[][] updateBoard(char[][] board, int[] click) {
+        if (board == null || board.length == 0) {
+            return board;
+        }
+        
+        m = board.length;
+        n = board[0].length;
+        int row = click[0], col = click[1];
+        
+        // If a mine is revealed, game over
+        if (board[row][col] == 'M') {
+            board[row][col] = 'X';
+            return board;
+        }
+        
+        dfs(board, row, col);
+        return board;
+    }
+    
+    private void dfs(char[][] board, int r, int c) {
+        if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] != 'E') {
+            return;
+        }
+        
+        int mines = countMines(board, r, c);
+        if (mines == 0) {
+            board[r][c] = 'B';
+            for (int i = Math.max(0, r-1); i < Math.min(m, r+2); i++) {
+                for (int j = Math.max(0, c-1); j < Math.min(n, c+2); j++) {
+                    dfs(board, i, j);
+                }
+            }
+        } else {
+            board[r][c] = (char)(mines + '0');
+        }
+    }
+    
+    private int countMines(char[][] board, int r, int c) {
+        int count = 0;
+        for (int i = Math.max(0, r-1); i < Math.min(m, r+2); i++) {
+            for (int j = Math.max(0, c-1); j < Math.min(n, c+2); j++) {
+                if (board[i][j] == 'M') {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. In worst case, we might need to reveal all cells.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">For the recursion stack in worst case when revealing all cells.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    int m, n;
+    
+    int countMines(vector<vector<char>>& board, int r, int c) {
+        int count = 0;
+        for (int i = max(0, r-1); i < min(m, r+2); i++) {
+            for (int j = max(0, c-1); j < min(n, c+2); j++) {
+                if (board[i][j] == 'M') {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    void dfs(vector<vector<char>>& board, int r, int c) {
+        if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] != 'E') {
+            return;
+        }
+        
+        int mines = countMines(board, r, c);
+        if (mines == 0) {
+            board[r][c] = 'B';
+            for (int i = max(0, r-1); i < min(m, r+2); i++) {
+                for (int j = max(0, c-1); j < min(n, c+2); j++) {
+                    dfs(board, i, j);
+                }
+            }
+        } else {
+            board[r][c] = mines + '0';
+        }
+    }
+    
+public:
+    vector<vector<char>> updateBoard(vector<vector<char>>& board, vector<int>& click) {
+        if (board.empty()) {
+            return board;
+        }
+        
+        m = board.size();
+        n = board[0].size();
+        int row = click[0], col = click[1];
+        
+        // If a mine is revealed, game over
+        if (board[row][col] == 'M') {
+            board[row][col] = 'X';
+            return board;
+        }
+        
+        dfs(board, row, col);
+        return board;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. In worst case, we might need to reveal all cells.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">For the recursion stack in worst case when revealing all cells.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {character[][]} board
+ * @param {number[]} click
+ * @return {character[][]}
+ */
+var updateBoard = function(board, click) {
+    if (!board.length) {
+        return board;
+    }
+    
+    const m = board.length;
+    const n = board[0].length;
+    const [row, col] = click;
+    
+    // If a mine is revealed, game over
+    if (board[row][col] === 'M') {
+        board[row][col] = 'X';
+        return board;
+    }
+    
+    const countMines = (r, c) => {
+        let count = 0;
+        for (let i = Math.max(0, r-1); i < Math.min(m, r+2); i++) {
+            for (let j = Math.max(0, c-1); j < Math.min(n, c+2); j++) {
+                if (board[i][j] === 'M') {
+                    count++;
+                }
+            }
+        }
+        return count;
+    };
+    
+    const dfs = (r, c) => {
+        if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] !== 'E') {
+            return;
+        }
+        
+        const mines = countMines(r, c);
+        if (mines === 0) {
+            board[r][c] = 'B';
+            for (let i = Math.max(0, r-1); i < Math.min(m, r+2); i++) {
+                for (let j = Math.max(0, c-1); j < Math.min(n, c+2); j++) {
+                    dfs(i, j);
+                }
+            }
+        } else {
+            board[r][c] = mines.toString();
+        }
+    };
+    
+    dfs(row, col);
+    return board;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. In worst case, we might need to reveal all cells.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">For the recursion stack in worst case when revealing all cells.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private int m, n;
+    
+    public char[][] UpdateBoard(char[][] board, int[] click) {
+        if (board == null || board.Length == 0) {
+            return board;
+        }
+        
+        m = board.Length;
+        n = board[0].Length;
+        int row = click[0], col = click[1];
+        
+        // If a mine is revealed, game over
+        if (board[row][col] == 'M') {
+            board[row][col] = 'X';
+            return board;
+        }
+        
+        DFS(board, row, col);
+        return board;
+    }
+    
+    private void DFS(char[][] board, int r, int c) {
+        if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] != 'E') {
+            return;
+        }
+        
+        int mines = CountMines(board, r, c);
+        if (mines == 0) {
+            board[r][c] = 'B';
+            for (int i = Math.Max(0, r-1); i < Math.Min(m, r+2); i++) {
+                for (int j = Math.Max(0, c-1); j < Math.Min(n, c+2); j++) {
+                    DFS(board, i, j);
+                }
+            }
+        } else {
+            board[r][c] = (char)(mines + '0');
+        }
+    }
+    
+    private int CountMines(char[][] board, int r, int c) {
+        int count = 0;
+        for (int i = Math.Max(0, r-1); i < Math.Min(m, r+2); i++) {
+            for (int j = Math.Max(0, c-1); j < Math.Min(n, c+2); j++) {
+                if (board[i][j] == 'M') {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the board. In worst case, we might need to reveal all cells.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m*n)</h4>
+                    <p class="text-gray-700">For the recursion stack in worst case when revealing all cells.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses DFS to reveal cells recursively:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>DFS traversal</li>
+                            <li>Adjacent counting</li>
+                            <li>Boundary checking</li>
+                            <li>State tracking</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Check mine hit</li>
+                            <li>Count adjacent mines</li>
+                            <li>Reveal recursively</li>
+                            <li>Update board state</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>DFS implementation</li>
+                        <li>Mine counting</li>
+                        <li>Board updates</li>
+                        <li>Boundary handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Boundary checks</li>
+                        <li>State tracking</li>
+                        <li>Memory usage</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty board</li>
+                        <li>Mine hit</li>
+                        <li>Board edges</li>
+                        <li>No adjacent mines</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

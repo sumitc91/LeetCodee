@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Word in Dictionary through Deleting - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">524. Longest Word in Dictionary through Deleting</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">s</code> and a list of strings <code class="bg-gray-100 px-1 rounded">dictionary</code>, find the longest string in the dictionary that can be formed by deleting some characters of the given string. If there is more than one possible result, return the longest word with the smallest lexicographical order. If there is no possible result, return the empty string.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "abpcplea", dictionary = ["ale","apple","monkey","plea"]
+Output: "apple"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "abpcplea", dictionary = ["a","b","c"]
+Output: "a"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= s.length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= dictionary.length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= dictionary[i].length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">s</code> and <code class="bg-gray-100 px-1 rounded">dictionary[i]</code> consist of lowercase English letters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findLongestWord(self, s: str, dictionary: List[str]) -> str:
+        def isSubsequence(word: str, s: str) -> bool:
+            i = j = 0
+            while i < len(word) and j < len(s):
+                if word[i] == s[j]:
+                    i += 1
+                j += 1
+            return i == len(word)
+        
+        # Sort dictionary by length (descending) and lexicographical order
+        dictionary.sort(key=lambda x: (-len(x), x))
+        
+        # Check each word
+        for word in dictionary:
+            if isSubsequence(word, s):
+                return word
+        
+        return ""</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * m * log(n))</h4>
+                    <p class="text-gray-700">Where n is the length of dictionary and m is the maximum length of strings. The sorting takes O(n * log(n)) and checking subsequence takes O(m) for each word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space. The sorting is typically done in-place.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private boolean isSubsequence(String word, String s) {
+        int i = 0, j = 0;
+        while (i < word.length() && j < s.length()) {
+            if (word.charAt(i) == s.charAt(j)) {
+                i++;
+            }
+            j++;
+        }
+        return i == word.length();
+    }
+    
+    public String findLongestWord(String s, List<String> dictionary) {
+        // Sort dictionary by length (descending) and lexicographical order
+        Collections.sort(dictionary, (a, b) -> {
+            if (a.length() != b.length()) {
+                return b.length() - a.length();
+            }
+            return a.compareTo(b);
+        });
+        
+        // Check each word
+        for (String word : dictionary) {
+            if (isSubsequence(word, s)) {
+                return word;
+            }
+        }
+        
+        return "";
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * m * log(n))</h4>
+                    <p class="text-gray-700">Where n is the length of dictionary and m is the maximum length of strings. The sorting takes O(n * log(n)) and checking subsequence takes O(m) for each word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space. The sorting is typically done in-place.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    bool isSubsequence(string& word, string& s) {
+        int i = 0, j = 0;
+        while (i < word.length() && j < s.length()) {
+            if (word[i] == s[j]) {
+                i++;
+            }
+            j++;
+        }
+        return i == word.length();
+    }
+    
+public:
+    string findLongestWord(string s, vector<string>& dictionary) {
+        // Sort dictionary by length (descending) and lexicographical order
+        sort(dictionary.begin(), dictionary.end(), 
+             [](const string& a, const string& b) {
+                 return a.length() != b.length() ? 
+                        a.length() > b.length() : a < b;
+             });
+        
+        // Check each word
+        for (const string& word : dictionary) {
+            if (isSubsequence(word, s)) {
+                return word;
+            }
+        }
+        
+        return "";
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * m * log(n))</h4>
+                    <p class="text-gray-700">Where n is the length of dictionary and m is the maximum length of strings. The sorting takes O(n * log(n)) and checking subsequence takes O(m) for each word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space. The sorting is typically done in-place.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} s
+ * @param {string[]} dictionary
+ * @return {string}
+ */
+var findLongestWord = function(s, dictionary) {
+    const isSubsequence = (word, s) => {
+        let i = 0, j = 0;
+        while (i < word.length && j < s.length) {
+            if (word[i] === s[j]) {
+                i++;
+            }
+            j++;
+        }
+        return i === word.length;
+    };
+    
+    // Sort dictionary by length (descending) and lexicographical order
+    dictionary.sort((a, b) => {
+        if (a.length !== b.length) {
+            return b.length - a.length;
+        }
+        return a.localeCompare(b);
+    });
+    
+    // Check each word
+    for (const word of dictionary) {
+        if (isSubsequence(word, s)) {
+            return word;
+        }
+    }
+    
+    return "";</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * m * log(n))</h4>
+                    <p class="text-gray-700">Where n is the length of dictionary and m is the maximum length of strings. The sorting takes O(n * log(n)) and checking subsequence takes O(m) for each word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space. The sorting is typically done in-place.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private bool IsSubsequence(string word, string s) {
+        int i = 0, j = 0;
+        while (i < word.Length && j < s.Length) {
+            if (word[i] == s[j]) {
+                i++;
+            }
+            j++;
+        }
+        return i == word.Length;
+    }
+    
+    public string FindLongestWord(string s, IList<string> dictionary) {
+        // Sort dictionary by length (descending) and lexicographical order
+        var sortedDict = dictionary.OrderByDescending(x => x.Length)
+                                 .ThenBy(x => x)
+                                 .ToList();
+        
+        // Check each word
+        foreach (string word in sortedDict) {
+            if (IsSubsequence(word, s)) {
+                return word;
+            }
+        }
+        
+        return "";
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * m * log(n))</h4>
+                    <p class="text-gray-700">Where n is the length of dictionary and m is the maximum length of strings. The sorting takes O(n * log(n)) and checking subsequence takes O(m) for each word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">In C#, LINQ's OrderBy creates a new sorted list.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses sorting and subsequence checking:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Subsequence checking</li>
+                            <li>Custom sorting</li>
+                            <li>Two-pointer technique</li>
+                            <li>Early termination</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sort dictionary</li>
+                            <li>Check subsequences</li>
+                            <li>Return first match</li>
+                            <li>Handle no match</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Custom comparator</li>
+                        <li>Two-pointer method</li>
+                        <li>String comparison</li>
+                        <li>Result tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Efficient sorting</li>
+                        <li>Early termination</li>
+                        <li>Memory usage</li>
+                        <li>String operations</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty strings</li>
+                        <li>No valid words</li>
+                        <li>Multiple matches</li>
+                        <li>Single character</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

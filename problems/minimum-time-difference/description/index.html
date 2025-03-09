@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Time Difference - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">539. Minimum Time Difference</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a list of 24-hour clock time points in <strong>"HH:MM"</strong> format, return <em>the minimum <strong>minutes</strong> difference between any two time points in the list</em>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: timePoints = ["23:59","00:00"]
+Output: 1
+Explanation: The minimum difference is 1 minute between 23:59 and 00:00.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: timePoints = ["00:00","23:59","00:00"]
+Output: 0
+Explanation: The minimum difference is 0 minutes between 00:00 and 00:00.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">2 <= timePoints.length <= 2 * 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">timePoints[i]</code> is in the format <strong>"HH:MM"</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findMinDifference(self, timePoints: List[str]) -> int:
+        # Convert all times to minutes since midnight
+        minutes = []
+        for time in timePoints:
+            h, m = map(int, time.split(':'))
+            minutes.append(h * 60 + m)
+        
+        # Sort the minutes
+        minutes.sort()
+        
+        # Find minimum difference
+        min_diff = float('inf')
+        for i in range(1, len(minutes)):
+            min_diff = min(min_diff, minutes[i] - minutes[i-1])
+        
+        # Check difference between first and last time (wrapping around)
+        min_diff = min(min_diff, 1440 + minutes[0] - minutes[-1])
+        
+        return min_diff</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of time points. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the minutes array.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int findMinDifference(List<String> timePoints) {
+        // Convert all times to minutes since midnight
+        List<Integer> minutes = new ArrayList<>();
+        for (String time : timePoints) {
+            String[] parts = time.split(":");
+            int h = Integer.parseInt(parts[0]);
+            int m = Integer.parseInt(parts[1]);
+            minutes.add(h * 60 + m);
+        }
+        
+        // Sort the minutes
+        Collections.sort(minutes);
+        
+        // Find minimum difference
+        int minDiff = Integer.MAX_VALUE;
+        for (int i = 1; i < minutes.size(); i++) {
+            minDiff = Math.min(minDiff, minutes.get(i) - minutes.get(i-1));
+        }
+        
+        // Check difference between first and last time (wrapping around)
+        minDiff = Math.min(minDiff, 1440 + minutes.get(0) - minutes.get(minutes.size()-1));
+        
+        return minDiff;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of time points. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the minutes list.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int findMinDifference(vector<string>& timePoints) {
+        // Convert all times to minutes since midnight
+        vector<int> minutes;
+        for (const string& time : timePoints) {
+            int h = stoi(time.substr(0, 2));
+            int m = stoi(time.substr(3));
+            minutes.push_back(h * 60 + m);
+        }
+        
+        // Sort the minutes
+        sort(minutes.begin(), minutes.end());
+        
+        // Find minimum difference
+        int minDiff = INT_MAX;
+        for (int i = 1; i < minutes.size(); i++) {
+            minDiff = min(minDiff, minutes[i] - minutes[i-1]);
+        }
+        
+        // Check difference between first and last time (wrapping around)
+        minDiff = min(minDiff, 1440 + minutes[0] - minutes.back());
+        
+        return minDiff;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of time points. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the minutes vector.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string[]} timePoints
+ * @return {number}
+ */
+var findMinDifference = function(timePoints) {
+    // Convert all times to minutes since midnight
+    const minutes = timePoints.map(time => {
+        const [h, m] = time.split(':').map(Number);
+        return h * 60 + m;
+    });
+    
+    // Sort the minutes
+    minutes.sort((a, b) => a - b);
+    
+    // Find minimum difference
+    let minDiff = Infinity;
+    for (let i = 1; i < minutes.length; i++) {
+        minDiff = Math.min(minDiff, minutes[i] - minutes[i-1]);
+    }
+    
+    // Check difference between first and last time (wrapping around)
+    minDiff = Math.min(minDiff, 1440 + minutes[0] - minutes[minutes.length-1]);
+    
+    return minDiff;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of time points. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the minutes array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int FindMinDifference(IList<string> timePoints) {
+        // Convert all times to minutes since midnight
+        List<int> minutes = new List<int>();
+        foreach (string time in timePoints) {
+            string[] parts = time.Split(':');
+            int h = int.Parse(parts[0]);
+            int m = int.Parse(parts[1]);
+            minutes.Add(h * 60 + m);
+        }
+        
+        // Sort the minutes
+        minutes.Sort();
+        
+        // Find minimum difference
+        int minDiff = int.MaxValue;
+        for (int i = 1; i < minutes.Count; i++) {
+            minDiff = Math.Min(minDiff, minutes[i] - minutes[i-1]);
+        }
+        
+        // Check difference between first and last time (wrapping around)
+        minDiff = Math.Min(minDiff, 1440 + minutes[0] - minutes[minutes.Count-1]);
+        
+        return minDiff;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of time points. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the minutes list.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses time conversion and sorting:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Time conversion</li>
+                            <li>Circular nature</li>
+                            <li>Sorting advantage</li>
+                            <li>Edge cases</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Convert to minutes</li>
+                            <li>Sort times</li>
+                            <li>Compare adjacent</li>
+                            <li>Handle wraparound</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>String parsing</li>
+                        <li>Time calculations</li>
+                        <li>Array operations</li>
+                        <li>Minimum tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single pass</li>
+                        <li>Efficient sorting</li>
+                        <li>Early termination</li>
+                        <li>Memory usage</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Midnight crossing</li>
+                        <li>Duplicate times</li>
+                        <li>Minimum size</li>
+                        <li>Maximum difference</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

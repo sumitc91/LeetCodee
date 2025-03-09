@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construct the Rectangle - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">492. Construct the Rectangle</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    A web developer needs to know how to design a web page's size. So, given a specific rectangular web page's area, your job by now is to design a rectangular web page, whose length L and width W satisfy the following requirements:
+                </p>
+                <ol class="list-decimal list-inside text-gray-700 mb-4">
+                    <li>The area of the rectangular web page you designed must equal to the given target area.</li>
+                    <li>The width <code class="bg-gray-100 px-1 rounded">W</code> should not be larger than the length <code class="bg-gray-100 px-1 rounded">L</code>, which means <code class="bg-gray-100 px-1 rounded">L >= W</code>.</li>
+                    <li>The difference between length <code class="bg-gray-100 px-1 rounded">L</code> and width <code class="bg-gray-100 px-1 rounded">W</code> should be as small as possible.</li>
+                </ol>
+                <p class="text-gray-700 mb-4">
+                    Return <em>an array</em> <code class="bg-gray-100 px-1 rounded">[L, W]</code> <em>where</em> <code class="bg-gray-100 px-1 rounded">L</code> <em>and</em> <code class="bg-gray-100 px-1 rounded">W</code> <em>are the length and width of the web page you designed in sequence</em>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: area = 4
+Output: [2,2]
+Explanation: The target area is 4, and all the possible ways to construct it are [1,4], [2,2], [4,1]. 
+But according to requirement 2, [1,4] and [4,1] are illegal; according to requirement 3, [2,2] is the optimal answer.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: area = 37
+Output: [37,1]
+Explanation: The target area is 37, and all the possible ways to construct it are [1,37], [37,1]. 
+According to requirement 2, [1,37] is illegal; according to requirement 3, [37,1] is the optimal answer.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: area = 122122
+Output: [427,286]
+Explanation: The target area is 122122, and the optimal dimensions are [427,286].</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= area <= 10⁷</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def constructRectangle(self, area: int) -> List[int]:
+        width = int(sqrt(area))
+        
+        while area % width != 0:
+            width -= 1
+            
+        return [area // width, width]</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(√n)</h4>
+                    <p class="text-gray-700">Where n is the input area. We start from square root and decrease width until we find a factor.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int[] constructRectangle(int area) {
+        int width = (int)Math.sqrt(area);
+        
+        while (area % width != 0) {
+            width--;
+        }
+        
+        return new int[]{area / width, width};
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(√n)</h4>
+                    <p class="text-gray-700">Where n is the input area. We start from square root and decrease width until we find a factor.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<int> constructRectangle(int area) {
+        int width = sqrt(area);
+        
+        while (area % width != 0) {
+            width--;
+        }
+        
+        return {area / width, width};
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(√n)</h4>
+                    <p class="text-gray-700">Where n is the input area. We start from square root and decrease width until we find a factor.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} area
+ * @return {number[]}
+ */
+var constructRectangle = function(area) {
+    let width = Math.floor(Math.sqrt(area));
+    
+    while (area % width !== 0) {
+        width--;
+    }
+    
+    return [area / width, width];
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(√n)</h4>
+                    <p class="text-gray-700">Where n is the input area. We start from square root and decrease width until we find a factor.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int[] ConstructRectangle(int area) {
+        int width = (int)Math.Sqrt(area);
+        
+        while (area % width != 0) {
+            width--;
+        }
+        
+        return new int[] { area / width, width };
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(√n)</h4>
+                    <p class="text-gray-700">Where n is the input area. We start from square root and decrease width until we find a factor.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses mathematical properties to find the optimal dimensions:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Square root property</li>
+                            <li>Factor finding</li>
+                            <li>Minimum difference</li>
+                            <li>Length-width order</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Calculate square root</li>
+                            <li>Find largest factor</li>
+                            <li>Calculate length</li>
+                            <li>Return dimensions</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Math functions</li>
+                        <li>Integer division</li>
+                        <li>Factor checking</li>
+                        <li>Array creation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Start from sqrt</li>
+                        <li>Decrease width</li>
+                        <li>Early stopping</li>
+                        <li>Efficient search</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Perfect squares</li>
+                        <li>Prime numbers</li>
+                        <li>Small areas</li>
+                        <li>Large areas</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

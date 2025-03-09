@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Point in Non-overlapping Rectangles - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">497. Random Point in Non-overlapping Rectangles</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given an array of non-overlapping axis-aligned rectangles <code class="bg-gray-100 px-1 rounded">rects</code> where <code class="bg-gray-100 px-1 rounded">rects[i] = [ai, bi, xi, yi]</code> indicates that <code class="bg-gray-100 px-1 rounded">(ai, bi)</code> is the bottom-left corner point of the <code class="bg-gray-100 px-1 rounded">ith</code> rectangle and <code class="bg-gray-100 px-1 rounded">(xi, yi)</code> is the top-right corner point of the <code class="bg-gray-100 px-1 rounded">ith</code> rectangle. Design an algorithm to pick a random integer point inside the space covered by the rectangles.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A point on the perimeter of a rectangle is included in the space covered by the rectangles. All integer points inside the space should be equally likely to be returned.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">Solution</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">Solution(int[][] rects)</code> Initializes the object with the array of rectangles <code class="bg-gray-100 px-1 rounded">rects</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int[] pick()</code> Returns a random integer point <code class="bg-gray-100 px-1 rounded">[u, v]</code> inside the space covered by the rectangles.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["Solution", "pick", "pick", "pick", "pick", "pick"]
+[[[[-2, -2, 1, 1], [2, 2, 4, 6]]], [], [], [], [], []]
+Output
+[null, [1, -2], [1, -1], [-1, -2], [-2, -2], [0, 0]]
+
+Explanation
+Solution solution = new Solution([[-2, -2, 1, 1], [2, 2, 4, 6]]);
+solution.pick(); // return [1, -2]
+solution.pick(); // return [1, -1]
+solution.pick(); // return [-1, -2]
+solution.pick(); // return [-2, -2]
+solution.pick(); // return [0, 0]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= rects.length <= 100</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">rects[i].length == 4</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁹ <= ai < xi <= 10⁹</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁹ <= bi < yi <= 10⁹</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">xi - ai <= 2000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">yi - bi <= 2000</code></li>
+                    <li>All the rectangles do not overlap.</li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">pick</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def __init__(self, rects: List[List[int]]):
+        self.rects = rects
+        self.total_points = 0
+        self.rect_weights = []
+        
+        # Calculate total points and weights for each rectangle
+        for rect in rects:
+            points = (rect[2] - rect[0] + 1) * (rect[3] - rect[1] + 1)
+            self.total_points += points
+            self.rect_weights.append(self.total_points)
+    
+    def pick(self) -> List[int]:
+        # Pick a random point index
+        point = random.randint(1, self.total_points)
+        
+        # Find the rectangle that contains this point
+        rect_idx = bisect.bisect_left(self.rect_weights, point)
+        rect = self.rects[rect_idx]
+        
+        # Calculate previous points to get local point index
+        prev = self.rect_weights[rect_idx - 1] if rect_idx > 0 else 0
+        point = point - prev
+        
+        # Calculate width and height of current rectangle
+        width = rect[2] - rect[0] + 1
+        height = rect[3] - rect[1] + 1
+        
+        # Convert point index to x,y coordinates
+        x = rect[0] + (point - 1) % width
+        y = rect[1] + (point - 1) // width
+        
+        return [x, y]</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n) where n is the number of rectangles</li>
+                        <li>Pick: O(log n) for binary search</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the rectangles and weights.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private int[][] rects;
+    private int totalPoints;
+    private TreeMap<Integer, Integer> rectMap;
+    private Random rand;
+    
+    public Solution(int[][] rects) {
+        this.rects = rects;
+        this.totalPoints = 0;
+        this.rectMap = new TreeMap<>();
+        this.rand = new Random();
+        
+        // Calculate total points and weights for each rectangle
+        for (int i = 0; i < rects.length; i++) {
+            int[] rect = rects[i];
+            int points = (rect[2] - rect[0] + 1) * (rect[3] - rect[1] + 1);
+            totalPoints += points;
+            rectMap.put(totalPoints, i);
+        }
+    }
+    
+    public int[] pick() {
+        // Pick a random point index
+        int point = rand.nextInt(totalPoints) + 1;
+        
+        // Find the rectangle that contains this point
+        int rectIdx = rectMap.ceilingEntry(point).getValue();
+        int[] rect = rects[rectIdx];
+        
+        // Calculate previous points to get local point index
+        int prev = rectIdx > 0 ? rectMap.floorKey(point - 1) : 0;
+        point = point - prev;
+        
+        // Calculate width and height of current rectangle
+        int width = rect[2] - rect[0] + 1;
+        int height = rect[3] - rect[1] + 1;
+        
+        // Convert point index to x,y coordinates
+        int x = rect[0] + (point - 1) % width;
+        int y = rect[1] + (point - 1) / width;
+        
+        return new int[]{x, y};
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n log n) where n is the number of rectangles</li>
+                        <li>Pick: O(log n) for TreeMap operations</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the rectangles and TreeMap.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    vector<vector<int>> rects;
+    int totalPoints;
+    vector<int> rectWeights;
+    
+public:
+    Solution(vector<vector<int>>& rects) {
+        this->rects = rects;
+        this->totalPoints = 0;
+        
+        // Calculate total points and weights for each rectangle
+        for (const auto& rect : rects) {
+            int points = (rect[2] - rect[0] + 1) * (rect[3] - rect[1] + 1);
+            totalPoints += points;
+            rectWeights.push_back(totalPoints);
+        }
+    }
+    
+    vector<int> pick() {
+        // Pick a random point index
+        int point = rand() % totalPoints + 1;
+        
+        // Find the rectangle that contains this point
+        int rectIdx = lower_bound(rectWeights.begin(), rectWeights.end(), point) - rectWeights.begin();
+        const auto& rect = rects[rectIdx];
+        
+        // Calculate previous points to get local point index
+        int prev = rectIdx > 0 ? rectWeights[rectIdx - 1] : 0;
+        point = point - prev;
+        
+        // Calculate width and height of current rectangle
+        int width = rect[2] - rect[0] + 1;
+        int height = rect[3] - rect[1] + 1;
+        
+        // Convert point index to x,y coordinates
+        int x = rect[0] + (point - 1) % width;
+        int y = rect[1] + (point - 1) / width;
+        
+        return {x, y};
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n) where n is the number of rectangles</li>
+                        <li>Pick: O(log n) for binary search</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the rectangles and weights.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} rects
+ */
+class Solution {
+    constructor(rects) {
+        this.rects = rects;
+        this.totalPoints = 0;
+        this.rectWeights = [];
+        
+        // Calculate total points and weights for each rectangle
+        for (const rect of rects) {
+            const points = (rect[2] - rect[0] + 1) * (rect[3] - rect[1] + 1);
+            this.totalPoints += points;
+            this.rectWeights.push(this.totalPoints);
+        }
+    }
+    
+    /**
+     * @return {number[]}
+     */
+    pick() {
+        // Pick a random point index
+        const point = Math.floor(Math.random() * this.totalPoints) + 1;
+        
+        // Find the rectangle that contains this point
+        const rectIdx = this.rectWeights.findIndex(w => w >= point);
+        const rect = this.rects[rectIdx];
+        
+        // Calculate previous points to get local point index
+        const prev = rectIdx > 0 ? this.rectWeights[rectIdx - 1] : 0;
+        const localPoint = point - prev;
+        
+        // Calculate width and height of current rectangle
+        const width = rect[2] - rect[0] + 1;
+        const height = rect[3] - rect[1] + 1;
+        
+        // Convert point index to x,y coordinates
+        const x = rect[0] + ((localPoint - 1) % width);
+        const y = rect[1] + Math.floor((localPoint - 1) / width);
+        
+        return [x, y];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n) where n is the number of rectangles</li>
+                        <li>Pick: O(n) for linear search</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the rectangles and weights.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private int[][] rects;
+    private int totalPoints;
+    private int[] rectWeights;
+    private Random rand;
+    
+    public Solution(int[][] rects) {
+        this.rects = rects;
+        this.totalPoints = 0;
+        this.rectWeights = new int[rects.Length];
+        this.rand = new Random();
+        
+        // Calculate total points and weights for each rectangle
+        for (int i = 0; i < rects.Length; i++) {
+            int points = (rects[i][2] - rects[i][0] + 1) * (rects[i][3] - rects[i][1] + 1);
+            totalPoints += points;
+            rectWeights[i] = totalPoints;
+        }
+    }
+    
+    public int[] Pick() {
+        // Pick a random point index
+        int point = rand.Next(totalPoints) + 1;
+        
+        // Find the rectangle that contains this point
+        int rectIdx = Array.BinarySearch(rectWeights, point);
+        if (rectIdx < 0) rectIdx = ~rectIdx;
+        int[] rect = rects[rectIdx];
+        
+        // Calculate previous points to get local point index
+        int prev = rectIdx > 0 ? rectWeights[rectIdx - 1] : 0;
+        point = point - prev;
+        
+        // Calculate width and height of current rectangle
+        int width = rect[2] - rect[0] + 1;
+        int height = rect[3] - rect[1] + 1;
+        
+        // Convert point index to x,y coordinates
+        int x = rect[0] + (point - 1) % width;
+        int y = rect[1] + (point - 1) / width;
+        
+        return new int[] { x, y };
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n) where n is the number of rectangles</li>
+                        <li>Pick: O(log n) for binary search</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the rectangles and weights.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses weighted random selection:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Point counting</li>
+                            <li>Weighted selection</li>
+                            <li>Coordinate mapping</li>
+                            <li>Random distribution</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Calculate weights</li>
+                            <li>Select rectangle</li>
+                            <li>Map coordinates</li>
+                            <li>Return point</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Weight calculation</li>
+                        <li>Binary search</li>
+                        <li>Point mapping</li>
+                        <li>Random generation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Precompute weights</li>
+                        <li>Efficient search</li>
+                        <li>Memory reuse</li>
+                        <li>Fast mapping</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single rectangle</li>
+                        <li>Large rectangles</li>
+                        <li>Small rectangles</li>
+                        <li>Boundary points</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

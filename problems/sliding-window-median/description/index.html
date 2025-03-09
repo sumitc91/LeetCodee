@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Window Median - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">480. Sliding Window Median</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    The <strong>median</strong> is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median would be the mean of the two middle values.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    For example, for <code class="bg-gray-100 px-1 rounded">arr = [2,3,4]</code>, the median is <code class="bg-gray-100 px-1 rounded">3</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    For example, for <code class="bg-gray-100 px-1 rounded">arr = [1,2,3,4]</code>, the median is <code class="bg-gray-100 px-1 rounded">(2 + 3) / 2 = 2.5</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given an integer array <code class="bg-gray-100 px-1 rounded">nums</code> and an integer <code class="bg-gray-100 px-1 rounded">k</code>, return <em>the median of each window of size</em> <code class="bg-gray-100 px-1 rounded">k</code> <em>starting from the start of the array</em>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+Output: [1.00000,-1.00000,-1.00000,3.00000,5.00000,6.00000]
+Explanation: 
+Window position                Median
+---------------                -----
+[1  3  -1] -3  5  3  6  7    1
+ 1 [3  -1  -3] 5  3  6  7    -1
+ 1  3 [-1  -3  5] 3  6  7    -1
+ 1  3  -1 [-3  5  3] 6  7    3
+ 1  3  -1  -3 [5  3  6] 7    5
+ 1  3  -1  -3  5 [3  6  7]   6</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [1,2,3,4,2,3,1,4,2], k = 3
+Output: [2.00000,3.00000,3.00000,3.00000,2.00000,3.00000,2.00000]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= k <= nums.length <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-2³¹ <= nums[i] <= 2³¹ - 1</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>from sortedcontainers import SortedList
+
+class Solution:
+    def medianSlidingWindow(self, nums: List[int], k: int) -> List[float]:
+        # Initialize sorted window and result array
+        window = SortedList()
+        result = []
+        
+        # Add first k elements to window
+        for i in range(k):
+            window.add(nums[i])
+        
+        # Calculate median for first window
+        result.append(self.getMedian(window, k))
+        
+        # Slide window and update median
+        for i in range(k, len(nums)):
+            window.remove(nums[i - k])
+            window.add(nums[i])
+            result.append(self.getMedian(window, k))
+        
+        return result
+    
+    def getMedian(self, window, k):
+        if k % 2 == 0:
+            return (window[k//2 - 1] + window[k//2]) / 2
+        return float(window[k//2])</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums. Each insertion and deletion in the sorted list takes O(log k) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the sorted window of size k.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        double[] result = new double[nums.length - k + 1];
+        TreeMap<Integer, Integer> window = new TreeMap<>();
+        
+        // Add first k elements to window
+        for (int i = 0; i < k; i++) {
+            window.put(nums[i], window.getOrDefault(nums[i], 0) + 1);
+        }
+        
+        // Calculate median for first window
+        result[0] = getMedian(window, k);
+        
+        // Slide window and update median
+        for (int i = k; i < nums.length; i++) {
+            // Remove leftmost element
+            if (window.get(nums[i - k]) == 1) {
+                window.remove(nums[i - k]);
+            } else {
+                window.put(nums[i - k], window.get(nums[i - k]) - 1);
+            }
+            
+            // Add new element
+            window.put(nums[i], window.getOrDefault(nums[i], 0) + 1);
+            
+            // Calculate median
+            result[i - k + 1] = getMedian(window, k);
+        }
+        
+        return result;
+    }
+    
+    private double getMedian(TreeMap<Integer, Integer> window, int k) {
+        int count = 0;
+        int mid1 = -1, mid2 = -1;
+        
+        for (Map.Entry<Integer, Integer> entry : window.entrySet()) {
+            count += entry.getValue();
+            if (mid1 == -1 && count >= k/2 + 1) {
+                mid1 = entry.getKey();
+            }
+            if (mid2 == -1 && count >= k/2) {
+                mid2 = entry.getKey();
+            }
+        }
+        
+        return k % 2 == 0 ? (double)(mid1 + mid2) / 2 : mid1;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums. Each insertion and deletion in the TreeMap takes O(log k) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the window elements in the TreeMap.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<double> medianSlidingWindow(vector<int>& nums, int k) {
+        vector<double> result;
+        multiset<int> window;
+        
+        // Add first k elements to window
+        for (int i = 0; i < k; i++) {
+            window.insert(nums[i]);
+        }
+        
+        // Calculate median for first window
+        result.push_back(getMedian(window, k));
+        
+        // Slide window and update median
+        for (int i = k; i < nums.length(); i++) {
+            window.erase(window.find(nums[i - k]));
+            window.insert(nums[i]);
+            result.push_back(getMedian(window, k));
+        }
+        
+        return result;
+    }
+    
+private:
+    double getMedian(multiset<int>& window, int k) {
+        auto it = window.begin();
+        advance(it, (k - 1) / 2);
+        
+        if (k % 2 == 0) {
+            double left = *it;
+            advance(it, 1);
+            return (left + *it) / 2.0;
+        }
+        return *it;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums. Each insertion and deletion in the multiset takes O(log k) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the window elements in the multiset.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var medianSlidingWindow = function(nums, k) {
+    const result = [];
+    const window = [];
+    
+    // Helper function to insert into sorted array
+    const insertSorted = (arr, num) => {
+        let left = 0;
+        let right = arr.length;
+        while (left < right) {
+            const mid = Math.floor((left + right) / 2);
+            if (arr[mid] < num) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        arr.splice(left, 0, num);
+    };
+    
+    // Helper function to remove from sorted array
+    const removeSorted = (arr, num) => {
+        const index = arr.indexOf(num);
+        arr.splice(index, 1);
+    };
+    
+    // Helper function to get median
+    const getMedian = (arr) => {
+        const mid = Math.floor(arr.length / 2);
+        if (arr.length % 2 === 0) {
+            return (arr[mid - 1] + arr[mid]) / 2;
+        }
+        return arr[mid];
+    };
+    
+    // Add first k elements
+    for (let i = 0; i < k; i++) {
+        insertSorted(window, nums[i]);
+    }
+    result.push(getMedian(window));
+    
+    // Slide window
+    for (let i = k; i < nums.length; i++) {
+        removeSorted(window, nums[i - k]);
+        insertSorted(window, nums[i]);
+        result.push(getMedian(window));
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n × k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums. Each insertion and deletion in the sorted array takes O(k) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the window elements in the sorted array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public double[] MedianSlidingWindow(int[] nums, int k) {
+        double[] result = new double[nums.Length - k + 1];
+        SortedDictionary<int, int> window = new SortedDictionary<int, int>();
+        
+        // Add first k elements to window
+        for (int i = 0; i < k; i++) {
+            if (!window.ContainsKey(nums[i])) {
+                window[nums[i]] = 0;
+            }
+            window[nums[i]]++;
+        }
+        
+        // Calculate median for first window
+        result[0] = GetMedian(window, k);
+        
+        // Slide window and update median
+        for (int i = k; i < nums.Length; i++) {
+            // Remove leftmost element
+            if (window[nums[i - k]] == 1) {
+                window.Remove(nums[i - k]);
+            } else {
+                window[nums[i - k]]--;
+            }
+            
+            // Add new element
+            if (!window.ContainsKey(nums[i])) {
+                window[nums[i]] = 0;
+            }
+            window[nums[i]]++;
+            
+            // Calculate median
+            result[i - k + 1] = GetMedian(window, k);
+        }
+        
+        return result;
+    }
+    
+    private double GetMedian(SortedDictionary<int, int> window, int k) {
+        int count = 0;
+        int mid1 = 0, mid2 = 0;
+        
+        foreach (var pair in window) {
+            count += pair.Value;
+            if (mid1 == 0 && count >= k/2 + 1) {
+                mid1 = pair.Key;
+            }
+            if (mid2 == 0 && count >= k/2) {
+                mid2 = pair.Key;
+            }
+        }
+        
+        return k % 2 == 0 ? (double)(mid1 + mid2) / 2 : mid1;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums. Each insertion and deletion in the SortedDictionary takes O(log k) time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the window elements in the SortedDictionary.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a sliding window with a sorted data structure:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sorted window</li>
+                            <li>Median calculation</li>
+                            <li>Efficient updates</li>
+                            <li>Window sliding</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize window</li>
+                            <li>Calculate median</li>
+                            <li>Slide window</li>
+                            <li>Update result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Data structure choice</li>
+                        <li>Efficient insertion/deletion</li>
+                        <li>Median finding</li>
+                        <li>Window management</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Balanced tree</li>
+                        <li>Quick updates</li>
+                        <li>Memory efficiency</li>
+                        <li>Duplicate handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single element</li>
+                        <li>Even/odd window</li>
+                        <li>Duplicate values</li>
+                        <li>Integer overflow</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

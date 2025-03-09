@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Random Point in a Circle - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">478. Generate Random Point in a Circle</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given the radius and the position of the center of a circle, implement the function <code class="bg-gray-100 px-1 rounded">randPoint</code> which generates a uniform random point inside the circle.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">Solution</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">Solution(double radius, double x_center, double y_center)</code> initializes the object with the radius of the circle <code class="bg-gray-100 px-1 rounded">radius</code> and the position of the center <code class="bg-gray-100 px-1 rounded">(x_center, y_center)</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">randPoint()</code> returns a random point inside the circle. A point on the circumference of the circle is considered to be in the circle. The answer is returned as an array <code class="bg-gray-100 px-1 rounded">[x, y]</code>.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["Solution", "randPoint", "randPoint", "randPoint"]
+[[1.0, 0.0, 0.0], [], [], []]
+Output
+[null, [-0.02493, -0.38077], [0.82314, 0.38945], [0.36572, 0.17248]]
+
+Explanation
+Solution solution = new Solution(1.0, 0.0, 0.0);
+solution.randPoint(); // return [-0.02493, -0.38077]
+solution.randPoint(); // return [0.82314, 0.38945]
+solution.randPoint(); // return [0.36572, 0.17248]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">0 < radius <= 10⁸</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁷ <= x_center, y_center <= 10⁷</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">3 * 10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">randPoint</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def __init__(self, radius: float, x_center: float, y_center: float):
+        self.radius = radius
+        self.x_center = x_center
+        self.y_center = y_center
+        
+    def randPoint(self) -> List[float]:
+        # Generate random angle and radius
+        angle = random.uniform(0, 2 * math.pi)
+        # Square root of random value to ensure uniform distribution
+        r = math.sqrt(random.uniform(0, 1)) * self.radius
+        
+        # Convert polar coordinates to cartesian
+        x = self.x_center + r * math.cos(angle)
+        y = self.y_center + r * math.sin(angle)
+        
+        return [x, y]</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">Each call to randPoint takes constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private double radius;
+    private double x_center;
+    private double y_center;
+    private Random rand;
+    
+    public Solution(double radius, double x_center, double y_center) {
+        this.radius = radius;
+        this.x_center = x_center;
+        this.y_center = y_center;
+        this.rand = new Random();
+    }
+    
+    public double[] randPoint() {
+        // Generate random angle and radius
+        double angle = rand.nextDouble() * 2 * Math.PI;
+        // Square root of random value to ensure uniform distribution
+        double r = Math.sqrt(rand.nextDouble()) * radius;
+        
+        // Convert polar coordinates to cartesian
+        double x = x_center + r * Math.cos(angle);
+        double y = y_center + r * Math.sin(angle);
+        
+        return new double[]{x, y};
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">Each call to randPoint takes constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    double radius;
+    double x_center;
+    double y_center;
+    
+public:
+    Solution(double radius, double x_center, double y_center) {
+        this->radius = radius;
+        this->x_center = x_center;
+        this->y_center = y_center;
+        srand(time(0));
+    }
+    
+    vector<double> randPoint() {
+        // Generate random angle and radius
+        double angle = (double)rand() / RAND_MAX * 2 * M_PI;
+        // Square root of random value to ensure uniform distribution
+        double r = sqrt((double)rand() / RAND_MAX) * radius;
+        
+        // Convert polar coordinates to cartesian
+        double x = x_center + r * cos(angle);
+        double y = y_center + r * sin(angle);
+        
+        return {x, y};
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">Each call to randPoint takes constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} radius
+ * @param {number} x_center
+ * @param {number} y_center
+ */
+var Solution = function(radius, x_center, y_center) {
+    this.radius = radius;
+    this.x_center = x_center;
+    this.y_center = y_center;
+};
+
+/**
+ * @return {number[]}
+ */
+Solution.prototype.randPoint = function() {
+    // Generate random angle and radius
+    const angle = Math.random() * 2 * Math.PI;
+    // Square root of random value to ensure uniform distribution
+    const r = Math.sqrt(Math.random()) * this.radius;
+    
+    // Convert polar coordinates to cartesian
+    const x = this.x_center + r * Math.cos(angle);
+    const y = this.y_center + r * Math.sin(angle);
+    
+    return [x, y];
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">Each call to randPoint takes constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private double radius;
+    private double x_center;
+    private double y_center;
+    private Random rand;
+    
+    public Solution(double radius, double x_center, double y_center) {
+        this.radius = radius;
+        this.x_center = x_center;
+        this.y_center = y_center;
+        this.rand = new Random();
+    }
+    
+    public double[] RandPoint() {
+        // Generate random angle and radius
+        double angle = rand.NextDouble() * 2 * Math.PI;
+        // Square root of random value to ensure uniform distribution
+        double r = Math.Sqrt(rand.NextDouble()) * radius;
+        
+        // Convert polar coordinates to cartesian
+        double x = x_center + r * Math.Cos(angle);
+        double y = y_center + r * Math.Sin(angle);
+        
+        return new double[]{x, y};
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">Each call to RandPoint takes constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses polar coordinates to generate random points:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Polar coordinates</li>
+                            <li>Uniform distribution</li>
+                            <li>Coordinate conversion</li>
+                            <li>Random generation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Generate angle</li>
+                            <li>Generate radius</li>
+                            <li>Convert coordinates</li>
+                            <li>Return point</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Random generation</li>
+                        <li>Square root transformation</li>
+                        <li>Trigonometric functions</li>
+                        <li>Point calculation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Constant time</li>
+                        <li>No extra space</li>
+                        <li>Direct computation</li>
+                        <li>Uniform distribution</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Small radius</li>
+                        <li>Large coordinates</li>
+                        <li>Boundary points</li>
+                        <li>Center at origin</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

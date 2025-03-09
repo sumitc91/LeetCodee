@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagonal Traverse - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">498. Diagonal Traverse</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an <code class="bg-gray-100 px-1 rounded">m x n</code> matrix <code class="bg-gray-100 px-1 rounded">mat</code>, return <em>an array of all the elements of the array in a diagonal order</em>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: mat = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [1,2,4,7,5,3,6,8,9]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: mat = [[1,2],[3,4]]
+Output: [1,2,3,4]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">m == mat.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == mat[i].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m, n <= 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m * n <= 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁵ <= mat[i][j] <= 10⁵</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:
+        if not mat or not mat[0]:
+            return []
+            
+        m, n = len(mat), len(mat[0])
+        result = []
+        row = col = 0
+        direction = 1  # 1 for up-right, -1 for down-left
+        
+        while len(result) < m * n:
+            result.append(mat[row][col])
+            
+            if direction == 1:
+                if col == n - 1:
+                    row += 1
+                    direction = -1
+                elif row == 0:
+                    col += 1
+                    direction = -1
+                else:
+                    row -= 1
+                    col += 1
+            else:
+                if row == m - 1:
+                    col += 1
+                    direction = 1
+                elif col == 0:
+                    row += 1
+                    direction = 1
+                else:
+                    row += 1
+                    col -= 1
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each element exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space needed for output array.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int[] findDiagonalOrder(int[][] mat) {
+        if (mat == null || mat.length == 0) {
+            return new int[0];
+        }
+        
+        int m = mat.length, n = mat[0].length;
+        int[] result = new int[m * n];
+        int row = 0, col = 0, index = 0;
+        int direction = 1;  // 1 for up-right, -1 for down-left
+        
+        while (index < m * n) {
+            result[index++] = mat[row][col];
+            
+            if (direction == 1) {
+                if (col == n - 1) {
+                    row++;
+                    direction = -1;
+                } else if (row == 0) {
+                    col++;
+                    direction = -1;
+                } else {
+                    row--;
+                    col++;
+                }
+            } else {
+                if (row == m - 1) {
+                    col++;
+                    direction = 1;
+                } else if (col == 0) {
+                    row++;
+                    direction = 1;
+                } else {
+                    row++;
+                    col--;
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each element exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space needed for output array.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<int> findDiagonalOrder(vector<vector<int>>& mat) {
+        if (mat.empty() || mat[0].empty()) {
+            return {};
+        }
+        
+        int m = mat.size(), n = mat[0].size();
+        vector<int> result;
+        int row = 0, col = 0;
+        int direction = 1;  // 1 for up-right, -1 for down-left
+        
+        while (result.size() < m * n) {
+            result.push_back(mat[row][col]);
+            
+            if (direction == 1) {
+                if (col == n - 1) {
+                    row++;
+                    direction = -1;
+                } else if (row == 0) {
+                    col++;
+                    direction = -1;
+                } else {
+                    row--;
+                    col++;
+                }
+            } else {
+                if (row == m - 1) {
+                    col++;
+                    direction = 1;
+                } else if (col == 0) {
+                    row++;
+                    direction = 1;
+                } else {
+                    row++;
+                    col--;
+                }
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each element exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space needed for output array.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} mat
+ * @return {number[]}
+ */
+var findDiagonalOrder = function(mat) {
+    if (!mat || !mat.length) {
+        return [];
+    }
+    
+    const m = mat.length, n = mat[0].length;
+    const result = [];
+    let row = 0, col = 0;
+    let direction = 1;  // 1 for up-right, -1 for down-left
+    
+    while (result.length < m * n) {
+        result.push(mat[row][col]);
+        
+        if (direction === 1) {
+            if (col === n - 1) {
+                row++;
+                direction = -1;
+            } else if (row === 0) {
+                col++;
+                direction = -1;
+            } else {
+                row--;
+                col++;
+            }
+        } else {
+            if (row === m - 1) {
+                col++;
+                direction = 1;
+            } else if (col === 0) {
+                row++;
+                direction = 1;
+            } else {
+                row++;
+                col--;
+            }
+        }
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each element exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space needed for output array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int[] FindDiagonalOrder(int[][] mat) {
+        if (mat == null || mat.Length == 0) {
+            return new int[0];
+        }
+        
+        int m = mat.Length, n = mat[0].Length;
+        int[] result = new int[m * n];
+        int row = 0, col = 0, index = 0;
+        int direction = 1;  // 1 for up-right, -1 for down-left
+        
+        while (index < m * n) {
+            result[index++] = mat[row][col];
+            
+            if (direction == 1) {
+                if (col == n - 1) {
+                    row++;
+                    direction = -1;
+                } else if (row == 0) {
+                    col++;
+                    direction = -1;
+                } else {
+                    row--;
+                    col++;
+                }
+            } else {
+                if (row == m - 1) {
+                    col++;
+                    direction = 1;
+                } else if (col == 0) {
+                    row++;
+                    direction = 1;
+                } else {
+                    row++;
+                    col--;
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">Where m and n are the dimensions of the matrix. We visit each element exactly once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space needed for output array.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a simulation approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Direction tracking</li>
+                            <li>Boundary handling</li>
+                            <li>Pattern recognition</li>
+                            <li>Coordinate manipulation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize direction</li>
+                            <li>Handle boundaries</li>
+                            <li>Update coordinates</li>
+                            <li>Build result array</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Direction flag</li>
+                        <li>Coordinate tracking</li>
+                        <li>Boundary checks</li>
+                        <li>Result building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single pass</li>
+                        <li>In-place tracking</li>
+                        <li>Minimal variables</li>
+                        <li>Early termination</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty matrix</li>
+                        <li>Single row/column</li>
+                        <li>Square matrix</li>
+                        <li>Rectangular matrix</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

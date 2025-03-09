@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance Record I - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">551. Student Attendance Record I</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given a string <code class="bg-gray-100 px-1 rounded">s</code> containing only the characters <code class="bg-gray-100 px-1 rounded">'A'</code>, <code class="bg-gray-100 px-1 rounded">'L'</code>, and <code class="bg-gray-100 px-1 rounded">'P'</code> where:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">'A'</code> stands for Absent</li>
+                    <li><code class="bg-gray-100 px-1 rounded">'L'</code> stands for Late</li>
+                    <li><code class="bg-gray-100 px-1 rounded">'P'</code> stands for Present</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    The student is eligible for an attendance award if they meet <strong>both</strong> of the following criteria:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>The student was absent (<code class="bg-gray-100 px-1 rounded">'A'</code>) for <strong>strictly fewer than 2 days</strong> in total.</li>
+                    <li>The student was <strong>never late</strong> (<code class="bg-gray-100 px-1 rounded">'L'</code>) for <strong>3 or more consecutive days</strong>.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    Return <code class="bg-gray-100 px-1 rounded">true</code> <em>if the student is eligible for an attendance award, or</em> <code class="bg-gray-100 px-1 rounded">false</code> <em>otherwise</em>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "PPALLP"
+Output: true
+Explanation: The student has fewer than 2 absences and was never late for 3 or more consecutive days.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "PPALLL"
+Output: false
+Explanation: The student was late for 3 consecutive days in the last 3 days.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= s.length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">s[i]</code> is either <code class="bg-gray-100 px-1 rounded">'A'</code>, <code class="bg-gray-100 px-1 rounded">'L'</code>, or <code class="bg-gray-100 px-1 rounded">'P'</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def checkRecord(self, s: str) -> bool:
+        absent_count = 0
+        late_streak = 0
+        
+        for attendance in s:
+            if attendance == 'A':
+                absent_count += 1
+                late_streak = 0
+                if absent_count >= 2:
+                    return False
+            elif attendance == 'L':
+                late_streak += 1
+                if late_streak >= 3:
+                    return False
+            else:  # attendance == 'P'
+                late_streak = 0
+        
+        return True</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. We scan through each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use two variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean checkRecord(String s) {
+        int absentCount = 0;
+        int lateStreak = 0;
+        
+        for (char attendance : s.toCharArray()) {
+            if (attendance == 'A') {
+                absentCount++;
+                lateStreak = 0;
+                if (absentCount >= 2) {
+                    return false;
+                }
+            } else if (attendance == 'L') {
+                lateStreak++;
+                if (lateStreak >= 3) {
+                    return false;
+                }
+            } else {  // attendance == 'P'
+                lateStreak = 0;
+            }
+        }
+        
+        return true;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. We scan through each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use two variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool checkRecord(string s) {
+        int absentCount = 0;
+        int lateStreak = 0;
+        
+        for (char attendance : s) {
+            if (attendance == 'A') {
+                absentCount++;
+                lateStreak = 0;
+                if (absentCount >= 2) {
+                    return false;
+                }
+            } else if (attendance == 'L') {
+                lateStreak++;
+                if (lateStreak >= 3) {
+                    return false;
+                }
+            } else {  // attendance == 'P'
+                lateStreak = 0;
+            }
+        }
+        
+        return true;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. We scan through each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use two variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var checkRecord = function(s) {
+    let absentCount = 0;
+    let lateStreak = 0;
+    
+    for (let attendance of s) {
+        if (attendance === 'A') {
+            absentCount++;
+            lateStreak = 0;
+            if (absentCount >= 2) {
+                return false;
+            }
+        } else if (attendance === 'L') {
+            lateStreak++;
+            if (lateStreak >= 3) {
+                return false;
+            }
+        } else {  // attendance === 'P'
+            lateStreak = 0;
+        }
+    }
+    
+    return true;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. We scan through each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use two variables regardless of input size.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool CheckRecord(string s) {
+        int absentCount = 0;
+        int lateStreak = 0;
+        
+        foreach (char attendance in s) {
+            if (attendance == 'A') {
+                absentCount++;
+                lateStreak = 0;
+                if (absentCount >= 2) {
+                    return false;
+                }
+            } else if (attendance == 'L') {
+                lateStreak++;
+                if (lateStreak >= 3) {
+                    return false;
+                }
+            } else {  // attendance == 'P'
+                lateStreak = 0;
+            }
+        }
+        
+        return true;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the string. We scan through each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use two variables regardless of input size.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a single pass through the string with counters:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Track absences</li>
+                            <li>Monitor late streaks</li>
+                            <li>Reset conditions</li>
+                            <li>Early termination</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize counters</li>
+                            <li>Process each day</li>
+                            <li>Update streaks</li>
+                            <li>Check conditions</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Counter variables</li>
+                        <li>Character checking</li>
+                        <li>Streak tracking</li>
+                        <li>Boolean logic</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single pass</li>
+                        <li>Early returns</li>
+                        <li>Minimal storage</li>
+                        <li>Clear conditions</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single character</li>
+                        <li>All same type</li>
+                        <li>Alternating patterns</li>
+                        <li>Maximum length</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encode and Decode TinyURL - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">535. Encode and Decode TinyURL</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    TinyURL is a URL shortening service where you enter a URL such as <code class="bg-gray-100 px-1 rounded">https://leetcode.com/problems/design-tinyurl</code> and it returns a short URL such as <code class="bg-gray-100 px-1 rounded">http://tinyurl.com/4e9iAk</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Design a class to encode a URL and decode a tiny URL.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    There is no restriction on how your encode/decode algorithm should work. You just need to ensure that a URL can be encoded to a tiny URL and the tiny URL can be decoded to the original URL.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">Solution</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">Solution()</code> Initializes the object of the system.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">String encode(String longUrl)</code> Returns a tiny URL for the given longUrl.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">String decode(String shortUrl)</code> Returns the original long URL for the given shortUrl. It is guaranteed that the given shortUrl was encoded by the same object.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: url = "https://leetcode.com/problems/design-tinyurl"
+Output: "https://leetcode.com/problems/design-tinyurl"
+
+Explanation:
+Solution solution = new Solution();
+solution.decode(solution.encode(url)) == url</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= url.length <= 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">url</code> is guranteed to be a valid URL</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Codec:
+    def __init__(self):
+        self.url_map = {}
+        self.chars = string.ascii_letters + string.digits
+        self.counter = 0
+    
+    def encode(self, longUrl: str) -> str:
+        # Generate a unique short code
+        code = ''.join(random.choices(self.chars, k=6))
+        while code in self.url_map:
+            code = ''.join(random.choices(self.chars, k=6))
+        
+        self.url_map[code] = longUrl
+        return f"http://tinyurl.com/{code}"
+
+    def decode(self, shortUrl: str) -> str:
+        # Extract code from shortUrl
+        code = shortUrl.split('/')[-1]
+        return self.url_map.get(code, '')</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Encode: O(1) average case</li>
+                        <li>Decode: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of URLs encoded. We need to store all URL mappings.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>public class Codec {
+    private Map<String, String> urlMap;
+    private String chars;
+    private Random rand;
+    
+    public Codec() {
+        urlMap = new HashMap<>();
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        rand = new Random();
+    }
+
+    // Encodes a URL to a shortened URL.
+    public String encode(String longUrl) {
+        String code;
+        do {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 6; i++) {
+                sb.append(chars.charAt(rand.nextInt(chars.length())));
+            }
+            code = sb.toString();
+        } while (urlMap.containsKey(code));
+        
+        urlMap.put(code, longUrl);
+        return "http://tinyurl.com/" + code;
+    }
+
+    // Decodes a shortened URL to its original URL.
+    public String decode(String shortUrl) {
+        String code = shortUrl.substring(shortUrl.lastIndexOf('/') + 1);
+        return urlMap.getOrDefault(code, "");
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Encode: O(1) average case</li>
+                        <li>Decode: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of URLs encoded. We need to store all URL mappings.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    unordered_map<string, string> urlMap;
+    string chars;
+    random_device rd;
+    mt19937 gen;
+    
+public:
+    Solution() : gen(rd()) {
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    }
+
+    // Encodes a URL to a shortened URL.
+    string encode(string longUrl) {
+        string code;
+        uniform_int_distribution<> dis(0, chars.length() - 1);
+        
+        do {
+            code = "";
+            for (int i = 0; i < 6; i++) {
+                code += chars[dis(gen)];
+            }
+        } while (urlMap.count(code));
+        
+        urlMap[code] = longUrl;
+        return "http://tinyurl.com/" + code;
+    }
+
+    // Decodes a shortened URL to its original URL.
+    string decode(string shortUrl) {
+        string code = shortUrl.substr(shortUrl.find_last_of('/') + 1);
+        return urlMap.count(code) ? urlMap[code] : "";
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Encode: O(1) average case</li>
+                        <li>Decode: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of URLs encoded. We need to store all URL mappings.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * Encodes and decodes tiny URLs.
+ */
+class Solution {
+    constructor() {
+        this.urlMap = new Map();
+        this.chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    }
+    
+    /**
+     * @param {string} longUrl
+     * @return {string}
+     */
+    encode(longUrl) {
+        let code;
+        do {
+            code = '';
+            for (let i = 0; i < 6; i++) {
+                code += this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        } while (this.urlMap.has(code));
+        
+        this.urlMap.set(code, longUrl);
+        return `http://tinyurl.com/${code}`;
+    }
+    
+    /**
+     * @param {string} shortUrl
+     * @return {string}
+     */
+    decode(shortUrl) {
+        const code = shortUrl.split('/').pop();
+        return this.urlMap.get(code) || '';
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Encode: O(1) average case</li>
+                        <li>Decode: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of URLs encoded. We need to store all URL mappings.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Codec {
+    private Dictionary<string, string> urlMap;
+    private string chars;
+    private Random rand;
+    
+    public Codec() {
+        urlMap = new Dictionary<string, string>();
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        rand = new Random();
+    }
+
+    // Encodes a URL to a shortened URL.
+    public string encode(string longUrl) {
+        string code;
+        do {
+            code = new string(Enumerable.Range(0, 6)
+                .Select(_ => chars[rand.Next(chars.Length)])
+                .ToArray());
+        } while (urlMap.ContainsKey(code));
+        
+        urlMap[code] = longUrl;
+        return "http://tinyurl.com/" + code;
+    }
+
+    // Decodes a shortened URL to its original URL.
+    public string decode(string shortUrl) {
+        string code = shortUrl.Split('/').Last();
+        return urlMap.ContainsKey(code) ? urlMap[code] : "";
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Encode: O(1) average case</li>
+                        <li>Decode: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of URLs encoded. We need to store all URL mappings.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses random code generation and hash map:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Random code generation</li>
+                            <li>Hash map storage</li>
+                            <li>Collision handling</li>
+                            <li>Bidirectional mapping</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Generate unique code</li>
+                            <li>Store mapping</li>
+                            <li>Extract code</li>
+                            <li>Retrieve original URL</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Random generation</li>
+                        <li>Hash map operations</li>
+                        <li>String manipulation</li>
+                        <li>URL handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Efficient storage</li>
+                        <li>Quick lookups</li>
+                        <li>Collision avoidance</li>
+                        <li>Space utilization</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Long URLs</li>
+                        <li>Code collisions</li>
+                        <li>Invalid URLs</li>
+                        <li>Memory limits</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

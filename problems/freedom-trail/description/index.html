@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freedom Trail - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">514. Freedom Trail</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    In the video game "Dragon Quest", the player starts their journey with a game character called a "hero" at the starting position. Given a string <code class="bg-gray-100 px-1 rounded">ring</code>, which represents the initial circle of characters that can be shown at the bottom of the game screen, the player needs to type the string <code class="bg-gray-100 px-1 rounded">key</code> in order to spell out the exact characters in <code class="bg-gray-100 px-1 rounded">key</code> one by one.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Initially, the hero's starting position is at <code class="bg-gray-100 px-1 rounded">12:00</code>. To type each character, you need to rotate the ring to make that character at the <code class="bg-gray-100 px-1 rounded">12:00</code> position and then press the center button.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    At the moment when you press the center button, you can immediately move to the next character in the string <code class="bg-gray-100 px-1 rounded">key</code>, and you will continue rotating the ring to spell all the characters.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return the minimum number of steps to spell all characters in the string <code class="bg-gray-100 px-1 rounded">key</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: ring = "godding", key = "gd"
+Output: 4
+Explanation:
+For the first key character 'g', since it is already in place, we just need to press the button 1 time.
+For the second key character 'd', we need to rotate the ring "godding" anticlockwise by two steps to make it become "ddinggo".
+Also, we need to press the button 1 time.
+So the final number of steps is 4.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: ring = "godding", key = "godding"
+Output: 13</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= ring.length, key.length <= 100</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">ring</code> and <code class="bg-gray-100 px-1 rounded">key</code> consist of only lowercase English letters.</li>
+                    <li>It is guaranteed that <code class="bg-gray-100 px-1 rounded">key</code> could always be spelled by rotating <code class="bg-gray-100 px-1 rounded">ring</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findRotateSteps(self, ring: str, key: str) -> int:
+        n, m = len(ring), len(key)
+        
+        # Create position map for each character in ring
+        pos = defaultdict(list)
+        for i, c in enumerate(ring):
+            pos[c].append(i)
+        
+        # dp[i][j] represents minimum steps to type key[i:] when ring[j] is at 12:00
+        @lru_cache(None)
+        def dp(key_idx, ring_idx):
+            if key_idx == m:
+                return 0
+            
+            ans = float('inf')
+            curr = ring[ring_idx]
+            target = key[key_idx]
+            
+            # Try all positions of target character
+            for next_pos in pos[target]:
+                # Calculate clockwise and counterclockwise distances
+                dist = min((ring_idx - next_pos) % n, (next_pos - ring_idx) % n)
+                ans = min(ans, dist + 1 + dp(key_idx + 1, next_pos))
+            
+            return ans
+        
+        return dp(0, 0)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n * k)</h4>
+                    <p class="text-gray-700">Where m is the length of key, n is the length of ring, and k is the average number of occurrences of each character in ring.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For the memoization cache in dynamic programming.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private Map<String, Integer> memo;
+    private Map<Character, List<Integer>> pos;
+    private String ring;
+    private String key;
+    private int n, m;
+    
+    public int findRotateSteps(String ring, String key) {
+        this.ring = ring;
+        this.key = key;
+        this.n = ring.length();
+        this.m = key.length();
+        this.memo = new HashMap<>();
+        this.pos = new HashMap<>();
+        
+        // Create position map
+        for (int i = 0; i < n; i++) {
+            char c = ring.charAt(i);
+            pos.computeIfAbsent(c, k -> new ArrayList<>()).add(i);
+        }
+        
+        return dp(0, 0);
+    }
+    
+    private int dp(int key_idx, int ring_idx) {
+        if (key_idx == m) {
+            return 0;
+        }
+        
+        String state = key_idx + "," + ring_idx;
+        if (memo.containsKey(state)) {
+            return memo.get(state);
+        }
+        
+        int ans = Integer.MAX_VALUE;
+        char target = key.charAt(key_idx);
+        
+        // Try all positions of target character
+        for (int next_pos : pos.getOrDefault(target, new ArrayList<>())) {
+            int dist = Math.min(Math.abs(ring_idx - next_pos),
+                              n - Math.abs(ring_idx - next_pos));
+            ans = Math.min(ans, dist + 1 + dp(key_idx + 1, next_pos));
+        }
+        
+        memo.put(state, ans);
+        return ans;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n * k)</h4>
+                    <p class="text-gray-700">Where m is the length of key, n is the length of ring, and k is the average number of occurrences of each character in ring.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For the memoization map and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    unordered_map<char, vector<int>> pos;
+    vector<vector<int>> memo;
+    string ring, key;
+    int n, m;
+    
+    int dp(int key_idx, int ring_idx) {
+        if (key_idx == m) {
+            return 0;
+        }
+        
+        if (memo[key_idx][ring_idx] != -1) {
+            return memo[key_idx][ring_idx];
+        }
+        
+        int ans = INT_MAX;
+        char target = key[key_idx];
+        
+        // Try all positions of target character
+        for (int next_pos : pos[target]) {
+            int dist = min(abs(ring_idx - next_pos),
+                         n - abs(ring_idx - next_pos));
+            ans = min(ans, dist + 1 + dp(key_idx + 1, next_pos));
+        }
+        
+        return memo[key_idx][ring_idx] = ans;
+    }
+    
+public:
+    int findRotateSteps(string ring, string key) {
+        this->ring = ring;
+        this->key = key;
+        this->n = ring.length();
+        this->m = key.length();
+        memo = vector<vector<int>>(m, vector<int>(n, -1));
+        
+        // Create position map
+        for (int i = 0; i < n; i++) {
+            pos[ring[i]].push_back(i);
+        }
+        
+        return dp(0, 0);
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n * k)</h4>
+                    <p class="text-gray-700">Where m is the length of key, n is the length of ring, and k is the average number of occurrences of each character in ring.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For the memoization array and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} ring
+ * @param {string} key
+ * @return {number}
+ */
+var findRotateSteps = function(ring, key) {
+    const n = ring.length;
+    const m = key.length;
+    
+    // Create position map
+    const pos = new Map();
+    for (let i = 0; i < n; i++) {
+        const c = ring[i];
+        if (!pos.has(c)) {
+            pos.set(c, []);
+        }
+        pos.get(c).push(i);
+    }
+    
+    // Create memoization map
+    const memo = new Map();
+    
+    function dp(key_idx, ring_idx) {
+        if (key_idx === m) {
+            return 0;
+        }
+        
+        const state = `${key_idx},${ring_idx}`;
+        if (memo.has(state)) {
+            return memo.get(state);
+        }
+        
+        let ans = Infinity;
+        const target = key[key_idx];
+        
+        // Try all positions of target character
+        for (const next_pos of pos.get(target) || []) {
+            const dist = Math.min(Math.abs(ring_idx - next_pos),
+                                n - Math.abs(ring_idx - next_pos));
+            ans = Math.min(ans, dist + 1 + dp(key_idx + 1, next_pos));
+        }
+        
+        memo.set(state, ans);
+        return ans;
+    }
+    
+    return dp(0, 0);
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n * k)</h4>
+                    <p class="text-gray-700">Where m is the length of key, n is the length of ring, and k is the average number of occurrences of each character in ring.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For the memoization map and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private Dictionary<char, List<int>> pos;
+    private Dictionary<string, int> memo;
+    private string ring;
+    private string key;
+    private int n, m;
+    
+    public int FindRotateSteps(string ring, string key) {
+        this.ring = ring;
+        this.key = key;
+        this.n = ring.Length;
+        this.m = key.Length;
+        this.memo = new Dictionary<string, int>();
+        this.pos = new Dictionary<char, List<int>>();
+        
+        // Create position map
+        for (int i = 0; i < n; i++) {
+            char c = ring[i];
+            if (!pos.ContainsKey(c)) {
+                pos[c] = new List<int>();
+            }
+            pos[c].Add(i);
+        }
+        
+        return Dp(0, 0);
+    }
+    
+    private int Dp(int key_idx, int ring_idx) {
+        if (key_idx == m) {
+            return 0;
+        }
+        
+        string state = $"{key_idx},{ring_idx}";
+        if (memo.ContainsKey(state)) {
+            return memo[state];
+        }
+        
+        int ans = int.MaxValue;
+        char target = key[key_idx];
+        
+        // Try all positions of target character
+        if (pos.ContainsKey(target)) {
+            foreach (int next_pos in pos[target]) {
+                int dist = Math.Min(Math.Abs(ring_idx - next_pos),
+                                  n - Math.Abs(ring_idx - next_pos));
+                ans = Math.Min(ans, dist + 1 + Dp(key_idx + 1, next_pos));
+            }
+        }
+        
+        memo[state] = ans;
+        return ans;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m * n * k)</h4>
+                    <p class="text-gray-700">Where m is the length of key, n is the length of ring, and k is the average number of occurrences of each character in ring.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For the memoization dictionary and recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses dynamic programming with memoization:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>State representation</li>
+                            <li>Position mapping</li>
+                            <li>Distance calculation</li>
+                            <li>Optimal substructure</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Create position map</li>
+                            <li>Initialize memoization</li>
+                            <li>Recursive exploration</li>
+                            <li>Distance optimization</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Character mapping</li>
+                        <li>State caching</li>
+                        <li>Distance calculation</li>
+                        <li>Recursion handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Memoization usage</li>
+                        <li>Position preprocessing</li>
+                        <li>Distance minimization</li>
+                        <li>State reduction</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single character</li>
+                        <li>Repeated characters</li>
+                        <li>Full rotation</li>
+                        <li>Same start/end</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

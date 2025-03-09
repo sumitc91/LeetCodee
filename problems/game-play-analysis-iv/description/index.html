@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Play Analysis IV - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">550. Game Play Analysis IV</h1>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Table: <code class="bg-gray-100 px-1 rounded">Activity</code>
+                </p>
+                <pre class="bg-gray-100 p-4 rounded mb-4"><code>+--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| player_id    | int     |
+| device_id    | int     |
+| event_date   | date    |
+| games_played | int     |
++--------------+---------+
+(player_id, event_date) is the primary key of this table.
+This table shows the activity of players of some games.
+Each row is a record of a player who logged in and played a number of games (possibly 0) before logging out on someday using some device.</code></pre>
+                <p class="text-gray-700 mb-4">
+                    Write a SQL query to report the fraction of players that logged in again on the day after the day they first logged in, <em>rounded to 2 decimal places</em>. In other words, you need to count the number of players that logged in for at least two consecutive days starting from their first login date, then divide that number by the total number of players.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example:</h2>
+                <p class="text-gray-700 mb-2">Input:</p>
+                <pre class="bg-gray-100 p-4 rounded mb-4"><code>Activity table:
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1         | 2         | 2016-03-01 | 5           |
+| 1         | 2         | 2016-03-02 | 6           |
+| 2         | 3         | 2017-06-25 | 1           |
+| 3         | 1         | 2016-03-02 | 0           |
+| 3         | 4         | 2018-07-03 | 5           |
++-----------+-----------+------------+--------------+</code></pre>
+                <p class="text-gray-700 mb-2">Output:</p>
+                <pre class="bg-gray-100 p-4 rounded"><code>+-----------+
+| fraction  |
++-----------+
+| 0.33      |
++-----------+
+Explanation: 
+Only the player with id 1 logged back in after the first day he had logged in so the answer is 1/3 = 0.33</code></pre>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- MySQL Solution -->
+            <div id="mysql" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">MySQL Solution</h3>
+                <pre class="language-sql"><code>SELECT ROUND(COUNT(DISTINCT player_id) / 
+    (SELECT COUNT(DISTINCT player_id) FROM Activity), 2) AS fraction
+FROM Activity
+WHERE (player_id, event_date) IN (
+    SELECT player_id, DATE_ADD(MIN(event_date), INTERVAL 1 DAY)
+    FROM Activity
+    GROUP BY player_id
+);</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Explanation:</h4>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                        <li>First, we find each player's first login date using <code class="bg-gray-100 px-1 rounded">MIN(event_date)</code></li>
+                        <li>Then, we check if they logged in the next day using <code class="bg-gray-100 px-1 rounded">DATE_ADD</code></li>
+                        <li>We count these players and divide by total distinct players</li>
+                        <li>Finally, we round to 2 decimal places using <code class="bg-gray-100 px-1 rounded">ROUND</code></li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- PostgreSQL Solution -->
+            <div id="postgresql" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">PostgreSQL Solution</h3>
+                <pre class="language-sql"><code>SELECT ROUND(COUNT(DISTINCT a.player_id)::NUMERIC / 
+    (SELECT COUNT(DISTINCT player_id) FROM Activity), 2) AS fraction
+FROM Activity a
+WHERE (a.player_id, a.event_date) IN (
+    SELECT player_id, MIN(event_date) + INTERVAL '1 day'
+    FROM Activity
+    GROUP BY player_id
+);</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Explanation:</h4>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                        <li>Similar to MySQL solution but uses PostgreSQL syntax</li>
+                        <li>Uses <code class="bg-gray-100 px-1 rounded">::NUMERIC</code> for type casting</li>
+                        <li>Uses <code class="bg-gray-100 px-1 rounded">INTERVAL '1 day'</code> for date addition</li>
+                        <li>Maintains same logical approach</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- MS SQL Server Solution -->
+            <div id="mssql" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">MS SQL Server Solution</h3>
+                <pre class="language-sql"><code>SELECT ROUND(CAST(COUNT(DISTINCT player_id) AS FLOAT) / 
+    (SELECT COUNT(DISTINCT player_id) FROM Activity), 2) AS fraction
+FROM Activity
+WHERE (player_id, event_date) IN (
+    SELECT player_id, DATEADD(day, 1, MIN(event_date))
+    FROM Activity
+    GROUP BY player_id
+);</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Explanation:</h4>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                        <li>Uses <code class="bg-gray-100 px-1 rounded">CAST</code> for float conversion</li>
+                        <li>Uses <code class="bg-gray-100 px-1 rounded">DATEADD</code> function for date manipulation</li>
+                        <li>Follows same logical structure as other solutions</li>
+                        <li>Handles division and rounding similarly</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution follows these key steps:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Concepts:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Date manipulation</li>
+                            <li>Subqueries</li>
+                            <li>Aggregation</li>
+                            <li>Division operation</li>
+                        </ul>
+                    </li>
+                    <li>Solution Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Find first login</li>
+                            <li>Check next day</li>
+                            <li>Calculate ratio</li>
+                            <li>Format result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Date functions</li>
+                        <li>Distinct counts</li>
+                        <li>Type conversion</li>
+                        <li>Rounding logic</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Efficient grouping</li>
+                        <li>Index usage</li>
+                        <li>Subquery optimization</li>
+                        <li>Data type handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>No players</li>
+                        <li>Single day logins</li>
+                        <li>Multiple devices</li>
+                        <li>Date boundaries</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

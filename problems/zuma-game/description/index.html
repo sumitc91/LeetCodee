@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zuma Game - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">488. Zuma Game</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are playing a variation of the game Zuma.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    In this variation of Zuma, there is a single row of colored balls on a board, where each ball can be colored red 'R', yellow 'Y', blue 'B', green 'G', or white 'W'. You also have several colored balls in your hand.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Your goal is to clear all of the balls from the board. On each turn:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Pick any ball from your hand and insert it in between any two balls on the board or at either end of the row.</li>
+                    <li>If there is a group of 3 or more consecutive balls of the same color, remove the group of balls from the board.</li>
+                    <li>If this removal causes more groups of 3 or more of the same color to form, then continue removing each group until no more can be removed.</li>
+                    <li>If there are no more balls on the board, then you win!</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    Return the minimum number of balls you have to insert to clear all the balls from the board. If you cannot clear all the balls from the board, return <code class="bg-gray-100 px-1 rounded">-1</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: board = "WRRBBW", hand = "RB"
+Output: -1
+Explanation: It is impossible to clear all the balls. The best you can do is:
+- Insert 'R' so the board becomes WRRRBBW. Then remove the group 'RRR'.
+- Board becomes WBW. You cannot remove any more groups.
+Thus, you need at least 2 balls from your hand to remove all the balls from the board. It is impossible to clear the board with 1 ball.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: board = "WWRRBBWW", hand = "WRBRW"
+Output: 2
+Explanation: To make the board empty:
+- Insert 'R' at index 2 so the board becomes WWRRRBBWW.
+- Remove the group 'RRR' to get WWB BWW.
+- Insert 'B' at index 4 so the board becomes WWBBBWW.
+- Remove the group 'BBB' to get WWWW.
+- Remove the group 'WWWW' to get an empty board.
+Only need to insert 2 balls.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: board = "G", hand = "GGGGG"
+Output: 2
+Explanation: To make the board empty:
+- Insert 'G' at index 0 so the board becomes GG.
+- Insert 'G' at index 1 so the board becomes GGG.
+- Remove the group 'GGG' to get an empty board.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= board.length <= 16</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= hand.length <= 5</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">board</code> and <code class="bg-gray-100 px-1 rounded">hand</code> consist of the characters 'R', 'Y', 'B', 'G', and 'W'.</li>
+                    <li>The initial row of balls on the board will not have any groups of three or more consecutive balls of the same color.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findMinStep(self, board: str, hand: str) -> int:
+        def remove_consecutive(s: str) -> str:
+            i = 0
+            while i < len(s):
+                j = i + 1
+                while j < len(s) and s[j] == s[i]:
+                    j += 1
+                if j - i >= 3:
+                    return remove_consecutive(s[:i] + s[j:])
+                i = j
+            return s
+        
+        @cache
+        def dfs(board: str, hand: str) -> int:
+            if not board:
+                return 0
+            if not hand:
+                return float('inf')
+            
+            min_steps = float('inf')
+            hand_count = Counter(hand)
+            
+            for i in range(len(board) + 1):
+                for ball in set(hand):
+                    # Try inserting ball at position i
+                    if hand_count[ball] > 0:
+                        new_board = board[:i] + ball + board[i:]
+                        new_board = remove_consecutive(new_board)
+                        
+                        # Update hand
+                        new_hand = list(hand)
+                        new_hand.remove(ball)
+                        new_hand = ''.join(sorted(new_hand))
+                        
+                        steps = dfs(new_board, new_hand)
+                        if steps != float('inf'):
+                            min_steps = min(min_steps, steps + 1)
+            
+            return min_steps
+        
+        result = dfs(board, ''.join(sorted(hand)))
+        return result if result != float('inf') else -1</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n! × m)</h4>
+                    <p class="text-gray-700">Where n is the length of the board and m is the length of hand. For each position, we try each ball from hand.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n × m)</h4>
+                    <p class="text-gray-700">For the recursion stack and memoization.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private Map<String, Integer> memo;
+    
+    public int findMinStep(String board, String hand) {
+        memo = new HashMap<>();
+        int result = dfs(board, hand);
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+    
+    private String removeConsecutive(String s) {
+        int i = 0;
+        while (i < s.length()) {
+            int j = i + 1;
+            while (j < s.length() && s.charAt(j) == s.charAt(i)) {
+                j++;
+            }
+            if (j - i >= 3) {
+                return removeConsecutive(s.substring(0, i) + s.substring(j));
+            }
+            i = j;
+        }
+        return s;
+    }
+    
+    private int dfs(String board, String hand) {
+        if (board.isEmpty()) {
+            return 0;
+        }
+        if (hand.isEmpty()) {
+            return Integer.MAX_VALUE;
+        }
+        
+        String key = board + "#" + hand;
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        
+        int minSteps = Integer.MAX_VALUE;
+        
+        for (int i = 0; i <= board.length(); i++) {
+            for (int j = 0; j < hand.length(); j++) {
+                String newBoard = board.substring(0, i) + hand.charAt(j) + board.substring(i);
+                newBoard = removeConsecutive(newBoard);
+                
+                String newHand = hand.substring(0, j) + hand.substring(j + 1);
+                int steps = dfs(newBoard, newHand);
+                
+                if (steps != Integer.MAX_VALUE) {
+                    minSteps = Math.min(minSteps, steps + 1);
+                }
+            }
+        }
+        
+        memo.put(key, minSteps);
+        return minSteps;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n! × m)</h4>
+                    <p class="text-gray-700">Where n is the length of the board and m is the length of hand. For each position, we try each ball from hand.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n × m)</h4>
+                    <p class="text-gray-700">For the recursion stack and memoization.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    unordered_map<string, int> memo;
+    
+    string removeConsecutive(string s) {
+        int i = 0;
+        while (i < s.length()) {
+            int j = i + 1;
+            while (j < s.length() && s[j] == s[i]) {
+                j++;
+            }
+            if (j - i >= 3) {
+                return removeConsecutive(s.substr(0, i) + s.substr(j));
+            }
+            i = j;
+        }
+        return s;
+    }
+    
+    int dfs(string board, string hand) {
+        if (board.empty()) {
+            return 0;
+        }
+        if (hand.empty()) {
+            return INT_MAX;
+        }
+        
+        string key = board + "#" + hand;
+        if (memo.count(key)) {
+            return memo[key];
+        }
+        
+        int minSteps = INT_MAX;
+        
+        for (int i = 0; i <= board.length(); i++) {
+            for (int j = 0; j < hand.length(); j++) {
+                string newBoard = board.substr(0, i) + hand[j] + board.substr(i);
+                newBoard = removeConsecutive(newBoard);
+                
+                string newHand = hand.substr(0, j) + hand.substr(j + 1);
+                int steps = dfs(newBoard, newHand);
+                
+                if (steps != INT_MAX) {
+                    minSteps = min(minSteps, steps + 1);
+                }
+            }
+        }
+        
+        memo[key] = minSteps;
+        return minSteps;
+    }
+    
+public:
+    int findMinStep(string board, string hand) {
+        sort(hand.begin(), hand.end());
+        int result = dfs(board, hand);
+        return result == INT_MAX ? -1 : result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n! × m)</h4>
+                    <p class="text-gray-700">Where n is the length of the board and m is the length of hand. For each position, we try each ball from hand.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n × m)</h4>
+                    <p class="text-gray-700">For the recursion stack and memoization.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} board
+ * @param {string} hand
+ * @return {number}
+ */
+var findMinStep = function(board, hand) {
+    const memo = new Map();
+    
+    const removeConsecutive = (s) => {
+        let i = 0;
+        while (i < s.length) {
+            let j = i + 1;
+            while (j < s.length && s[j] === s[i]) {
+                j++;
+            }
+            if (j - i >= 3) {
+                return removeConsecutive(s.slice(0, i) + s.slice(j));
+            }
+            i = j;
+        }
+        return s;
+    };
+    
+    const dfs = (board, hand) => {
+        if (board === '') {
+            return 0;
+        }
+        if (hand === '') {
+            return Infinity;
+        }
+        
+        const key = board + '#' + hand;
+        if (memo.has(key)) {
+            return memo.get(key);
+        }
+        
+        let minSteps = Infinity;
+        
+        for (let i = 0; i <= board.length; i++) {
+            for (let j = 0; j < hand.length; j++) {
+                const newBoard = board.slice(0, i) + hand[j] + board.slice(i);
+                const cleanBoard = removeConsecutive(newBoard);
+                
+                const newHand = hand.slice(0, j) + hand.slice(j + 1);
+                const steps = dfs(cleanBoard, newHand);
+                
+                if (steps !== Infinity) {
+                    minSteps = Math.min(minSteps, steps + 1);
+                }
+            }
+        }
+        
+        memo.set(key, minSteps);
+        return minSteps;
+    };
+    
+    const result = dfs(board, hand.split('').sort().join(''));
+    return result === Infinity ? -1 : result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n! × m)</h4>
+                    <p class="text-gray-700">Where n is the length of the board and m is the length of hand. For each position, we try each ball from hand.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n × m)</h4>
+                    <p class="text-gray-700">For the recursion stack and memoization.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private Dictionary<string, int> memo;
+    
+    public int FindMinStep(string board, string hand) {
+        memo = new Dictionary<string, int>();
+        char[] handArray = hand.ToCharArray();
+        Array.Sort(handArray);
+        int result = DFS(board, new string(handArray));
+        return result == int.MaxValue ? -1 : result;
+    }
+    
+    private string RemoveConsecutive(string s) {
+        int i = 0;
+        while (i < s.Length) {
+            int j = i + 1;
+            while (j < s.Length && s[j] == s[i]) {
+                j++;
+            }
+            if (j - i >= 3) {
+                return RemoveConsecutive(s.Substring(0, i) + s.Substring(j));
+            }
+            i = j;
+        }
+        return s;
+    }
+    
+    private int DFS(string board, string hand) {
+        if (string.IsNullOrEmpty(board)) {
+            return 0;
+        }
+        if (string.IsNullOrEmpty(hand)) {
+            return int.MaxValue;
+        }
+        
+        string key = board + "#" + hand;
+        if (memo.ContainsKey(key)) {
+            return memo[key];
+        }
+        
+        int minSteps = int.MaxValue;
+        
+        for (int i = 0; i <= board.Length; i++) {
+            for (int j = 0; j < hand.Length; j++) {
+                string newBoard = board.Insert(i, hand[j].ToString());
+                newBoard = RemoveConsecutive(newBoard);
+                
+                string newHand = hand.Remove(j, 1);
+                int steps = DFS(newBoard, newHand);
+                
+                if (steps != int.MaxValue) {
+                    minSteps = Math.Min(minSteps, steps + 1);
+                }
+            }
+        }
+        
+        memo[key] = minSteps;
+        return minSteps;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n! × m)</h4>
+                    <p class="text-gray-700">Where n is the length of the board and m is the length of hand. For each position, we try each ball from hand.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n × m)</h4>
+                    <p class="text-gray-700">For the recursion stack and memoization.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses backtracking with memoization:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>State exploration</li>
+                            <li>Recursive solution</li>
+                            <li>Memoization</li>
+                            <li>String manipulation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Try each position</li>
+                            <li>Try each ball</li>
+                            <li>Remove groups</li>
+                            <li>Track minimum</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>DFS traversal</li>
+                        <li>State caching</li>
+                        <li>Group removal</li>
+                        <li>Path tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Memoization</li>
+                        <li>Early pruning</li>
+                        <li>State reduction</li>
+                        <li>Efficient string ops</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty board</li>
+                        <li>Empty hand</li>
+                        <li>No solution</li>
+                        <li>Multiple solutions</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

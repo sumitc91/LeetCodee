@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Uncommon Subsequence II - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">522. Longest Uncommon Subsequence II</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an array of strings <code class="bg-gray-100 px-1 rounded">strs</code>, return the length of the <strong>longest uncommon subsequence</strong> between them. If the longest uncommon subsequence does not exist, return <code class="bg-gray-100 px-1 rounded">-1</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    An <strong>uncommon subsequence</strong> between an array of strings is a string that is a <strong>subsequence of one string but not the others</strong>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A <strong>subsequence</strong> of a string <code class="bg-gray-100 px-1 rounded">s</code> is a string that can be derived from <code class="bg-gray-100 px-1 rounded">s</code> by deleting some or no characters without changing the order of the remaining characters.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: strs = ["aba","cdc","eae"]
+Output: 3</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: strs = ["aaa","aaa","aa"]
+Output: -1</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">2 <= strs.length <= 50</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= strs[i].length <= 10</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">strs[i]</code> consists of lowercase English letters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findLUSlength(self, strs: List[str]) -> int:
+        def isSubsequence(s: str, t: str) -> bool:
+            t_idx = 0
+            for c in s:
+                while t_idx < len(t) and t[t_idx] != c:
+                    t_idx += 1
+                if t_idx == len(t):
+                    return False
+                t_idx += 1
+            return True
+        
+        n = len(strs)
+        longest = -1
+        
+        # Check each string
+        for i in range(n):
+            # Check if current string is subsequence of any other string
+            is_uncommon = True
+            for j in range(n):
+                if i != j and isSubsequence(strs[i], strs[j]):
+                    is_uncommon = False
+                    break
+            
+            # If uncommon, update longest length
+            if is_uncommon:
+                longest = max(longest, len(strs[i]))
+        
+        return longest</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²*m)</h4>
+                    <p class="text-gray-700">Where n is the number of strings and m is the maximum length of any string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private boolean isSubsequence(String s, String t) {
+        int tIdx = 0;
+        for (char c : s.toCharArray()) {
+            while (tIdx < t.length() && t.charAt(tIdx) != c) {
+                tIdx++;
+            }
+            if (tIdx == t.length()) {
+                return false;
+            }
+            tIdx++;
+        }
+        return true;
+    }
+    
+    public int findLUSlength(String[] strs) {
+        int n = strs.length;
+        int longest = -1;
+        
+        // Check each string
+        for (int i = 0; i < n; i++) {
+            // Check if current string is subsequence of any other string
+            boolean isUncommon = true;
+            for (int j = 0; j < n; j++) {
+                if (i != j && isSubsequence(strs[i], strs[j])) {
+                    isUncommon = false;
+                    break;
+                }
+            }
+            
+            // If uncommon, update longest length
+            if (isUncommon) {
+                longest = Math.max(longest, strs[i].length());
+            }
+        }
+        
+        return longest;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²*m)</h4>
+                    <p class="text-gray-700">Where n is the number of strings and m is the maximum length of any string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    bool isSubsequence(string& s, string& t) {
+        int tIdx = 0;
+        for (char c : s) {
+            while (tIdx < t.length() && t[tIdx] != c) {
+                tIdx++;
+            }
+            if (tIdx == t.length()) {
+                return false;
+            }
+            tIdx++;
+        }
+        return true;
+    }
+    
+public:
+    int findLUSlength(vector<string>& strs) {
+        int n = strs.size();
+        int longest = -1;
+        
+        // Check each string
+        for (int i = 0; i < n; i++) {
+            // Check if current string is subsequence of any other string
+            bool isUncommon = true;
+            for (int j = 0; j < n; j++) {
+                if (i != j && isSubsequence(strs[i], strs[j])) {
+                    isUncommon = false;
+                    break;
+                }
+            }
+            
+            // If uncommon, update longest length
+            if (isUncommon) {
+                longest = max(longest, (int)strs[i].length());
+            }
+        }
+        
+        return longest;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²*m)</h4>
+                    <p class="text-gray-700">Where n is the number of strings and m is the maximum length of any string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string[]} strs
+ * @return {number}
+ */
+var findLUSlength = function(strs) {
+    const isSubsequence = (s, t) => {
+        let tIdx = 0;
+        for (let c of s) {
+            while (tIdx < t.length && t[tIdx] !== c) {
+                tIdx++;
+            }
+            if (tIdx === t.length) {
+                return false;
+            }
+            tIdx++;
+        }
+        return true;
+    };
+    
+    const n = strs.length;
+    let longest = -1;
+    
+    // Check each string
+    for (let i = 0; i < n; i++) {
+        // Check if current string is subsequence of any other string
+        let isUncommon = true;
+        for (let j = 0; j < n; j++) {
+            if (i !== j && isSubsequence(strs[i], strs[j])) {
+                isUncommon = false;
+                break;
+            }
+        }
+        
+        // If uncommon, update longest length
+        if (isUncommon) {
+            longest = Math.max(longest, strs[i].length);
+        }
+    }
+    
+    return longest;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²*m)</h4>
+                    <p class="text-gray-700">Where n is the number of strings and m is the maximum length of any string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private bool IsSubsequence(string s, string t) {
+        int tIdx = 0;
+        foreach (char c in s) {
+            while (tIdx < t.Length && t[tIdx] != c) {
+                tIdx++;
+            }
+            if (tIdx == t.Length) {
+                return false;
+            }
+            tIdx++;
+        }
+        return true;
+    }
+    
+    public int FindLUSlength(string[] strs) {
+        int n = strs.Length;
+        int longest = -1;
+        
+        // Check each string
+        for (int i = 0; i < n; i++) {
+            // Check if current string is subsequence of any other string
+            bool isUncommon = true;
+            for (int j = 0; j < n; j++) {
+                if (i != j && IsSubsequence(strs[i], strs[j])) {
+                    isUncommon = false;
+                    break;
+                }
+            }
+            
+            // If uncommon, update longest length
+            if (isUncommon) {
+                longest = Math.Max(longest, strs[i].Length);
+            }
+        }
+        
+        return longest;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n²*m)</h4>
+                    <p class="text-gray-700">Where n is the number of strings and m is the maximum length of any string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a brute force approach with subsequence checking:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Subsequence checking</li>
+                            <li>String comparison</li>
+                            <li>Length tracking</li>
+                            <li>Edge case handling</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Check each string</li>
+                            <li>Verify subsequence</li>
+                            <li>Track maximum</li>
+                            <li>Handle duplicates</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Subsequence function</li>
+                        <li>String iteration</li>
+                        <li>Length comparison</li>
+                        <li>Result tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient comparison</li>
+                        <li>Memory usage</li>
+                        <li>Loop structure</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Duplicate strings</li>
+                        <li>Empty strings</li>
+                        <li>Single character</li>
+                        <li>No solution</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 
