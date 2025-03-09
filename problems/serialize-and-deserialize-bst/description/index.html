@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serialize and Deserialize BST - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">449. Serialize and Deserialize BST</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Serialization is converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Design an algorithm to serialize and deserialize a binary search tree. There is no restriction on how your serialization/deserialization algorithm should work. You need to ensure that a binary search tree can be serialized to a string, and this string can be deserialized to the original tree structure.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The encoded string should be as compact as possible.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: root = [2,1,3]
+Output: [2,1,3]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: root = []
+Output: []</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>The number of nodes in the tree is in the range <code class="bg-gray-100 px-1 rounded">[0, 10⁴]</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= Node.val <= 10⁴</code></li>
+                    <li>The input tree is guaranteed to be a binary search tree.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Codec:
+    def serialize(self, root: TreeNode) -> str:
+        """Encodes a tree to a single string."""
+        if not root:
+            return ""
+        
+        # Use preorder traversal for serialization
+        def preorder(node):
+            if not node:
+                return []
+            return [str(node.val)] + preorder(node.left) + preorder(node.right)
+        
+        return ','.join(preorder(root))
+        
+    def deserialize(self, data: str) -> TreeNode:
+        """Decodes your encoded data to tree."""
+        if not data:
+            return None
+        
+        # Convert string to list of integers
+        preorder = [int(x) for x in data.split(',')]
+        
+        def buildBST(values, min_val, max_val):
+            if not values or values[0] < min_val or values[0] > max_val:
+                return None
+            
+            val = values.pop(0)
+            root = TreeNode(val)
+            root.left = buildBST(values, min_val, val)
+            root.right = buildBST(values, val, max_val)
+            return root
+        
+        return buildBST(preorder, float('-inf'), float('inf'))</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the serialized string and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>public class Codec {
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) return "";
+        StringBuilder sb = new StringBuilder();
+        serializeHelper(root, sb);
+        return sb.toString().trim();
+    }
+    
+    private void serializeHelper(TreeNode node, StringBuilder sb) {
+        if (node == null) return;
+        sb.append(node.val).append(" ");
+        serializeHelper(node.left, sb);
+        serializeHelper(node.right, sb);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.isEmpty()) return null;
+        String[] values = data.split(" ");
+        Queue<Integer> queue = new LinkedList<>();
+        for (String val : values) {
+            queue.offer(Integer.parseInt(val));
+        }
+        return deserializeHelper(queue, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+    private TreeNode deserializeHelper(Queue<Integer> queue, int min, int max) {
+        if (queue.isEmpty() || queue.peek() < min || queue.peek() > max) return null;
+        
+        int val = queue.poll();
+        TreeNode root = new TreeNode(val);
+        root.left = deserializeHelper(queue, min, val);
+        root.right = deserializeHelper(queue, val, max);
+        return root;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the serialized string and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Codec {
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (!root) return "";
+        string result;
+        serializeHelper(root, result);
+        return result;
+    }
+    
+    void serializeHelper(TreeNode* node, string& result) {
+        if (!node) return;
+        result += to_string(node->val) + " ";
+        serializeHelper(node->left, result);
+        serializeHelper(node->right, result);
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if (data.empty()) return nullptr;
+        stringstream ss(data);
+        queue<int> q;
+        string val;
+        while (ss >> val) {
+            q.push(stoi(val));
+        }
+        return deserializeHelper(q, INT_MIN, INT_MAX);
+    }
+    
+    TreeNode* deserializeHelper(queue<int>& q, int min, int max) {
+        if (q.empty() || q.front() < min || q.front() > max) return nullptr;
+        
+        int val = q.front();
+        q.pop();
+        TreeNode* root = new TreeNode(val);
+        root->left = deserializeHelper(q, min, val);
+        root->right = deserializeHelper(q, val, max);
+        return root;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the serialized string and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+
+/**
+ * Encodes a tree to a single string.
+ *
+ * @param {TreeNode} root
+ * @return {string}
+ */
+var serialize = function(root) {
+    if (!root) return '';
+    
+    const result = [];
+    function preorder(node) {
+        if (!node) return;
+        result.push(node.val);
+        preorder(node.left);
+        preorder(node.right);
+    }
+    
+    preorder(root);
+    return result.join(' ');
+};
+
+/**
+ * Decodes your encoded data to tree.
+ *
+ * @param {string} data
+ * @return {TreeNode}
+ */
+var deserialize = function(data) {
+    if (!data) return null;
+    
+    const values = data.split(' ').map(Number);
+    const queue = values.slice();
+    
+    function buildBST(min, max) {
+        if (!queue.length || queue[0] < min || queue[0] > max) return null;
+        
+        const val = queue.shift();
+        const node = new TreeNode(val);
+        node.left = buildBST(min, val);
+        node.right = buildBST(val, max);
+        return node;
+    }
+    
+    return buildBST(-Infinity, Infinity);
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the serialized string and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Codec {
+    // Encodes a tree to a single string.
+    public string serialize(TreeNode root) {
+        if (root == null) return "";
+        StringBuilder sb = new StringBuilder();
+        SerializeHelper(root, sb);
+        return sb.ToString().Trim();
+    }
+    
+    private void SerializeHelper(TreeNode node, StringBuilder sb) {
+        if (node == null) return;
+        sb.Append(node.val).Append(" ");
+        SerializeHelper(node.left, sb);
+        SerializeHelper(node.right, sb);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(string data) {
+        if (string.IsNullOrEmpty(data)) return null;
+        Queue<int> queue = new Queue<int>();
+        foreach (string val in data.Split(' ')) {
+            queue.Enqueue(int.Parse(val));
+        }
+        return DeserializeHelper(queue, int.MinValue, int.MaxValue);
+    }
+    
+    private TreeNode DeserializeHelper(Queue<int> queue, int min, int max) {
+        if (queue.Count == 0 || queue.Peek() < min || queue.Peek() > max) return null;
+        
+        int val = queue.Dequeue();
+        TreeNode root = new TreeNode(val);
+        root.left = DeserializeHelper(queue, min, val);
+        root.right = DeserializeHelper(queue, val, max);
+        return root;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the serialized string and recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses preorder traversal and BST properties:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>BST properties for reconstruction</li>
+                            <li>Preorder traversal</li>
+                            <li>Value range validation</li>
+                            <li>Compact representation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Serialize using preorder</li>
+                            <li>Store values as string</li>
+                            <li>Parse string to values</li>
+                            <li>Reconstruct BST</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>String manipulation</li>
+                        <li>Queue for reconstruction</li>
+                        <li>Value range checks</li>
+                        <li>Recursive construction</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>No need for null markers</li>
+                        <li>BST property usage</li>
+                        <li>Space optimization</li>
+                        <li>Efficient parsing</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty tree</li>
+                        <li>Single node</li>
+                        <li>Unbalanced tree</li>
+                        <li>Duplicate values</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

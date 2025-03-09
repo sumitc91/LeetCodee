@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poor Pigs - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">458. Poor Pigs</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    There are <code class="bg-gray-100 px-1 rounded">buckets</code> buckets of liquid, where exactly one of the buckets is poisonous. To figure out which one is poisonous, you feed some number of (poor) pigs the liquid to see whether they will die or not. Unfortunately, you only have <code class="bg-gray-100 px-1 rounded">minutesToTest</code> minutes to determine which bucket is poisonous.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    You can feed the pigs according to these steps:
+                </p>
+                <ol class="list-decimal list-inside text-gray-700 mb-4">
+                    <li>Choose some live pigs to feed.</li>
+                    <li>For each pig, choose which buckets to feed it. The pig will consume all the chosen buckets simultaneously and will take no time. Each pig can feed from any number of buckets.</li>
+                    <li>Wait for <code class="bg-gray-100 px-1 rounded">minutesToDie</code> minutes. You may not feed any other pigs during this time.</li>
+                    <li>After <code class="bg-gray-100 px-1 rounded">minutesToDie</code> minutes have passed, any pigs that have been fed the poisonous bucket will die, and all others will survive.</li>
+                    <li>Repeat this process until you run out of time.</li>
+                </ol>
+                <p class="text-gray-700 mb-4">
+                    Given <code class="bg-gray-100 px-1 rounded">buckets</code>, <code class="bg-gray-100 px-1 rounded">minutesToDie</code>, and <code class="bg-gray-100 px-1 rounded">minutesToTest</code>, return the minimum number of pigs needed to figure out which bucket is poisonous within the allotted time.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: buckets = 4, minutesToDie = 15, minutesToTest = 15
+Output: 2
+Explanation: We can determine the poisonous bucket as follows:
+At time 0, feed the first pig buckets 1 and 2, and feed the second pig buckets 2 and 3.
+At time 15, if either pig dies, we can determine the poisonous bucket.
+If neither pig dies, bucket 4 must be poisonous.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: buckets = 4, minutesToDie = 15, minutesToTest = 30
+Output: 2
+Explanation: We can determine the poisonous bucket as follows:
+At time 0, feed the first pig bucket 1, and feed the second pig bucket 2.
+At time 15, neither pig should die. Feed the first pig bucket 3, and feed the second pig bucket 4.
+At time 30, one of the pigs should die, and we can determine which bucket is poisonous.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= buckets <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= minutesToDie <= minutesToTest <= 100</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def poorPigs(self, buckets: int, minutesToDie: int, minutesToTest: int) -> int:
+        # Calculate number of tests possible
+        tests = minutesToTest // minutesToDie
+        
+        # Each pig can represent tests + 1 states (including initial state)
+        states_per_pig = tests + 1
+        
+        # Calculate minimum pigs needed using logarithm
+        # states_per_pig ^ pigs >= buckets
+        # pigs >= log(buckets) / log(states_per_pig)
+        import math
+        pigs = math.ceil(math.log(buckets) / math.log(states_per_pig))
+        
+        return pigs</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple mathematical operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
+        // Calculate number of tests possible
+        int tests = minutesToTest / minutesToDie;
+        
+        // Each pig can represent tests + 1 states (including initial state)
+        int statesPerPig = tests + 1;
+        
+        // Calculate minimum pigs needed using logarithm
+        // statesPerPig ^ pigs >= buckets
+        // pigs >= log(buckets) / log(statesPerPig)
+        return (int) Math.ceil(Math.log(buckets) / Math.log(statesPerPig));
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple mathematical operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int poorPigs(int buckets, int minutesToDie, int minutesToTest) {
+        // Calculate number of tests possible
+        int tests = minutesToTest / minutesToDie;
+        
+        // Each pig can represent tests + 1 states (including initial state)
+        int statesPerPig = tests + 1;
+        
+        // Calculate minimum pigs needed using logarithm
+        // statesPerPig ^ pigs >= buckets
+        // pigs >= log(buckets) / log(statesPerPig)
+        return ceil(log(buckets) / log(statesPerPig));
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple mathematical operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} buckets
+ * @param {number} minutesToDie
+ * @param {number} minutesToTest
+ * @return {number}
+ */
+var poorPigs = function(buckets, minutesToDie, minutesToTest) {
+    // Calculate number of tests possible
+    const tests = Math.floor(minutesToTest / minutesToDie);
+    
+    // Each pig can represent tests + 1 states (including initial state)
+    const statesPerPig = tests + 1;
+    
+    // Calculate minimum pigs needed using logarithm
+    // statesPerPig ^ pigs >= buckets
+    // pigs >= log(buckets) / log(statesPerPig)
+    return Math.ceil(Math.log(buckets) / Math.log(statesPerPig));
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple mathematical operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int PoorPigs(int buckets, int minutesToDie, int minutesToTest) {
+        // Calculate number of tests possible
+        int tests = minutesToTest / minutesToDie;
+        
+        // Each pig can represent tests + 1 states (including initial state)
+        int statesPerPig = tests + 1;
+        
+        // Calculate minimum pigs needed using logarithm
+        // statesPerPig ^ pigs >= buckets
+        // pigs >= log(buckets) / log(statesPerPig)
+        return (int)Math.Ceiling(Math.Log(buckets) / Math.Log(statesPerPig));
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple mathematical operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses information theory and combinatorics:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Information encoding</li>
+                            <li>State representation</li>
+                            <li>Base conversion</li>
+                            <li>Logarithmic solution</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Calculate test rounds</li>
+                            <li>Determine states per pig</li>
+                            <li>Apply logarithm</li>
+                            <li>Round up result</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Mathematical formula</li>
+                        <li>Logarithm usage</li>
+                        <li>Ceiling function</li>
+                        <li>Integer division</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Constant time</li>
+                        <li>No iteration needed</li>
+                        <li>Direct calculation</li>
+                        <li>Memory efficient</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single bucket</li>
+                        <li>Equal times</li>
+                        <li>Maximum buckets</li>
+                        <li>Minimum times</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

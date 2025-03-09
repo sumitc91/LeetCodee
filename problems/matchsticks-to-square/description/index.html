@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchsticks to Square - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">473. Matchsticks to Square</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given an integer array <code class="bg-gray-100 px-1 rounded">matchsticks</code> where <code class="bg-gray-100 px-1 rounded">matchsticks[i]</code> is the length of the <code class="bg-gray-100 px-1 rounded">i<sup>th</sup></code> matchstick. You want to use <strong>all the matchsticks</strong> to make one square. You <strong>should not break</strong> any stick, but you can link them up, and each matchstick must be used <strong>exactly one time</strong>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return <code class="bg-gray-100 px-1 rounded">true</code> if you can make this square and <code class="bg-gray-100 px-1 rounded">false</code> otherwise.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: matchsticks = [1,1,2,2,2]
+Output: true
+Explanation: You can form a square with length 2, one side of the square came from two sticks with length 1.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: matchsticks = [3,3,3,3,4]
+Output: false
+Explanation: You cannot form a square with the given matchsticks.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= matchsticks.length <= 15</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= matchsticks[i] <= 10⁸</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def makesquare(self, matchsticks: List[int]) -> bool:
+        # Early pruning: if sum is not divisible by 4, we can't form a square
+        total = sum(matchsticks)
+        if total % 4 != 0:
+            return False
+        
+        # Sort in descending order for better pruning
+        matchsticks.sort(reverse=True)
+        target = total // 4
+        sides = [0] * 4
+        
+        def backtrack(index):
+            if index == len(matchsticks):
+                return True
+            
+            # Try to add current matchstick to each side
+            for i in range(4):
+                if sides[i] + matchsticks[index] <= target:
+                    # Skip duplicate attempts
+                    if i > 0 and sides[i] == sides[i-1]:
+                        continue
+                    
+                    sides[i] += matchsticks[index]
+                    if backtrack(index + 1):
+                        return True
+                    sides[i] -= matchsticks[index]
+            
+            return False
+        
+        return backtrack(0)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">Where n is the number of matchsticks. Each matchstick can be placed in 4 sides.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private int[] matchsticks;
+    private int[] sides;
+    private int target;
+    
+    public boolean makesquare(int[] matchsticks) {
+        // Early pruning: if sum is not divisible by 4, we can't form a square
+        int total = 0;
+        for (int match : matchsticks) {
+            total += match;
+        }
+        if (total % 4 != 0) {
+            return false;
+        }
+        
+        // Sort in descending order for better pruning
+        this.matchsticks = matchsticks;
+        Arrays.sort(this.matchsticks);
+        for (int i = 0; i < matchsticks.length / 2; i++) {
+            int temp = this.matchsticks[i];
+            this.matchsticks[i] = this.matchsticks[matchsticks.length - 1 - i];
+            this.matchsticks[matchsticks.length - 1 - i] = temp;
+        }
+        
+        this.target = total / 4;
+        this.sides = new int[4];
+        
+        return backtrack(0);
+    }
+    
+    private boolean backtrack(int index) {
+        if (index == matchsticks.length) {
+            return true;
+        }
+        
+        // Try to add current matchstick to each side
+        for (int i = 0; i < 4; i++) {
+            if (sides[i] + matchsticks[index] <= target) {
+                // Skip duplicate attempts
+                if (i > 0 && sides[i] == sides[i-1]) {
+                    continue;
+                }
+                
+                sides[i] += matchsticks[index];
+                if (backtrack(index + 1)) {
+                    return true;
+                }
+                sides[i] -= matchsticks[index];
+            }
+        }
+        
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">Where n is the number of matchsticks. Each matchstick can be placed in 4 sides.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    vector<int> matchsticks;
+    vector<int> sides;
+    int target;
+    
+    bool backtrack(int index) {
+        if (index == matchsticks.size()) {
+            return true;
+        }
+        
+        // Try to add current matchstick to each side
+        for (int i = 0; i < 4; i++) {
+            if (sides[i] + matchsticks[index] <= target) {
+                // Skip duplicate attempts
+                if (i > 0 && sides[i] == sides[i-1]) {
+                    continue;
+                }
+                
+                sides[i] += matchsticks[index];
+                if (backtrack(index + 1)) {
+                    return true;
+                }
+                sides[i] -= matchsticks[index];
+            }
+        }
+        
+        return false;
+    }
+    
+public:
+    bool makesquare(vector<int>& matchsticks) {
+        // Early pruning: if sum is not divisible by 4, we can't form a square
+        int total = accumulate(matchsticks.begin(), matchsticks.end(), 0);
+        if (total % 4 != 0) {
+            return false;
+        }
+        
+        // Sort in descending order for better pruning
+        this->matchsticks = matchsticks;
+        sort(this->matchsticks.rbegin(), this->matchsticks.rend());
+        
+        this->target = total / 4;
+        this->sides = vector<int>(4, 0);
+        
+        return backtrack(0);
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">Where n is the number of matchsticks. Each matchstick can be placed in 4 sides.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} matchsticks
+ * @return {boolean}
+ */
+var makesquare = function(matchsticks) {
+    // Early pruning: if sum is not divisible by 4, we can't form a square
+    const total = matchsticks.reduce((a, b) => a + b, 0);
+    if (total % 4 !== 0) {
+        return false;
+    }
+    
+    // Sort in descending order for better pruning
+    matchsticks.sort((a, b) => b - a);
+    const target = total / 4;
+    const sides = new Array(4).fill(0);
+    
+    function backtrack(index) {
+        if (index === matchsticks.length) {
+            return true;
+        }
+        
+        // Try to add current matchstick to each side
+        for (let i = 0; i < 4; i++) {
+            if (sides[i] + matchsticks[index] <= target) {
+                // Skip duplicate attempts
+                if (i > 0 && sides[i] === sides[i-1]) {
+                    continue;
+                }
+                
+                sides[i] += matchsticks[index];
+                if (backtrack(index + 1)) {
+                    return true;
+                }
+                sides[i] -= matchsticks[index];
+            }
+        }
+        
+        return false;
+    }
+    
+    return backtrack(0);
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">Where n is the number of matchsticks. Each matchstick can be placed in 4 sides.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private int[] matchsticks;
+    private int[] sides;
+    private int target;
+    
+    public bool Makesquare(int[] matchsticks) {
+        // Early pruning: if sum is not divisible by 4, we can't form a square
+        int total = matchsticks.Sum();
+        if (total % 4 != 0) {
+            return false;
+        }
+        
+        // Sort in descending order for better pruning
+        this.matchsticks = matchsticks.OrderByDescending(x => x).ToArray();
+        this.target = total / 4;
+        this.sides = new int[4];
+        
+        return Backtrack(0);
+    }
+    
+    private bool Backtrack(int index) {
+        if (index == matchsticks.Length) {
+            return true;
+        }
+        
+        // Try to add current matchstick to each side
+        for (int i = 0; i < 4; i++) {
+            if (sides[i] + matchsticks[index] <= target) {
+                // Skip duplicate attempts
+                if (i > 0 && sides[i] == sides[i-1]) {
+                    continue;
+                }
+                
+                sides[i] += matchsticks[index];
+                if (Backtrack(index + 1)) {
+                    return true;
+                }
+                sides[i] -= matchsticks[index];
+            }
+        }
+        
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">Where n is the number of matchsticks. Each matchstick can be placed in 4 sides.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For the recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses backtracking with optimization techniques:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Early pruning</li>
+                            <li>Sorting optimization</li>
+                            <li>Backtracking approach</li>
+                            <li>State tracking</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Check total sum</li>
+                            <li>Sort matchsticks</li>
+                            <li>Try combinations</li>
+                            <li>Track side lengths</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Sum calculation</li>
+                        <li>Array manipulation</li>
+                        <li>Recursive calls</li>
+                        <li>State management</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Duplicate skipping</li>
+                        <li>Descending sort</li>
+                        <li>Side tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty array</li>
+                        <li>Single matchstick</li>
+                        <li>Impossible cases</li>
+                        <li>Equal sides</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

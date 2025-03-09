@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validate IP Address - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">468. Validate IP Address</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">queryIP</code>, return "IPv4" if IP is a valid IPv4 address, "IPv6" if IP is a valid IPv6 address or "Neither" if IP is not a correct IP of any type.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A valid IPv4 address is an IP in the form "x1.x2.x3.x4" where 0 ≤ xi ≤ 255 and xi cannot contain leading zeros. For example: "192.168.1.1" and "192.168.1.0" are valid IPv4 addresses while "192.168.01.1", "192.168.1.00", and "192.168@1.1" are invalid IPv4 addresses.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A valid IPv6 address is an IP in the form "x1:x2:x3:x4:x5:x6:x7:x8" where:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>1 ≤ xi.length ≤ 4</li>
+                        <li>xi is a hexadecimal string which may contain digits, lowercase English letters ('a' to 'f'), and uppercase English letters ('A' to 'F')</li>
+                        <li>Leading zeros are allowed in xi</li>
+                    </ul>
+                </p>
+                <p class="text-gray-700 mb-4">
+                    For example: "2001:0db8:85a3:0000:0000:8a2e:0370:7334" and "2001:db8:85a3:0:0:8A2E:0370:7334" are valid IPv6 addresses, while "2001:0db8:85a3::8A2E:037j:7334" and "02001:0db8:85a3:0000:0000:8a2e:0370:7334" are invalid IPv6 addresses.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: queryIP = "172.16.254.1"
+Output: "IPv4"
+Explanation: This is a valid IPv4 address, return "IPv4".</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: queryIP = "2001:0db8:85a3:0:0:8A2E:0370:7334"
+Output: "IPv6"
+Explanation: This is a valid IPv6 address, return "IPv6".</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: queryIP = "256.256.256.256"
+Output: "Neither"
+Explanation: This is neither a valid IPv4 address nor a valid IPv6 address.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">queryIP</code> consists only of English letters, digits and the characters '.' and ':'.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def validIPAddress(self, queryIP: str) -> str:
+        def isIPv4(s):
+            try:
+                # Split by dots and check if we have exactly 4 parts
+                parts = s.split('.')
+                if len(parts) != 4:
+                    return False
+                
+                # Check each part
+                for part in parts:
+                    # Check for empty parts or parts with length > 3
+                    if len(part) == 0 or len(part) > 3:
+                        return False
+                    # Check for leading zeros
+                    if len(part) > 1 and part[0] == '0':
+                        return False
+                    # Check if all characters are digits
+                    if not part.isdigit():
+                        return False
+                    # Check if value is between 0 and 255
+                    if not 0 <= int(part) <= 255:
+                        return False
+                return True
+            except:
+                return False
+        
+        def isIPv6(s):
+            try:
+                # Split by colons and check if we have exactly 8 parts
+                parts = s.split(':')
+                if len(parts) != 8:
+                    return False
+                
+                # Check each part
+                for part in parts:
+                    # Check for empty parts or parts with length > 4
+                    if len(part) == 0 or len(part) > 4:
+                        return False
+                    # Check if all characters are valid hex digits
+                    for c in part.lower():
+                        if not (c.isdigit() or 'a' <= c <= 'f'):
+                            return False
+                return True
+            except:
+                return False
+        
+        if isIPv4(queryIP):
+            return "IPv4"
+        if isIPv6(queryIP):
+            return "IPv6"
+        return "Neither"</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to check each character in the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public String validIPAddress(String queryIP) {
+        if (isIPv4(queryIP)) return "IPv4";
+        if (isIPv6(queryIP)) return "IPv6";
+        return "Neither";
+    }
+    
+    private boolean isIPv4(String ip) {
+        try {
+            // Split by dots and check if we have exactly 4 parts
+            String[] parts = ip.split("\\.", -1);
+            if (parts.length != 4) return false;
+            
+            // Check each part
+            for (String part : parts) {
+                // Check for empty parts or parts with length > 3
+                if (part.length() == 0 || part.length() > 3) return false;
+                // Check for leading zeros
+                if (part.length() > 1 && part.charAt(0) == '0') return false;
+                // Check if all characters are digits
+                for (char c : part.toCharArray()) {
+                    if (!Character.isDigit(c)) return false;
+                }
+                // Check if value is between 0 and 255
+                int value = Integer.parseInt(part);
+                if (value < 0 || value > 255) return false;
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    private boolean isIPv6(String ip) {
+        try {
+            // Split by colons and check if we have exactly 8 parts
+            String[] parts = ip.split(":", -1);
+            if (parts.length != 8) return false;
+            
+            // Check each part
+            for (String part : parts) {
+                // Check for empty parts or parts with length > 4
+                if (part.length() == 0 || part.length() > 4) return false;
+                // Check if all characters are valid hex digits
+                for (char c : part.toLowerCase().toCharArray()) {
+                    if (!Character.isDigit(c) && (c < 'a' || c > 'f')) return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to check each character in the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    string validIPAddress(string queryIP) {
+        if (isIPv4(queryIP)) return "IPv4";
+        if (isIPv6(queryIP)) return "IPv6";
+        return "Neither";
+    }
+    
+private:
+    bool isIPv4(string& ip) {
+        // Split by dots and check if we have exactly 4 parts
+        vector<string> parts;
+        stringstream ss(ip);
+        string part;
+        while (getline(ss, part, '.')) {
+            parts.push_back(part);
+        }
+        if (parts.size() != 4 || ip.back() == '.') return false;
+        
+        // Check each part
+        for (const string& part : parts) {
+            // Check for empty parts or parts with length > 3
+            if (part.empty() || part.length() > 3) return false;
+            // Check for leading zeros
+            if (part.length() > 1 && part[0] == '0') return false;
+            // Check if all characters are digits
+            for (char c : part) {
+                if (!isdigit(c)) return false;
+            }
+            // Check if value is between 0 and 255
+            int value = stoi(part);
+            if (value < 0 || value > 255) return false;
+        }
+        return true;
+    }
+    
+    bool isIPv6(string& ip) {
+        // Split by colons and check if we have exactly 8 parts
+        vector<string> parts;
+        stringstream ss(ip);
+        string part;
+        while (getline(ss, part, ':')) {
+            parts.push_back(part);
+        }
+        if (parts.size() != 8 || ip.back() == ':') return false;
+        
+        // Check each part
+        for (const string& part : parts) {
+            // Check for empty parts or parts with length > 4
+            if (part.empty() || part.length() > 4) return false;
+            // Check if all characters are valid hex digits
+            for (char c : part) {
+                c = tolower(c);
+                if (!isdigit(c) && (c < 'a' || c > 'f')) return false;
+            }
+        }
+        return true;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to check each character in the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} queryIP
+ * @return {string}
+ */
+var validIPAddress = function(queryIP) {
+    const isIPv4 = (ip) => {
+        try {
+            // Split by dots and check if we have exactly 4 parts
+            const parts = ip.split('.');
+            if (parts.length !== 4) return false;
+            
+            // Check each part
+            for (const part of parts) {
+                // Check for empty parts or parts with length > 3
+                if (part.length === 0 || part.length > 3) return false;
+                // Check for leading zeros
+                if (part.length > 1 && part[0] === '0') return false;
+                // Check if all characters are digits
+                if (!/^\d+$/.test(part)) return false;
+                // Check if value is between 0 and 255
+                const value = parseInt(part);
+                if (value < 0 || value > 255) return false;
+            }
+            return true;
+        } catch {
+            return false;
+        }
+    };
+    
+    const isIPv6 = (ip) => {
+        try {
+            // Split by colons and check if we have exactly 8 parts
+            const parts = ip.split(':');
+            if (parts.length !== 8) return false;
+            
+            // Check each part
+            for (const part of parts) {
+                // Check for empty parts or parts with length > 4
+                if (part.length === 0 || part.length > 4) return false;
+                // Check if all characters are valid hex digits
+                if (!/^[0-9a-fA-F]+$/.test(part)) return false;
+            }
+            return true;
+        } catch {
+            return false;
+        }
+    };
+    
+    if (isIPv4(queryIP)) return "IPv4";
+    if (isIPv6(queryIP)) return "IPv6";
+    return "Neither";
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to check each character in the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public string ValidIPAddress(string queryIP) {
+        if (IsIPv4(queryIP)) return "IPv4";
+        if (IsIPv6(queryIP)) return "IPv6";
+        return "Neither";
+    }
+    
+    private bool IsIPv4(string ip) {
+        try {
+            // Split by dots and check if we have exactly 4 parts
+            string[] parts = ip.Split('.');
+            if (parts.Length != 4) return false;
+            
+            // Check each part
+            foreach (string part in parts) {
+                // Check for empty parts or parts with length > 3
+                if (part.Length == 0 || part.Length > 3) return false;
+                // Check for leading zeros
+                if (part.Length > 1 && part[0] == '0') return false;
+                // Check if all characters are digits
+                if (!part.All(char.IsDigit)) return false;
+                // Check if value is between 0 and 255
+                int value = int.Parse(part);
+                if (value < 0 || value > 255) return false;
+            }
+            return true;
+        } catch {
+            return false;
+        }
+    }
+    
+    private bool IsIPv6(string ip) {
+        try {
+            // Split by colons and check if we have exactly 8 parts
+            string[] parts = ip.Split(':');
+            if (parts.Length != 8) return false;
+            
+            // Check each part
+            foreach (string part in parts) {
+                // Check for empty parts or parts with length > 4
+                if (part.Length == 0 || part.Length > 4) return false;
+                // Check if all characters are valid hex digits
+                if (!part.All(c => char.IsDigit(c) || 
+                    ('a' <= char.ToLower(c) && char.ToLower(c) <= 'f'))) {
+                    return false;
+                }
+            }
+            return true;
+        } catch {
+            return false;
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to check each character in the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We only use a constant amount of extra space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses string manipulation and validation techniques:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>String splitting</li>
+                            <li>Format validation</li>
+                            <li>Range checking</li>
+                            <li>Character validation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Split input string</li>
+                            <li>Validate format</li>
+                            <li>Check constraints</li>
+                            <li>Verify values</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>String parsing</li>
+                        <li>Format checking</li>
+                        <li>Value validation</li>
+                        <li>Error handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early validation</li>
+                        <li>Efficient parsing</li>
+                        <li>Quick checks</li>
+                        <li>Exception handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty strings</li>
+                        <li>Invalid formats</li>
+                        <li>Leading zeros</li>
+                        <li>Invalid characters</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

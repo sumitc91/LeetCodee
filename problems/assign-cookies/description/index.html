@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Cookies - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">455. Assign Cookies</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most one cookie.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Each child <code class="bg-gray-100 px-1 rounded">i</code> has a greed factor <code class="bg-gray-100 px-1 rounded">g[i]</code>, which is the minimum size of a cookie that the child will be content with; and each cookie <code class="bg-gray-100 px-1 rounded">j</code> has a size <code class="bg-gray-100 px-1 rounded">s[j]</code>. If <code class="bg-gray-100 px-1 rounded">s[j] >= g[i]</code>, we can assign the cookie <code class="bg-gray-100 px-1 rounded">j</code> to the child <code class="bg-gray-100 px-1 rounded">i</code>, and the child <code class="bg-gray-100 px-1 rounded">i</code> will be content. Your goal is to maximize the number of your content children and output the maximum number.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: g = [1,2,3], s = [1,1]
+Output: 1
+Explanation: You have 3 children and 2 cookies. The greed factors of 3 children are 1, 2, 3. 
+And even though you have 2 cookies, since their size is both 1, you could only make the child whose greed factor is 1 content.
+You need to output 1.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: g = [1,2], s = [1,2,3]
+Output: 2
+Explanation: You have 2 children and 3 cookies. The greed factors of 2 children are 1, 2. 
+You have 3 cookies and their sizes are big enough to gratify all of the children.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= g.length <= 3 * 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= s.length <= 3 * 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= g[i], s[j] <= 2³¹ - 1</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findContentChildren(self, g: List[int], s: List[int]) -> int:
+        # Sort both arrays
+        g.sort()
+        s.sort()
+        
+        content_children = 0
+        cookie_index = 0
+        
+        # Try to assign cookies to children
+        for child in g:
+            # Find the smallest cookie that can satisfy current child
+            while cookie_index < len(s) and s[cookie_index] < child:
+                cookie_index += 1
+            
+            # If we found a suitable cookie
+            if cookie_index < len(s):
+                content_children += 1
+                cookie_index += 1
+            else:
+                break
+        
+        return content_children</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the maximum length between g and s arrays (due to sorting).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int findContentChildren(int[] g, int[] s) {
+        // Sort both arrays
+        Arrays.sort(g);
+        Arrays.sort(s);
+        
+        int contentChildren = 0;
+        int cookieIndex = 0;
+        
+        // Try to assign cookies to children
+        for (int child : g) {
+            // Find the smallest cookie that can satisfy current child
+            while (cookieIndex < s.length && s[cookieIndex] < child) {
+                cookieIndex++;
+            }
+            
+            // If we found a suitable cookie
+            if (cookieIndex < s.length) {
+                contentChildren++;
+                cookieIndex++;
+            } else {
+                break;
+            }
+        }
+        
+        return contentChildren;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the maximum length between g and s arrays (due to sorting).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        // Sort both arrays
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        
+        int contentChildren = 0;
+        int cookieIndex = 0;
+        
+        // Try to assign cookies to children
+        for (int child : g) {
+            // Find the smallest cookie that can satisfy current child
+            while (cookieIndex < s.size() && s[cookieIndex] < child) {
+                cookieIndex++;
+            }
+            
+            // If we found a suitable cookie
+            if (cookieIndex < s.size()) {
+                contentChildren++;
+                cookieIndex++;
+            } else {
+                break;
+            }
+        }
+        
+        return contentChildren;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the maximum length between g and s arrays (due to sorting).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} g
+ * @param {number[]} s
+ * @return {number}
+ */
+var findContentChildren = function(g, s) {
+    // Sort both arrays
+    g.sort((a, b) => a - b);
+    s.sort((a, b) => a - b);
+    
+    let contentChildren = 0;
+    let cookieIndex = 0;
+    
+    // Try to assign cookies to children
+    for (const child of g) {
+        // Find the smallest cookie that can satisfy current child
+        while (cookieIndex < s.length && s[cookieIndex] < child) {
+            cookieIndex++;
+        }
+        
+        // If we found a suitable cookie
+        if (cookieIndex < s.length) {
+            contentChildren++;
+            cookieIndex++;
+        } else {
+            break;
+        }
+    }
+    
+    return contentChildren;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the maximum length between g and s arrays (due to sorting).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int FindContentChildren(int[] g, int[] s) {
+        // Sort both arrays
+        Array.Sort(g);
+        Array.Sort(s);
+        
+        int contentChildren = 0;
+        int cookieIndex = 0;
+        
+        // Try to assign cookies to children
+        foreach (int child in g) {
+            // Find the smallest cookie that can satisfy current child
+            while (cookieIndex < s.Length && s[cookieIndex] < child) {
+                cookieIndex++;
+            }
+            
+            // If we found a suitable cookie
+            if (cookieIndex < s.Length) {
+                contentChildren++;
+                cookieIndex++;
+            } else {
+                break;
+            }
+        }
+        
+        return contentChildren;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the maximum length between g and s arrays (due to sorting).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a greedy approach to maximize the number of content children:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sort both arrays first</li>
+                            <li>Assign smallest possible cookie</li>
+                            <li>One pass through arrays</li>
+                            <li>Early termination</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sort greed factors and cookie sizes</li>
+                            <li>Iterate through children</li>
+                            <li>Find suitable cookies</li>
+                            <li>Track assignments</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Array sorting</li>
+                        <li>Two-pointer technique</li>
+                        <li>Counter maintenance</li>
+                        <li>Loop control</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Minimal comparisons</li>
+                        <li>In-place sorting</li>
+                        <li>No extra space</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty cookie array</li>
+                        <li>No satisfied children</li>
+                        <li>All children satisfied</li>
+                        <li>Single element arrays</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

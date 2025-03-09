@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique Substrings in Wraparound String - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">467. Unique Substrings in Wraparound String</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    We define the string <code class="bg-gray-100 px-1 rounded">s</code> to be the infinite wraparound string of "abcdefghijklmnopqrstuvwxyz", so <code class="bg-gray-100 px-1 rounded">s</code> will look like: "...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....".
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">p</code>, return the number of unique non-empty substrings of <code class="bg-gray-100 px-1 rounded">p</code> present in <code class="bg-gray-100 px-1 rounded">s</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: p = "a"
+Output: 1
+Explanation: Only the substring "a" of p is in s.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: p = "cac"
+Output: 2
+Explanation: There are two substrings ("a", "c") of p in s.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: p = "zab"
+Output: 6
+Explanation: There are six substrings ("z", "a", "b", "za", "ab", and "zab") of p in s.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= p.length <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">p</code> consists of lowercase English letters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findSubstringInWraproundString(self, p: str) -> int:
+        # dp[i] represents the maximum length of contiguous substring ends with char i
+        dp = [0] * 26
+        curr_len = 0
+        
+        for i in range(len(p)):
+            if i > 0 and (ord(p[i]) - ord(p[i-1])) % 26 == 1:
+                curr_len += 1
+            else:
+                curr_len = 1
+            
+            # Update the maximum length for current character
+            dp[ord(p[i]) - ord('a')] = max(dp[ord(p[i]) - ord('a')], curr_len)
+        
+        # Sum up all unique lengths
+        return sum(dp)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We only need to iterate through the string once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We use a fixed-size array of length 26.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int findSubstringInWraproundString(String p) {
+        // dp[i] represents the maximum length of contiguous substring ends with char i
+        int[] dp = new int[26];
+        int currLen = 0;
+        
+        for (int i = 0; i < p.length(); i++) {
+            if (i > 0 && (p.charAt(i) - p.charAt(i-1) + 26) % 26 == 1) {
+                currLen++;
+            } else {
+                currLen = 1;
+            }
+            
+            // Update the maximum length for current character
+            dp[p.charAt(i) - 'a'] = Math.max(dp[p.charAt(i) - 'a'], currLen);
+        }
+        
+        // Sum up all unique lengths
+        int result = 0;
+        for (int count : dp) {
+            result += count;
+        }
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We only need to iterate through the string once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We use a fixed-size array of length 26.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int findSubstringInWraproundString(string p) {
+        // dp[i] represents the maximum length of contiguous substring ends with char i
+        vector<int> dp(26, 0);
+        int currLen = 0;
+        
+        for (int i = 0; i < p.length(); i++) {
+            if (i > 0 && (p[i] - p[i-1] + 26) % 26 == 1) {
+                currLen++;
+            } else {
+                currLen = 1;
+            }
+            
+            // Update the maximum length for current character
+            dp[p[i] - 'a'] = max(dp[p[i] - 'a'], currLen);
+        }
+        
+        // Sum up all unique lengths
+        return accumulate(dp.begin(), dp.end(), 0);
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We only need to iterate through the string once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We use a fixed-size vector of length 26.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} p
+ * @return {number}
+ */
+var findSubstringInWraproundString = function(p) {
+    // dp[i] represents the maximum length of contiguous substring ends with char i
+    const dp = new Array(26).fill(0);
+    let currLen = 0;
+    
+    for (let i = 0; i < p.length; i++) {
+        if (i > 0 && (p.charCodeAt(i) - p.charCodeAt(i-1) + 26) % 26 === 1) {
+            currLen++;
+        } else {
+            currLen = 1;
+        }
+        
+        // Update the maximum length for current character
+        const index = p.charCodeAt(i) - 'a'.charCodeAt(0);
+        dp[index] = Math.max(dp[index], currLen);
+    }
+    
+    // Sum up all unique lengths
+    return dp.reduce((sum, count) => sum + count, 0);
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We only need to iterate through the string once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We use a fixed-size array of length 26.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int FindSubstringInWraproundString(string p) {
+        // dp[i] represents the maximum length of contiguous substring ends with char i
+        int[] dp = new int[26];
+        int currLen = 0;
+        
+        for (int i = 0; i < p.Length; i++) {
+            if (i > 0 && (p[i] - p[i-1] + 26) % 26 == 1) {
+                currLen++;
+            } else {
+                currLen = 1;
+            }
+            
+            // Update the maximum length for current character
+            dp[p[i] - 'a'] = Math.Max(dp[p[i] - 'a'], currLen);
+        }
+        
+        // Sum up all unique lengths
+        return dp.Sum();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We only need to iterate through the string once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">We use a fixed-size array of length 26.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses dynamic programming with a clever observation about contiguous substrings:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Contiguous substring property</li>
+                            <li>Character sequence pattern</li>
+                            <li>Maximum length tracking</li>
+                            <li>Unique counting</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize DP array</li>
+                            <li>Track contiguous sequences</li>
+                            <li>Update maximum lengths</li>
+                            <li>Sum unique counts</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>DP array initialization</li>
+                        <li>Sequence tracking</li>
+                        <li>Length calculation</li>
+                        <li>Result aggregation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Constant space complexity</li>
+                        <li>Single pass solution</li>
+                        <li>Efficient counting</li>
+                        <li>No duplicate counting</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single character</li>
+                        <li>Repeated characters</li>
+                        <li>Wraparound sequences</li>
+                        <li>Empty string</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

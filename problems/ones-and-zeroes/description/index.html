@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ones and Zeroes - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">474. Ones and Zeroes</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given an array of binary strings <code class="bg-gray-100 px-1 rounded">strs</code> and two integers <code class="bg-gray-100 px-1 rounded">m</code> and <code class="bg-gray-100 px-1 rounded">n</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return the size of the largest subset of <code class="bg-gray-100 px-1 rounded">strs</code> such that there are <strong>at most</strong> <code class="bg-gray-100 px-1 rounded">m</code> <code class="bg-gray-100 px-1 rounded">0</code>'s and <code class="bg-gray-100 px-1 rounded">n</code> <code class="bg-gray-100 px-1 rounded">1</code>'s in total.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: strs = ["10","0001","111001","1","0"], m = 5, n = 3
+Output: 4
+Explanation: The largest subset with at most 5 0's and 3 1's is {"10", "0001", "1", "0"}, so the answer is 4.
+Other valid but smaller subsets include {"0001", "1"} and {"10", "1", "0"}.
+{"111001"} is an invalid subset because it contains 4 1's, greater than the maximum of 3.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: strs = ["10","0","1"], m = 1, n = 1
+Output: 2
+Explanation: The largest subset is {"0", "1"}, so the answer is 2.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= strs.length <= 600</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= strs[i].length <= 100</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">strs[i]</code> consists only of digits <code class="bg-gray-100 px-1 rounded">'0'</code> and <code class="bg-gray-100 px-1 rounded">'1'</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m, n <= 100</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        # dp[i][j] represents the maximum number of strings that can be formed with i 0's and j 1's
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        
+        for s in strs:
+            # Count number of zeros and ones in current string
+            zeros = s.count('0')
+            ones = s.count('1')
+            
+            # Update dp array from bottom-right to top-left
+            for i in range(m, zeros - 1, -1):
+                for j in range(n, ones - 1, -1):
+                    dp[i][j] = max(dp[i][j], dp[i - zeros][j - ones] + 1)
+        
+        return dp[m][n]</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(L × m × n)</h4>
+                    <p class="text-gray-700">Where L is the length of strs array, and m and n are the given constraints.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">For the dynamic programming table.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+        // dp[i][j] represents the maximum number of strings that can be formed with i 0's and j 1's
+        int[][] dp = new int[m + 1][n + 1];
+        
+        for (String s : strs) {
+            int[] count = countZerosOnes(s);
+            int zeros = count[0], ones = count[1];
+            
+            // Update dp array from bottom-right to top-left
+            for (int i = m; i >= zeros; i--) {
+                for (int j = n; j >= ones; j--) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+    
+    private int[] countZerosOnes(String s) {
+        int[] count = new int[2];
+        for (char c : s.toCharArray()) {
+            count[c - '0']++;
+        }
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(L × m × n)</h4>
+                    <p class="text-gray-700">Where L is the length of strs array, and m and n are the given constraints.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">For the dynamic programming table.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        // dp[i][j] represents the maximum number of strings that can be formed with i 0's and j 1's
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        
+        for (const string& s : strs) {
+            int zeros = count(s.begin(), s.end(), '0');
+            int ones = s.length() - zeros;
+            
+            // Update dp array from bottom-right to top-left
+            for (int i = m; i >= zeros; i--) {
+                for (int j = n; j >= ones; j--) {
+                    dp[i][j] = max(dp[i][j], dp[i - zeros][j - ones] + 1);
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(L × m × n)</h4>
+                    <p class="text-gray-700">Where L is the length of strs array, and m and n are the given constraints.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">For the dynamic programming table.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string[]} strs
+ * @param {number} m
+ * @param {number} n
+ * @return {number}
+ */
+var findMaxForm = function(strs, m, n) {
+    // dp[i][j] represents the maximum number of strings that can be formed with i 0's and j 1's
+    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+    
+    for (const s of strs) {
+        const zeros = (s.match(/0/g) || []).length;
+        const ones = s.length - zeros;
+        
+        // Update dp array from bottom-right to top-left
+        for (let i = m; i >= zeros; i--) {
+            for (let j = n; j >= ones; j--) {
+                dp[i][j] = Math.max(dp[i][j], dp[i - zeros][j - ones] + 1);
+            }
+        }
+    }
+    
+    return dp[m][n];
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(L × m × n)</h4>
+                    <p class="text-gray-700">Where L is the length of strs array, and m and n are the given constraints.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">For the dynamic programming table.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int FindMaxForm(string[] strs, int m, int n) {
+        // dp[i][j] represents the maximum number of strings that can be formed with i 0's and j 1's
+        int[,] dp = new int[m + 1, n + 1];
+        
+        foreach (string s in strs) {
+            int zeros = s.Count(c => c == '0');
+            int ones = s.Length - zeros;
+            
+            // Update dp array from bottom-right to top-left
+            for (int i = m; i >= zeros; i--) {
+                for (int j = n; j >= ones; j--) {
+                    dp[i,j] = Math.Max(dp[i,j], dp[i - zeros,j - ones] + 1);
+                }
+            }
+        }
+        
+        return dp[m,n];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(L × m × n)</h4>
+                    <p class="text-gray-700">Where L is the length of strs array, and m and n are the given constraints.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m × n)</h4>
+                    <p class="text-gray-700">For the dynamic programming table.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses dynamic programming with a 2D array approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>0/1 Knapsack variation</li>
+                            <li>State representation</li>
+                            <li>Bottom-up approach</li>
+                            <li>Optimal substructure</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize DP table</li>
+                            <li>Process each string</li>
+                            <li>Count zeros and ones</li>
+                            <li>Update states</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>2D array creation</li>
+                        <li>String counting</li>
+                        <li>State transitions</li>
+                        <li>Maximum subset tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Space optimization</li>
+                        <li>Efficient counting</li>
+                        <li>Early termination</li>
+                        <li>Memory reuse</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty strings</li>
+                        <li>Single character</li>
+                        <li>Maximum constraints</li>
+                        <li>Zero capacity</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

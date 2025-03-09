@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concatenated Words - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">472. Concatenated Words</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an array of strings <code class="bg-gray-100 px-1 rounded">words</code> (<strong>without duplicates</strong>), return all the <strong>concatenated words</strong> in the given list of words.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A <strong>concatenated word</strong> is defined as a string that is comprised entirely of at least two shorter words in the given array.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["cat","cats","catsdogcats","dog","dogcatsdog","hippopotamuses","rat","ratcatdogcat"]
+Output: ["catsdogcats","dogcatsdog","ratcatdogcat"]
+Explanation: "catsdogcats" can be concatenated by "cats", "dog" and "cats"; 
+"dogcatsdog" can be concatenated by "dog", "cats" and "dog"; 
+"ratcatdogcat" can be concatenated by "rat", "cat", "dog" and "cat".</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["cat","dog","catdog"]
+Output: ["catdog"]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= words.length <= 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= words[i].length <= 30</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">words[i]</code> consists of only lowercase English letters.</li>
+                    <li>All the strings of <code class="bg-gray-100 px-1 rounded">words</code> are <strong>unique</strong>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= sum(words[i].length) <= 10⁵</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findAllConcatenatedWordsInADict(self, words: List[str]) -> List[str]:
+        word_set = set(words)
+        result = []
+        
+        def can_form(word, start, count):
+            if start == len(word) and count >= 2:
+                return True
+            
+            for i in range(start + 1, len(word) + 1):
+                curr = word[start:i]
+                if curr in word_set:
+                    if can_form(word, i, count + 1):
+                        return True
+            return False
+        
+        for word in words:
+            word_set.remove(word)
+            if word and can_form(word, 0, 0):
+                result.append(word)
+            word_set.add(word)
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n × l²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and l is the maximum length of a word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word set and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private Set<String> wordSet;
+    
+    public List<String> findAllConcatenatedWordsInADict(String[] words) {
+        wordSet = new HashSet<>(Arrays.asList(words));
+        List<String> result = new ArrayList<>();
+        
+        for (String word : words) {
+            wordSet.remove(word);
+            if (word.length() > 0 && canForm(word, 0, 0)) {
+                result.add(word);
+            }
+            wordSet.add(word);
+        }
+        
+        return result;
+    }
+    
+    private boolean canForm(String word, int start, int count) {
+        if (start == word.length() && count >= 2) {
+            return true;
+        }
+        
+        for (int i = start + 1; i <= word.length(); i++) {
+            String curr = word.substring(start, i);
+            if (wordSet.contains(curr)) {
+                if (canForm(word, i, count + 1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n × l²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and l is the maximum length of a word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word set and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    unordered_set<string> wordSet;
+    
+    bool canForm(const string& word, int start, int count) {
+        if (start == word.length() && count >= 2) {
+            return true;
+        }
+        
+        for (int i = start + 1; i <= word.length(); i++) {
+            string curr = word.substr(start, i - start);
+            if (wordSet.count(curr)) {
+                if (canForm(word, i, count + 1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+public:
+    vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
+        wordSet = unordered_set<string>(words.begin(), words.end());
+        vector<string> result;
+        
+        for (const string& word : words) {
+            wordSet.erase(word);
+            if (word.length() > 0 && canForm(word, 0, 0)) {
+                result.push_back(word);
+            }
+            wordSet.insert(word);
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n × l²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and l is the maximum length of a word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word set and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string[]} words
+ * @return {string[]}
+ */
+var findAllConcatenatedWordsInADict = function(words) {
+    const wordSet = new Set(words);
+    const result = [];
+    
+    const canForm = (word, start, count) => {
+        if (start === word.length && count >= 2) {
+            return true;
+        }
+        
+        for (let i = start + 1; i <= word.length; i++) {
+            const curr = word.slice(start, i);
+            if (wordSet.has(curr)) {
+                if (canForm(word, i, count + 1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+    
+    for (const word of words) {
+        wordSet.delete(word);
+        if (word.length > 0 && canForm(word, 0, 0)) {
+            result.push(word);
+        }
+        wordSet.add(word);
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n × l²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and l is the maximum length of a word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word set and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private HashSet<string> wordSet;
+    
+    public IList<string> FindAllConcatenatedWordsInADict(string[] words) {
+        wordSet = new HashSet<string>(words);
+        IList<string> result = new List<string>();
+        
+        foreach (string word in words) {
+            wordSet.Remove(word);
+            if (word.Length > 0 && CanForm(word, 0, 0)) {
+                result.Add(word);
+            }
+            wordSet.Add(word);
+        }
+        
+        return result;
+    }
+    
+    private bool CanForm(string word, int start, int count) {
+        if (start == word.Length && count >= 2) {
+            return true;
+        }
+        
+        for (int i = start + 1; i <= word.Length; i++) {
+            string curr = word.Substring(start, i - start);
+            if (wordSet.Contains(curr)) {
+                if (CanForm(word, i, count + 1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n × l²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and l is the maximum length of a word.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word set and recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses recursion and a set data structure:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Word decomposition</li>
+                            <li>Recursive search</li>
+                            <li>Set membership</li>
+                            <li>String manipulation</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Create word set</li>
+                            <li>Try decompositions</li>
+                            <li>Track word count</li>
+                            <li>Build result list</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Set operations</li>
+                        <li>String slicing</li>
+                        <li>Recursive calls</li>
+                        <li>Result tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Set lookups</li>
+                        <li>Word removal</li>
+                        <li>Memory reuse</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty strings</li>
+                        <li>Single words</li>
+                        <li>Long words</li>
+                        <li>Multiple combinations</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heaters - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">475. Heaters</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Winter is coming! During the contest, your first job is to design a standard heater with a fixed warm radius to warm all the houses.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Every house can be warmed, as long as the house is within the heater's warm radius range. 
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given the positions of <code class="bg-gray-100 px-1 rounded">houses</code> and <code class="bg-gray-100 px-1 rounded">heaters</code> on a horizontal line, return <em>the minimum radius standard of heaters so that those heaters could cover all houses</em>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    <strong>Notice</strong> that all the <code class="bg-gray-100 px-1 rounded">heaters</code> follow your radius standard, and the warm radius will be the same.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: houses = [1,2,3], heaters = [2]
+Output: 1
+Explanation: The only heater was placed in the position 2, and if we use the radius 1 standard, then all the houses can be warmed.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: houses = [1,2,3,4], heaters = [1,4]
+Output: 1
+Explanation: The two heaters were placed at positions 1 and 4. We need to use a radius 1 standard, then all the houses can be warmed.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: houses = [1,5], heaters = [2]
+Output: 3</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= houses.length, heaters.length <= 3 * 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= houses[i], heaters[i] <= 10⁹</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findRadius(self, houses: List[int], heaters: List[int]) -> int:
+        # Sort both arrays
+        houses.sort()
+        heaters.sort()
+        
+        # Initialize result and heater index
+        result = 0
+        i = 0
+        
+        # For each house, find the minimum distance to a heater
+        for house in houses:
+            # Find the closest heater
+            while i < len(heaters) - 1 and abs(heaters[i] - house) >= abs(heaters[i + 1] - house):
+                i += 1
+            
+            # Update result with maximum distance needed
+            result = max(result, abs(heaters[i] - house))
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n + m log m)</h4>
+                    <p class="text-gray-700">Where n is the number of houses and m is the number of heaters. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int findRadius(int[] houses, int[] heaters) {
+        // Sort both arrays
+        Arrays.sort(houses);
+        Arrays.sort(heaters);
+        
+        int result = 0;
+        int i = 0;
+        
+        // For each house, find the minimum distance to a heater
+        for (int house : houses) {
+            // Find the closest heater
+            while (i < heaters.length - 1 && 
+                   Math.abs(heaters[i] - house) >= Math.abs(heaters[i + 1] - house)) {
+                i++;
+            }
+            
+            // Update result with maximum distance needed
+            result = Math.max(result, Math.abs(heaters[i] - house));
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n + m log m)</h4>
+                    <p class="text-gray-700">Where n is the number of houses and m is the number of heaters. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int findRadius(vector<int>& houses, vector<int>& heaters) {
+        // Sort both arrays
+        sort(houses.begin(), houses.end());
+        sort(heaters.begin(), heaters.end());
+        
+        int result = 0;
+        int i = 0;
+        
+        // For each house, find the minimum distance to a heater
+        for (int house : houses) {
+            // Find the closest heater
+            while (i < heaters.size() - 1 && 
+                   abs(heaters[i] - house) >= abs(heaters[i + 1] - house)) {
+                i++;
+            }
+            
+            // Update result with maximum distance needed
+            result = max(result, abs(heaters[i] - house));
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n + m log m)</h4>
+                    <p class="text-gray-700">Where n is the number of houses and m is the number of heaters. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} houses
+ * @param {number[]} heaters
+ * @return {number}
+ */
+var findRadius = function(houses, heaters) {
+    // Sort both arrays
+    houses.sort((a, b) => a - b);
+    heaters.sort((a, b) => a - b);
+    
+    let result = 0;
+    let i = 0;
+    
+    // For each house, find the minimum distance to a heater
+    for (const house of houses) {
+        // Find the closest heater
+        while (i < heaters.length - 1 && 
+               Math.abs(heaters[i] - house) >= Math.abs(heaters[i + 1] - house)) {
+            i++;
+        }
+        
+        // Update result with maximum distance needed
+        result = Math.max(result, Math.abs(heaters[i] - house));
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n + m log m)</h4>
+                    <p class="text-gray-700">Where n is the number of houses and m is the number of heaters. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int FindRadius(int[] houses, int[] heaters) {
+        // Sort both arrays
+        Array.Sort(houses);
+        Array.Sort(heaters);
+        
+        int result = 0;
+        int i = 0;
+        
+        // For each house, find the minimum distance to a heater
+        foreach (int house in houses) {
+            // Find the closest heater
+            while (i < heaters.Length - 1 && 
+                   Math.Abs(heaters[i] - house) >= Math.Abs(heaters[i + 1] - house)) {
+                i++;
+            }
+            
+            // Update result with maximum distance needed
+            result = Math.Max(result, Math.Abs(heaters[i] - house));
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n + m log m)</h4>
+                    <p class="text-gray-700">Where n is the number of houses and m is the number of heaters. The sorting step dominates the time complexity.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a two-pointer approach with sorting:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sorting optimization</li>
+                            <li>Two-pointer technique</li>
+                            <li>Distance calculation</li>
+                            <li>Maximum radius tracking</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sort both arrays</li>
+                            <li>Process each house</li>
+                            <li>Find closest heater</li>
+                            <li>Update radius</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Array sorting</li>
+                        <li>Distance comparison</li>
+                        <li>Pointer movement</li>
+                        <li>Maximum tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient searching</li>
+                        <li>Memory efficiency</li>
+                        <li>Linear scanning</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single house/heater</li>
+                        <li>Equal positions</li>
+                        <li>Large distances</li>
+                        <li>Boundary values</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

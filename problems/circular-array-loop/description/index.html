@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Array Loop - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">457. Circular Array Loop</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are playing with a circular array. The array is given in the form of a <code class="bg-gray-100 px-1 rounded">nums</code> array, and you can move from index <code class="bg-gray-100 px-1 rounded">i</code> to index <code class="bg-gray-100 px-1 rounded">j</code> if:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">i + nums[i]</code> is cyclic, meaning you can go forward or backward in the array</li>
+                    <li>The direction of movement (forward/backward) must be consistent throughout the cycle</li>
+                    <li>The cycle should contain at least one element</li>
+                    <li>The cycle should not contain more than <code class="bg-gray-100 px-1 rounded">n</code> elements, where <code class="bg-gray-100 px-1 rounded">n</code> is the length of <code class="bg-gray-100 px-1 rounded">nums</code></li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    Return <code class="bg-gray-100 px-1 rounded">true</code> if there exists a cycle in the array, otherwise return <code class="bg-gray-100 px-1 rounded">false</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [2,-1,1,2,2]
+Output: true
+Explanation: There is a cycle from index 0 -> 2 -> 3 -> 0. The cycle's length is 3.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [-1,2]
+Output: false
+Explanation: The sequence from index 1 -> 1 -> 1 ... is not a cycle because the sequence's length is 1.
+By definition the sequence's length must be strictly greater than 1 to be a cycle.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [-2,1,-1,-2,-2]
+Output: false
+Explanation: The sequence from index 1 -> 2 -> 1 -> ... is not a cycle because the sequence's movement direction changes.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums.length <= 5000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-1000 <= nums[i] <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">nums[i] != 0</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def circularArrayLoop(self, nums: List[int]) -> bool:
+        n = len(nums)
+        
+        def get_next(current: int) -> int:
+            # Calculate next position with modulo to handle circular nature
+            return (current + nums[current]) % n
+        
+        # Check each position as a potential start of a cycle
+        for start in range(n):
+            if nums[start] == 0:
+                continue
+                
+            # Use slow and fast pointers
+            slow = start
+            fast = start
+            
+            # Store the direction of movement
+            forward = nums[start] > 0
+            
+            while True:
+                # Move slow pointer one step
+                slow = get_next(slow)
+                if nums[slow] == 0:
+                    break
+                
+                # Check if direction changes or self-loop
+                if (nums[slow] > 0) != forward:
+                    break
+                
+                # Move fast pointer two steps
+                fast = get_next(fast)
+                if nums[fast] == 0:
+                    break
+                
+                if (nums[fast] > 0) != forward:
+                    break
+                    
+                fast = get_next(fast)
+                if nums[fast] == 0:
+                    break
+                
+                if (nums[fast] > 0) != forward:
+                    break
+                
+                # If pointers meet, we found a cycle
+                if slow == fast:
+                    # Check cycle length > 1
+                    next_pos = get_next(slow)
+                    if next_pos != slow:
+                        return True
+                    break
+            
+            # Mark visited positions
+            current = start
+            while nums[current] != 0 and (nums[current] > 0) == forward:
+                next_pos = get_next(current)
+                nums[current] = 0
+                current = next_pos
+        
+        return False</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean circularArrayLoop(int[] nums) {
+        int n = nums.length;
+        
+        for (int start = 0; start < n; start++) {
+            if (nums[start] == 0) {
+                continue;
+            }
+            
+            // Use slow and fast pointers
+            int slow = start;
+            int fast = start;
+            boolean forward = nums[start] > 0;
+            
+            while (true) {
+                // Move slow pointer one step
+                slow = getNext(nums, slow);
+                if (nums[slow] == 0) {
+                    break;
+                }
+                
+                // Check if direction changes
+                if ((nums[slow] > 0) != forward) {
+                    break;
+                }
+                
+                // Move fast pointer two steps
+                fast = getNext(nums, fast);
+                if (nums[fast] == 0) {
+                    break;
+                }
+                
+                if ((nums[fast] > 0) != forward) {
+                    break;
+                }
+                
+                fast = getNext(nums, fast);
+                if (nums[fast] == 0) {
+                    break;
+                }
+                
+                if ((nums[fast] > 0) != forward) {
+                    break;
+                }
+                
+                // If pointers meet, we found a cycle
+                if (slow == fast) {
+                    // Check cycle length > 1
+                    int next = getNext(nums, slow);
+                    if (next != slow) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+            
+            // Mark visited positions
+            int current = start;
+            while (nums[current] != 0 && (nums[current] > 0) == forward) {
+                int next = getNext(nums, current);
+                nums[current] = 0;
+                current = next;
+            }
+        }
+        
+        return false;
+    }
+    
+    private int getNext(int[] nums, int current) {
+        int n = nums.length;
+        return ((current + nums[current]) % n + n) % n;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool circularArrayLoop(vector<int>& nums) {
+        int n = nums.size();
+        
+        for (int start = 0; start < n; start++) {
+            if (nums[start] == 0) {
+                continue;
+            }
+            
+            // Use slow and fast pointers
+            int slow = start;
+            int fast = start;
+            bool forward = nums[start] > 0;
+            
+            while (true) {
+                // Move slow pointer one step
+                slow = getNext(nums, slow);
+                if (nums[slow] == 0) {
+                    break;
+                }
+                
+                // Check if direction changes
+                if ((nums[slow] > 0) != forward) {
+                    break;
+                }
+                
+                // Move fast pointer two steps
+                fast = getNext(nums, fast);
+                if (nums[fast] == 0) {
+                    break;
+                }
+                
+                if ((nums[fast] > 0) != forward) {
+                    break;
+                }
+                
+                fast = getNext(nums, fast);
+                if (nums[fast] == 0) {
+                    break;
+                }
+                
+                if ((nums[fast] > 0) != forward) {
+                    break;
+                }
+                
+                // If pointers meet, we found a cycle
+                if (slow == fast) {
+                    // Check cycle length > 1
+                    int next = getNext(nums, slow);
+                    if (next != slow) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+            
+            // Mark visited positions
+            int current = start;
+            while (nums[current] != 0 && (nums[current] > 0) == forward) {
+                int next = getNext(nums, current);
+                nums[current] = 0;
+                current = next;
+            }
+        }
+        
+        return false;
+    }
+    
+private:
+    int getNext(vector<int>& nums, int current) {
+        int n = nums.size();
+        return ((current + nums[current]) % n + n) % n;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var circularArrayLoop = function(nums) {
+    const n = nums.length;
+    
+    const getNext = (current) => {
+        return ((current + nums[current]) % n + n) % n;
+    };
+    
+    for (let start = 0; start < n; start++) {
+        if (nums[start] === 0) {
+            continue;
+        }
+        
+        // Use slow and fast pointers
+        let slow = start;
+        let fast = start;
+        const forward = nums[start] > 0;
+        
+        while (true) {
+            // Move slow pointer one step
+            slow = getNext(slow);
+            if (nums[slow] === 0) {
+                break;
+            }
+            
+            // Check if direction changes
+            if ((nums[slow] > 0) !== forward) {
+                break;
+            }
+            
+            // Move fast pointer two steps
+            fast = getNext(fast);
+            if (nums[fast] === 0) {
+                break;
+            }
+            
+            if ((nums[fast] > 0) !== forward) {
+                break;
+            }
+            
+            fast = getNext(fast);
+            if (nums[fast] === 0) {
+                break;
+            }
+            
+            if ((nums[fast] > 0) !== forward) {
+                break;
+            }
+            
+            // If pointers meet, we found a cycle
+            if (slow === fast) {
+                // Check cycle length > 1
+                const next = getNext(slow);
+                if (next !== slow) {
+                    return true;
+                }
+                break;
+            }
+        }
+        
+        // Mark visited positions
+        let current = start;
+        while (nums[current] !== 0 && (nums[current] > 0) === forward) {
+            const next = getNext(current);
+            nums[current] = 0;
+            current = next;
+        }
+    }
+    
+    return false;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool CircularArrayLoop(int[] nums) {
+        int n = nums.Length;
+        
+        for (int start = 0; start < n; start++) {
+            if (nums[start] == 0) {
+                continue;
+            }
+            
+            // Use slow and fast pointers
+            int slow = start;
+            int fast = start;
+            bool forward = nums[start] > 0;
+            
+            while (true) {
+                // Move slow pointer one step
+                slow = GetNext(nums, slow);
+                if (nums[slow] == 0) {
+                    break;
+                }
+                
+                // Check if direction changes
+                if ((nums[slow] > 0) != forward) {
+                    break;
+                }
+                
+                // Move fast pointer two steps
+                fast = GetNext(nums, fast);
+                if (nums[fast] == 0) {
+                    break;
+                }
+                
+                if ((nums[fast] > 0) != forward) {
+                    break;
+                }
+                
+                fast = GetNext(nums, fast);
+                if (nums[fast] == 0) {
+                    break;
+                }
+                
+                if ((nums[fast] > 0) != forward) {
+                    break;
+                }
+                
+                // If pointers meet, we found a cycle
+                if (slow == fast) {
+                    // Check cycle length > 1
+                    int next = GetNext(nums, slow);
+                    if (next != slow) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+            
+            // Mark visited positions
+            int current = start;
+            while (nums[current] != 0 && (nums[current] > 0) == forward) {
+                int next = GetNext(nums, current);
+                nums[current] = 0;
+                current = next;
+            }
+        }
+        
+        return false;
+    }
+    
+    private int GetNext(int[] nums, int current) {
+        int n = nums.Length;
+        return ((current + nums[current]) % n + n) % n;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses Floyd's Cycle Finding Algorithm (also known as the "tortoise and hare" algorithm) to detect cycles:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Two-pointer technique</li>
+                            <li>Direction consistency</li>
+                            <li>Cycle length check</li>
+                            <li>Visited marking</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize pointers</li>
+                            <li>Move pointers</li>
+                            <li>Check conditions</li>
+                            <li>Mark visited</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Circular movement</li>
+                        <li>Direction tracking</li>
+                        <li>Cycle detection</li>
+                        <li>Length verification</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Space optimization</li>
+                        <li>Visited marking</li>
+                        <li>Direction check</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single element</li>
+                        <li>Direction changes</li>
+                        <li>Self loops</li>
+                        <li>Multiple cycles</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

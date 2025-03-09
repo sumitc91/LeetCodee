@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sort Characters By Frequency - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">451. Sort Characters By Frequency</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">s</code>, sort it in decreasing order based on the frequency of the characters. The frequency of a character is the number of times it appears in the string.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return the sorted string. If there are multiple answers, return any of them.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "tree"
+Output: "eert"
+Explanation: 'e' appears twice while 'r' and 't' both appear once.
+So 'e' should appear before both 'r' and 't'. Therefore "eetr" is also a valid answer.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "cccaaa"
+Output: "cccaaa"
+Explanation: Both 'c' and 'a' appear three times, so both "cccaaa" and "aaaccc" are valid answers.
+Note that "cacaca" is incorrect, as the same characters must be together.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "Aabb"
+Output: "bbAa"
+Explanation: "bbaA" is also a valid answer, but "Aabb" is incorrect.
+Note that 'A' and 'a' are treated as two different characters.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= s.length <= 5 * 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">s</code> consists of uppercase and lowercase English letters and digits.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def frequencySort(self, s: str) -> str:
+        # Count character frequencies
+        freq = Counter(s)
+        
+        # Sort characters by frequency in descending order
+        sorted_chars = sorted(freq.items(), key=lambda x: (-x[1], x[0]))
+        
+        # Build the result string
+        result = []
+        for char, count in sorted_chars:
+            result.append(char * count)
+        
+        return ''.join(result)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of the string and k is the number of unique characters.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the frequency map and sorted characters.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public String frequencySort(String s) {
+        // Count character frequencies
+        Map<Character, Integer> freq = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            freq.put(c, freq.getOrDefault(c, 0) + 1);
+        }
+        
+        // Create a list of characters and sort by frequency
+        List<Character> chars = new ArrayList<>(freq.keySet());
+        Collections.sort(chars, (a, b) -> {
+            int freqCompare = freq.get(b).compareTo(freq.get(a));
+            return freqCompare != 0 ? freqCompare : a.compareTo(b);
+        });
+        
+        // Build the result string
+        StringBuilder result = new StringBuilder();
+        for (char c : chars) {
+            result.append(String.valueOf(c).repeat(freq.get(c)));
+        }
+        
+        return result.toString();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of the string and k is the number of unique characters.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the frequency map and sorted characters.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    string frequencySort(string s) {
+        // Count character frequencies
+        unordered_map<char, int> freq;
+        for (char c : s) {
+            freq[c]++;
+        }
+        
+        // Sort characters by frequency
+        vector<pair<char, int>> chars;
+        for (const auto& p : freq) {
+            chars.push_back(p);
+        }
+        sort(chars.begin(), chars.end(), 
+             [](const pair<char, int>& a, const pair<char, int>& b) {
+                 return a.second > b.second || (a.second == b.second && a.first < b.first);
+             });
+        
+        // Build the result string
+        string result;
+        for (const auto& p : chars) {
+            result.append(p.second, p.first);
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of the string and k is the number of unique characters.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the frequency map and sorted characters.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} s
+ * @return {string}
+ */
+var frequencySort = function(s) {
+    // Count character frequencies
+    const freq = new Map();
+    for (const c of s) {
+        freq.set(c, (freq.get(c) || 0) + 1);
+    }
+    
+    // Sort characters by frequency
+    const chars = Array.from(freq.entries());
+    chars.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    
+    // Build the result string
+    return chars.map(([char, count]) => char.repeat(count)).join('');
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of the string and k is the number of unique characters.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the frequency map and sorted characters.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public string FrequencySort(string s) {
+        // Count character frequencies
+        Dictionary<char, int> freq = new Dictionary<char, int>();
+        foreach (char c in s) {
+            if (!freq.ContainsKey(c)) {
+                freq[c] = 0;
+            }
+            freq[c]++;
+        }
+        
+        // Sort characters by frequency
+        var chars = freq.ToList();
+        chars.Sort((a, b) => {
+            int freqCompare = b.Value.CompareTo(a.Value);
+            return freqCompare != 0 ? freqCompare : a.Key.CompareTo(b.Key);
+        });
+        
+        // Build the result string
+        StringBuilder result = new StringBuilder();
+        foreach (var pair in chars) {
+            result.Append(new string(pair.Key, pair.Value));
+        }
+        
+        return result.ToString();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of the string and k is the number of unique characters.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For storing the frequency map and sorted characters.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a frequency-based sorting approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Character frequency counting</li>
+                            <li>Custom sorting criteria</li>
+                            <li>String building</li>
+                            <li>Case sensitivity</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Count frequencies</li>
+                            <li>Sort by frequency</li>
+                            <li>Build result string</li>
+                            <li>Handle duplicates</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Hash map usage</li>
+                        <li>Sorting logic</li>
+                        <li>String concatenation</li>
+                        <li>Character repetition</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Efficient counting</li>
+                        <li>Optimal sorting</li>
+                        <li>Memory usage</li>
+                        <li>String building</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty string</li>
+                        <li>Single character</li>
+                        <li>All same frequency</li>
+                        <li>Case sensitivity</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

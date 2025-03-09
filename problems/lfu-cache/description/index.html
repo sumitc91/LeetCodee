@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LFU Cache - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">460. LFU Cache</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Design and implement a data structure for a Least Frequently Used (LFU) cache.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">LFUCache</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">LFUCache(int capacity)</code> Initializes the object with the capacity of the data structure.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int get(int key)</code> Gets the value of the key if it exists in the cache. Otherwise, returns -1.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">void put(int key, int value)</code> Update the value of the key if present, or inserts the key if not present. When the cache reaches its capacity, it should invalidate and remove the least frequently used key before inserting a new item.</li>
+                </ul>
+                <p class="text-gray-700">
+                    For the purpose of this problem, when there is a tie (i.e., two or more keys with the same frequency), the least recently used key would be invalidated.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input:
+["LFUCache", "put", "put", "get", "put", "get", "get", "put", "get", "get", "get"]
+[[2], [1, 1], [2, 2], [1], [3, 3], [2], [3], [4, 4], [1], [3], [4]]
+Output:
+[null, null, null, 1, null, -1, 3, null, -1, 3, 4]
+
+Explanation:
+// cnt(x) = the use counter for key x
+// cache=[] will show the last used order for tiebreakers (leftmost element is most recent)
+LFUCache lfu = new LFUCache(2);
+lfu.put(1, 1);   // cache=[1,_], cnt(1)=1
+lfu.put(2, 2);   // cache=[2,1], cnt(2)=1, cnt(1)=1
+lfu.get(1);      // return 1
+                 // cache=[1,2], cnt(2)=1, cnt(1)=2
+lfu.put(3, 3);   // 2 is the LFU key because cnt(2)=1 is the smallest, invalidate 2.
+                 // cache=[3,1], cnt(3)=1, cnt(1)=2
+lfu.get(2);      // return -1 (not found)
+lfu.get(3);      // return 3
+                 // cache=[3,1], cnt(3)=2, cnt(1)=2
+lfu.put(4, 4);   // Both 1 and 3 have cnt=2, but 1 is LRU, invalidate 1.
+                 // cache=[4,3], cnt(4)=1, cnt(3)=2
+lfu.get(1);      // return -1 (not found)
+lfu.get(3);      // return 3
+                 // cache=[3,4], cnt(4)=1, cnt(3)=3
+lfu.get(4);      // return 4
+                 // cache=[4,3], cnt(4)=2, cnt(3)=3</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= capacity <= 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= key <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= value <= 10⁹</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">2 * 10⁵</code> calls will be made to <code class="bg-gray-100 px-1 rounded">get</code> and <code class="bg-gray-100 px-1 rounded">put</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Node:
+    def __init__(self, key=None, value=None):
+        self.key = key
+        self.value = value
+        self.freq = 1
+        self.prev = None
+        self.next = None
+
+class DLinkedList:
+    def __init__(self):
+        self.head = Node()
+        self.tail = Node()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+        self.size = 0
+    
+    def add_node(self, node):
+        node.prev = self.head
+        node.next = self.head.next
+        self.head.next.prev = node
+        self.head.next = node
+        self.size += 1
+    
+    def remove_node(self, node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        self.size -= 1
+
+class LFUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.size = 0
+        self.min_freq = 0
+        self.cache = {}
+        self.freq_map = collections.defaultdict(DLinkedList)
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        node = self.cache[key]
+        self.update_freq(node)
+        return node.value
+
+    def put(self, key: int, value: int) -> None:
+        if self.capacity == 0:
+            return
+        
+        if key in self.cache:
+            node = self.cache[key]
+            node.value = value
+            self.update_freq(node)
+        else:
+            if self.size >= self.capacity:
+                old_list = self.freq_map[self.min_freq]
+                del self.cache[old_list.tail.prev.key]
+                old_list.remove_node(old_list.tail.prev)
+                self.size -= 1
+            
+            node = Node(key, value)
+            self.cache[key] = node
+            self.freq_map[1].add_node(node)
+            self.min_freq = 1
+            self.size += 1
+    
+    def update_freq(self, node):
+        freq = node.freq
+        self.freq_map[freq].remove_node(node)
+        if freq == self.min_freq and self.freq_map[freq].size == 0:
+            self.min_freq += 1
+        
+        node.freq += 1
+        self.freq_map[node.freq].add_node(node)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (get and put) are performed in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(capacity)</h4>
+                    <p class="text-gray-700">Space used is proportional to the capacity of the cache.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Node {
+    int key;
+    int value;
+    int freq;
+    Node prev;
+    Node next;
+    
+    public Node(int key, int value) {
+        this.key = key;
+        this.value = value;
+        this.freq = 1;
+    }
+    
+    public Node() {
+        this.freq = 0;
+    }
+}
+
+class DLinkedList {
+    Node head;
+    Node tail;
+    int size;
+    
+    public DLinkedList() {
+        head = new Node();
+        tail = new Node();
+        head.next = tail;
+        tail.prev = head;
+        size = 0;
+    }
+    
+    public void addNode(Node node) {
+        node.prev = head;
+        node.next = head.next;
+        head.next.prev = node;
+        head.next = node;
+        size++;
+    }
+    
+    public void removeNode(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        size--;
+    }
+}
+
+class LFUCache {
+    private int capacity;
+    private int size;
+    private int minFreq;
+    private Map<Integer, Node> cache;
+    private Map<Integer, DLinkedList> freqMap;
+    
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.size = 0;
+        this.minFreq = 0;
+        this.cache = new HashMap<>();
+        this.freqMap = new HashMap<>();
+    }
+    
+    public int get(int key) {
+        if (!cache.containsKey(key)) {
+            return -1;
+        }
+        Node node = cache.get(key);
+        updateFreq(node);
+        return node.value;
+    }
+    
+    public void put(int key, int value) {
+        if (capacity == 0) {
+            return;
+        }
+        
+        if (cache.containsKey(key)) {
+            Node node = cache.get(key);
+            node.value = value;
+            updateFreq(node);
+        } else {
+            if (size >= capacity) {
+                DLinkedList oldList = freqMap.get(minFreq);
+                cache.remove(oldList.tail.prev.key);
+                oldList.removeNode(oldList.tail.prev);
+                size--;
+            }
+            
+            Node node = new Node(key, value);
+            cache.put(key, node);
+            if (!freqMap.containsKey(1)) {
+                freqMap.put(1, new DLinkedList());
+            }
+            freqMap.get(1).addNode(node);
+            minFreq = 1;
+            size++;
+        }
+    }
+    
+    private void updateFreq(Node node) {
+        int freq = node.freq;
+        DLinkedList oldList = freqMap.get(freq);
+        oldList.removeNode(node);
+        
+        if (freq == minFreq && oldList.size == 0) {
+            minFreq++;
+        }
+        
+        node.freq++;
+        if (!freqMap.containsKey(node.freq)) {
+            freqMap.put(node.freq, new DLinkedList());
+        }
+        freqMap.get(node.freq).addNode(node);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (get and put) are performed in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(capacity)</h4>
+                    <p class="text-gray-700">Space used is proportional to the capacity of the cache.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>struct Node {
+    int key, value, freq;
+    Node *prev, *next;
+    Node(int k = 0, int v = 0) : key(k), value(v), freq(1), prev(nullptr), next(nullptr) {}
+};
+
+class DLinkedList {
+public:
+    Node *head, *tail;
+    int size;
+    
+    DLinkedList() {
+        head = new Node();
+        tail = new Node();
+        head->next = tail;
+        tail->prev = head;
+        size = 0;
+    }
+    
+    void addNode(Node* node) {
+        node->prev = head;
+        node->next = head->next;
+        head->next->prev = node;
+        head->next = node;
+        size++;
+    }
+    
+    void removeNode(Node* node) {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        size--;
+    }
+};
+
+class LFUCache {
+private:
+    int capacity, size, minFreq;
+    unordered_map<int, Node*> cache;
+    unordered_map<int, DLinkedList*> freqMap;
+    
+    void updateFreq(Node* node) {
+        int freq = node->freq;
+        freqMap[freq]->removeNode(node);
+        
+        if (freq == minFreq && freqMap[freq]->size == 0) {
+            minFreq++;
+        }
+        
+        node->freq++;
+        if (!freqMap[node->freq]) {
+            freqMap[node->freq] = new DLinkedList();
+        }
+        freqMap[node->freq]->addNode(node);
+    }
+    
+public:
+    LFUCache(int capacity) {
+        this->capacity = capacity;
+        size = 0;
+        minFreq = 0;
+    }
+    
+    int get(int key) {
+        if (!cache.count(key)) {
+            return -1;
+        }
+        Node* node = cache[key];
+        updateFreq(node);
+        return node->value;
+    }
+    
+    void put(int key, int value) {
+        if (capacity == 0) {
+            return;
+        }
+        
+        if (cache.count(key)) {
+            Node* node = cache[key];
+            node->value = value;
+            updateFreq(node);
+        } else {
+            if (size >= capacity) {
+                DLinkedList* oldList = freqMap[minFreq];
+                cache.erase(oldList->tail->prev->key);
+                oldList->removeNode(oldList->tail->prev);
+                size--;
+            }
+            
+            Node* node = new Node(key, value);
+            cache[key] = node;
+            if (!freqMap[1]) {
+                freqMap[1] = new DLinkedList();
+            }
+            freqMap[1]->addNode(node);
+            minFreq = 1;
+            size++;
+        }
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (get and put) are performed in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(capacity)</h4>
+                    <p class="text-gray-700">Space used is proportional to the capacity of the cache.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>class Node {
+    constructor(key = null, value = null) {
+        this.key = key;
+        this.value = value;
+        this.freq = 1;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DLinkedList {
+    constructor() {
+        this.head = new Node();
+        this.tail = new Node();
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+        this.size = 0;
+    }
+    
+    addNode(node) {
+        node.prev = this.head;
+        node.next = this.head.next;
+        this.head.next.prev = node;
+        this.head.next = node;
+        this.size++;
+    }
+    
+    removeNode(node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        this.size--;
+    }
+}
+
+class LFUCache {
+    constructor(capacity) {
+        this.capacity = capacity;
+        this.size = 0;
+        this.minFreq = 0;
+        this.cache = new Map();
+        this.freqMap = new Map();
+    }
+    
+    get(key) {
+        if (!this.cache.has(key)) {
+            return -1;
+        }
+        const node = this.cache.get(key);
+        this.updateFreq(node);
+        return node.value;
+    }
+    
+    put(key, value) {
+        if (this.capacity === 0) {
+            return;
+        }
+        
+        if (this.cache.has(key)) {
+            const node = this.cache.get(key);
+            node.value = value;
+            this.updateFreq(node);
+        } else {
+            if (this.size >= this.capacity) {
+                const oldList = this.freqMap.get(this.minFreq);
+                this.cache.delete(oldList.tail.prev.key);
+                oldList.removeNode(oldList.tail.prev);
+                this.size--;
+            }
+            
+            const node = new Node(key, value);
+            this.cache.set(key, node);
+            if (!this.freqMap.has(1)) {
+                this.freqMap.set(1, new DLinkedList());
+            }
+            this.freqMap.get(1).addNode(node);
+            this.minFreq = 1;
+            this.size++;
+        }
+    }
+    
+    updateFreq(node) {
+        const freq = node.freq;
+        const oldList = this.freqMap.get(freq);
+        oldList.removeNode(node);
+        
+        if (freq === this.minFreq && oldList.size === 0) {
+            this.minFreq++;
+        }
+        
+        node.freq++;
+        if (!this.freqMap.has(node.freq)) {
+            this.freqMap.set(node.freq, new DLinkedList());
+        }
+        this.freqMap.get(node.freq).addNode(node);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (get and put) are performed in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(capacity)</h4>
+                    <p class="text-gray-700">Space used is proportional to the capacity of the cache.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Node {
+    public int Key { get; set; }
+    public int Value { get; set; }
+    public int Freq { get; set; }
+    public Node Prev { get; set; }
+    public Node Next { get; set; }
+    
+    public Node(int key = 0, int value = 0) {
+        Key = key;
+        Value = value;
+        Freq = 1;
+    }
+}
+
+public class DLinkedList {
+    public Node Head { get; set; }
+    public Node Tail { get; set; }
+    public int Size { get; set; }
+    
+    public DLinkedList() {
+        Head = new Node();
+        Tail = new Node();
+        Head.Next = Tail;
+        Tail.Prev = Head;
+        Size = 0;
+    }
+    
+    public void AddNode(Node node) {
+        node.Prev = Head;
+        node.Next = Head.Next;
+        Head.Next.Prev = node;
+        Head.Next = node;
+        Size++;
+    }
+    
+    public void RemoveNode(Node node) {
+        node.Prev.Next = node.Next;
+        node.Next.Prev = node.Prev;
+        Size--;
+    }
+}
+
+public class LFUCache {
+    private int capacity;
+    private int size;
+    private int minFreq;
+    private Dictionary<int, Node> cache;
+    private Dictionary<int, DLinkedList> freqMap;
+    
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        size = 0;
+        minFreq = 0;
+        cache = new Dictionary<int, Node>();
+        freqMap = new Dictionary<int, DLinkedList>();
+    }
+    
+    public int Get(int key) {
+        if (!cache.ContainsKey(key)) {
+            return -1;
+        }
+        Node node = cache[key];
+        UpdateFreq(node);
+        return node.Value;
+    }
+    
+    public void Put(int key, int value) {
+        if (capacity == 0) {
+            return;
+        }
+        
+        if (cache.ContainsKey(key)) {
+            Node node = cache[key];
+            node.Value = value;
+            UpdateFreq(node);
+        } else {
+            if (size >= capacity) {
+                DLinkedList oldList = freqMap[minFreq];
+                cache.Remove(oldList.Tail.Prev.Key);
+                oldList.RemoveNode(oldList.Tail.Prev);
+                size--;
+            }
+            
+            Node node = new Node(key, value);
+            cache[key] = node;
+            if (!freqMap.ContainsKey(1)) {
+                freqMap[1] = new DLinkedList();
+            }
+            freqMap[1].AddNode(node);
+            minFreq = 1;
+            size++;
+        }
+    }
+    
+    private void UpdateFreq(Node node) {
+        int freq = node.Freq;
+        DLinkedList oldList = freqMap[freq];
+        oldList.RemoveNode(node);
+        
+        if (freq == minFreq && oldList.Size == 0) {
+            minFreq++;
+        }
+        
+        node.Freq++;
+        if (!freqMap.ContainsKey(node.Freq)) {
+            freqMap[node.Freq] = new DLinkedList();
+        }
+        freqMap[node.Freq].AddNode(node);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">All operations (get and put) are performed in constant time.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(capacity)</h4>
+                    <p class="text-gray-700">Space used is proportional to the capacity of the cache.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution implements an LFU Cache using the following components and techniques:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Components:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Node class for storing key-value pairs</li>
+                            <li>Doubly linked list for O(1) operations</li>
+                            <li>Frequency map for tracking usage</li>
+                            <li>Cache map for quick access</li>
+                        </ul>
+                    </li>
+                    <li>Data Structures:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>HashMap for cache</li>
+                            <li>HashMap for frequency map</li>
+                            <li>Doubly linked lists</li>
+                            <li>Custom Node class</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Constant time operations</li>
+                        <li>Frequency tracking</li>
+                        <li>LRU within same frequency</li>
+                        <li>Capacity management</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>O(1) time complexity</li>
+                        <li>Efficient node removal</li>
+                        <li>Quick frequency updates</li>
+                        <li>Minimal space overhead</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty cache</li>
+                        <li>Zero capacity</li>
+                        <li>Frequency ties</li>
+                        <li>Cache full</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

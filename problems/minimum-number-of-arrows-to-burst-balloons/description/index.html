@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Number of Arrows to Burst Balloons - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">452. Minimum Number of Arrows to Burst Balloons</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    There are some spherical balloons taped onto a flat wall that represents the XY-plane. The balloons are represented as a 2D integer array <code class="bg-gray-100 px-1 rounded">points</code> where <code class="bg-gray-100 px-1 rounded">points[i] = [xstart, xend]</code> denotes a balloon whose horizontal diameter stretches between <code class="bg-gray-100 px-1 rounded">xstart</code> and <code class="bg-gray-100 px-1 rounded">xend</code>. You do not know the exact y-coordinates of the balloons.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Arrows can be shot up directly vertically (in the positive y-direction) from different points along the x-axis. A balloon with <code class="bg-gray-100 px-1 rounded">xstart</code> and <code class="bg-gray-100 px-1 rounded">xend</code> is burst by an arrow shot at <code class="bg-gray-100 px-1 rounded">x</code> if <code class="bg-gray-100 px-1 rounded">xstart ≤ x ≤ xend</code>. There is no limit to the number of arrows that can be shot. A shot arrow keeps traveling up infinitely, bursting any balloons in its path.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given the array <code class="bg-gray-100 px-1 rounded">points</code>, return the minimum number of arrows that must be shot to burst all balloons.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: points = [[10,16],[2,8],[1,6],[7,12]]
+Output: 2
+Explanation: The balloons can be burst by 2 arrows:
+- Shoot an arrow at x = 6, bursting the balloons [2,8] and [1,6].
+- Shoot an arrow at x = 11, bursting the balloons [10,16] and [7,12].</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: points = [[1,2],[3,4],[5,6],[7,8]]
+Output: 4
+Explanation: One arrow needs to be shot for each balloon for a total of 4 arrows.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: points = [[1,2],[2,3],[3,4],[4,5]]
+Output: 2
+Explanation: The balloons can be burst by 2 arrows:
+- Shoot an arrow at x = 2, bursting the balloons [1,2] and [2,3].
+- Shoot an arrow at x = 4, bursting the balloons [3,4] and [4,5].</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= points.length <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">points[i].length == 2</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-2³¹ <= xstart < xend <= 2³¹ - 1</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findMinArrowShots(self, points: List[List[int]]) -> int:
+        if not points:
+            return 0
+        
+        # Sort by end points
+        points.sort(key=lambda x: x[1])
+        
+        arrows = 1
+        end = points[0][1]
+        
+        # Count minimum arrows needed
+        for i in range(1, len(points)):
+            if points[i][0] > end:
+                arrows += 1
+                end = points[i][1]
+        
+        return arrows</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of balloons, due to sorting.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int findMinArrowShots(int[][] points) {
+        if (points == null || points.length == 0) {
+            return 0;
+        }
+        
+        // Sort by end points
+        Arrays.sort(points, (a, b) -> {
+            // Handle integer overflow
+            if (a[1] < b[1]) return -1;
+            if (a[1] > b[1]) return 1;
+            return 0;
+        });
+        
+        int arrows = 1;
+        long end = points[0][1];
+        
+        // Count minimum arrows needed
+        for (int i = 1; i < points.length; i++) {
+            if (points[i][0] > end) {
+                arrows++;
+                end = points[i][1];
+            }
+        }
+        
+        return arrows;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of balloons, due to sorting.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        if (points.empty()) {
+            return 0;
+        }
+        
+        // Sort by end points
+        sort(points.begin(), points.end(), 
+             [](const vector<int>& a, const vector<int>& b) {
+                 return a[1] < b[1];
+             });
+        
+        int arrows = 1;
+        long end = points[0][1];
+        
+        // Count minimum arrows needed
+        for (int i = 1; i < points.size(); i++) {
+            if (points[i][0] > end) {
+                arrows++;
+                end = points[i][1];
+            }
+        }
+        
+        return arrows;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of balloons, due to sorting.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} points
+ * @return {number}
+ */
+var findMinArrowShots = function(points) {
+    if (!points.length) {
+        return 0;
+    }
+    
+    // Sort by end points
+    points.sort((a, b) => a[1] - b[1]);
+    
+    let arrows = 1;
+    let end = points[0][1];
+    
+    // Count minimum arrows needed
+    for (let i = 1; i < points.length; i++) {
+        if (points[i][0] > end) {
+            arrows++;
+            end = points[i][1];
+        }
+    }
+    
+    return arrows;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of balloons, due to sorting.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int FindMinArrowShots(int[][] points) {
+        if (points == null || points.Length == 0) {
+            return 0;
+        }
+        
+        // Sort by end points
+        Array.Sort(points, (a, b) => {
+            // Handle integer overflow
+            if (a[1] < b[1]) return -1;
+            if (a[1] > b[1]) return 1;
+            return 0;
+        });
+        
+        int arrows = 1;
+        long end = points[0][1];
+        
+        // Count minimum arrows needed
+        for (int i = 1; i < points.Length; i++) {
+            if (points[i][0] > end) {
+                arrows++;
+                end = points[i][1];
+            }
+        }
+        
+        return arrows;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Where n is the number of balloons, due to sorting.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a greedy approach with sorting:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insights:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sort by end points</li>
+                            <li>Greedy selection</li>
+                            <li>Overlap detection</li>
+                            <li>Arrow reuse</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sort balloons</li>
+                            <li>Track end points</li>
+                            <li>Count arrows</li>
+                            <li>Handle overlaps</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Sorting logic</li>
+                        <li>Overlap check</li>
+                        <li>Arrow counting</li>
+                        <li>Boundary handling</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization Insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>End point sorting</li>
+                        <li>Single pass</li>
+                        <li>Minimal memory</li>
+                        <li>Integer overflow</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty array</li>
+                        <li>Single balloon</li>
+                        <li>No overlap</li>
+                        <li>Complete overlap</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 
