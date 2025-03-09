@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rectangle Area - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">223. Rectangle Area</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given the coordinates of two rectilinear rectangles in a 2D plane, return the total area covered by the two rectangles.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The first rectangle is defined by its bottom-left corner <code class="bg-gray-100 px-1 rounded">(ax1, ay1)</code> and its top-right corner <code class="bg-gray-100 px-1 rounded">(ax2, ay2)</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The second rectangle is defined by its bottom-left corner <code class="bg-gray-100 px-1 rounded">(bx1, by1)</code> and its top-right corner <code class="bg-gray-100 px-1 rounded">(bx2, by2)</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: ax1 = -3, ay1 = 0, ax2 = 3, ay2 = 4, bx1 = 0, by1 = -1, bx2 = 9, by2 = 2
+Output: 45</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: ax1 = -2, ay1 = -2, ax2 = 2, ay2 = 2, bx1 = -2, by1 = -2, bx2 = 2, by2 = 2
+Output: 16</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">-10^4 <= ax1 <= ax2 <= 10^4</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10^4 <= ay1 <= ay2 <= 10^4</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10^4 <= bx1 <= bx2 <= 10^4</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10^4 <= by1 <= by2 <= 10^4</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def computeArea(self, ax1: int, ay1: int, ax2: int, ay2: int, 
+                    bx1: int, by1: int, bx2: int, by2: int) -> int:
+        # Calculate areas of both rectangles
+        area1 = (ax2 - ax1) * (ay2 - ay1)
+        area2 = (bx2 - bx1) * (by2 - by1)
+        
+        # Find overlapping rectangle coordinates
+        x_left = max(ax1, bx1)
+        x_right = min(ax2, bx2)
+        y_bottom = max(ay1, by1)
+        y_top = min(ay2, by2)
+        
+        # Calculate overlapping area
+        overlap_area = 0
+        if x_right > x_left and y_top > y_bottom:
+            overlap_area = (x_right - x_left) * (y_top - y_bottom)
+        
+        # Total area is sum of both areas minus the overlap
+        return area1 + area2 - overlap_area</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple arithmetic operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int computeArea(int ax1, int ay1, int ax2, int ay2, 
+                         int bx1, int by1, int bx2, int by2) {
+        // Calculate areas of both rectangles
+        int area1 = (ax2 - ax1) * (ay2 - ay1);
+        int area2 = (bx2 - bx1) * (by2 - by1);
+        
+        // Find overlapping rectangle coordinates
+        int xLeft = Math.max(ax1, bx1);
+        int xRight = Math.min(ax2, bx2);
+        int yBottom = Math.max(ay1, by1);
+        int yTop = Math.min(ay2, by2);
+        
+        // Calculate overlapping area
+        int overlapArea = 0;
+        if (xRight > xLeft && yTop > yBottom) {
+            overlapArea = (xRight - xLeft) * (yTop - yBottom);
+        }
+        
+        // Total area is sum of both areas minus the overlap
+        return area1 + area2 - overlapArea;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple arithmetic operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int computeArea(int ax1, int ay1, int ax2, int ay2, 
+                   int bx1, int by1, int bx2, int by2) {
+        // Calculate areas of both rectangles
+        long long area1 = (long long)(ax2 - ax1) * (ay2 - ay1);
+        long long area2 = (long long)(bx2 - bx1) * (by2 - by1);
+        
+        // Find overlapping rectangle coordinates
+        int xLeft = max(ax1, bx1);
+        int xRight = min(ax2, bx2);
+        int yBottom = max(ay1, by1);
+        int yTop = min(ay2, by2);
+        
+        // Calculate overlapping area
+        long long overlapArea = 0;
+        if (xRight > xLeft && yTop > yBottom) {
+            overlapArea = (long long)(xRight - xLeft) * (yTop - yBottom);
+        }
+        
+        // Total area is sum of both areas minus the overlap
+        return (int)(area1 + area2 - overlapArea);
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple arithmetic operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} ax1
+ * @param {number} ay1
+ * @param {number} ax2
+ * @param {number} ay2
+ * @param {number} bx1
+ * @param {number} by1
+ * @param {number} bx2
+ * @param {number} by2
+ * @return {number}
+ */
+var computeArea = function(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
+    // Calculate areas of both rectangles
+    const area1 = (ax2 - ax1) * (ay2 - ay1);
+    const area2 = (bx2 - bx1) * (by2 - by1);
+    
+    // Find overlapping rectangle coordinates
+    const xLeft = Math.max(ax1, bx1);
+    const xRight = Math.min(ax2, bx2);
+    const yBottom = Math.max(ay1, by1);
+    const yTop = Math.min(ay2, by2);
+    
+    // Calculate overlapping area
+    let overlapArea = 0;
+    if (xRight > xLeft && yTop > yBottom) {
+        overlapArea = (xRight - xLeft) * (yTop - yBottom);
+    }
+    
+    // Total area is sum of both areas minus the overlap
+    return area1 + area2 - overlapArea;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple arithmetic operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int ComputeArea(int ax1, int ay1, int ax2, int ay2, 
+                          int bx1, int by1, int bx2, int by2) {
+        // Calculate areas of both rectangles
+        long area1 = (long)(ax2 - ax1) * (ay2 - ay1);
+        long area2 = (long)(bx2 - bx1) * (by2 - by1);
+        
+        // Find overlapping rectangle coordinates
+        int xLeft = Math.Max(ax1, bx1);
+        int xRight = Math.Min(ax2, bx2);
+        int yBottom = Math.Max(ay1, by1);
+        int yTop = Math.Min(ay2, by2);
+        
+        // Calculate overlapping area
+        long overlapArea = 0;
+        if (xRight > xLeft && yTop > yBottom) {
+            overlapArea = (long)(xRight - xLeft) * (yTop - yBottom);
+        }
+        
+        // Total area is sum of both areas minus the overlap
+        return (int)(area1 + area2 - overlapArea);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(1)</h4>
+                    <p class="text-gray-700">The solution uses simple arithmetic operations.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution follows these steps:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Calculate the area of each rectangle separately</li>
+                    <li>Find the coordinates of the overlapping rectangle:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Left x-coordinate is the maximum of both left x-coordinates</li>
+                            <li>Right x-coordinate is the minimum of both right x-coordinates</li>
+                            <li>Bottom y-coordinate is the maximum of both bottom y-coordinates</li>
+                            <li>Top y-coordinate is the minimum of both top y-coordinates</li>
+                        </ul>
+                    </li>
+                    <li>Calculate the area of overlap if the rectangles intersect</li>
+                    <li>Return the sum of both areas minus the overlapping area</li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    The key insight is that we need to subtract the overlapping area exactly once,
+                    as it would otherwise be counted twice in the sum of the individual areas.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

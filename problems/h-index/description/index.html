@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-Index - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">274. H-Index</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an array of integers <code class="bg-gray-100 px-1 rounded">citations</code> where <code class="bg-gray-100 px-1 rounded">citations[i]</code> is the number of citations a researcher received for their <code class="bg-gray-100 px-1 rounded">i<sup>th</sup></code> paper, return compute the researcher's <code class="bg-gray-100 px-1 rounded">h</code>-index.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    According to the definition of h-index on Wikipedia: A scientist has an index <code class="bg-gray-100 px-1 rounded">h</code> if <code class="bg-gray-100 px-1 rounded">h</code> of their <code class="bg-gray-100 px-1 rounded">n</code> papers have at least <code class="bg-gray-100 px-1 rounded">h</code> citations each, and the other <code class="bg-gray-100 px-1 rounded">n − h</code> papers have no more than <code class="bg-gray-100 px-1 rounded">h</code> citations each.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: citations = [3,0,6,1,5]
+Output: 3
+Explanation: [3,0,6,1,5] means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively.
+Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, their h-index is 3.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: citations = [1,3,1]
+Output: 1</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">n == citations.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n <= 5000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= citations[i] <= 1000</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        n = len(citations)
+        count = [0] * (n + 1)
+        
+        # Count papers for each citation number
+        for c in citations:
+            if c >= n:
+                count[n] += 1
+            else:
+                count[c] += 1
+        
+        # Find h-index by counting from right
+        total = 0
+        for i in range(n, -1, -1):
+            total += count[i]
+            if total >= i:
+                return i
+        return 0</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to traverse the array twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need an array of size n+1 to store the counts.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int hIndex(int[] citations) {
+        int n = citations.length;
+        int[] count = new int[n + 1];
+        
+        // Count papers for each citation number
+        for (int c : citations) {
+            if (c >= n) {
+                count[n]++;
+            } else {
+                count[c]++;
+            }
+        }
+        
+        // Find h-index by counting from right
+        int total = 0;
+        for (int i = n; i >= 0; i--) {
+            total += count[i];
+            if (total >= i) {
+                return i;
+            }
+        }
+        return 0;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to traverse the array twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need an array of size n+1 to store the counts.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        int n = citations.size();
+        vector<int> count(n + 1);
+        
+        // Count papers for each citation number
+        for (int c : citations) {
+            if (c >= n) {
+                count[n]++;
+            } else {
+                count[c]++;
+            }
+        }
+        
+        // Find h-index by counting from right
+        int total = 0;
+        for (int i = n; i >= 0; i--) {
+            total += count[i];
+            if (total >= i) {
+                return i;
+            }
+        }
+        return 0;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to traverse the array twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need an array of size n+1 to store the counts.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} citations
+ * @return {number}
+ */
+var hIndex = function(citations) {
+    const n = citations.length;
+    const count = new Array(n + 1).fill(0);
+    
+    // Count papers for each citation number
+    for (let c of citations) {
+        if (c >= n) {
+            count[n]++;
+        } else {
+            count[c]++;
+        }
+    }
+    
+    // Find h-index by counting from right
+    let total = 0;
+    for (let i = n; i >= 0; i--) {
+        total += count[i];
+        if (total >= i) {
+            return i;
+        }
+    }
+    return 0;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to traverse the array twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need an array of size n+1 to store the counts.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int HIndex(int[] citations) {
+        int n = citations.Length;
+        int[] count = new int[n + 1];
+        
+        // Count papers for each citation number
+        foreach (int c in citations) {
+            if (c >= n) {
+                count[n]++;
+            } else {
+                count[c]++;
+            }
+        }
+        
+        // Find h-index by counting from right
+        int total = 0;
+        for (int i = n; i >= 0; i--) {
+            total += count[i];
+            if (total >= i) {
+                return i;
+            }
+        }
+        return 0;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to traverse the array twice.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need an array of size n+1 to store the counts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses counting sort approach to find the h-index:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>H-index cannot be larger than the number of papers</li>
+                            <li>We can count papers for each citation number</li>
+                            <li>Process counts from highest to lowest</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Create count array of size n+1</li>
+                            <li>Count papers for each citation number</li>
+                            <li>Process from right to find h-index</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough for [3,0,6,1,5]:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Count array: [1,1,0,1,0,1,1] (index 5 represents 5 and above)</li>
+                        <li>Process from right: 1+1+1=3 papers with 3+ citations</li>
+                        <li>H-index is 3</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Alternative Approaches:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Sorting approach (O(n log n))</li>
+                        <li>Binary search approach</li>
+                        <li>Direct counting approach</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>All zeros</li>
+                        <li>All same numbers</li>
+                        <li>Single element array</li>
+                        <li>Citations greater than paper count</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

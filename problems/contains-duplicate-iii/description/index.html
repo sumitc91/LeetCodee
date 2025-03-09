@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contains Duplicate III - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">220. Contains Duplicate III</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given an integer array <code class="bg-gray-100 px-1 rounded">nums</code> and two integers <code class="bg-gray-100 px-1 rounded">indexDiff</code> and <code class="bg-gray-100 px-1 rounded">valueDiff</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Find a pair of indices <code class="bg-gray-100 px-1 rounded">(i, j)</code> such that:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">i != j</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">abs(i - j) <= indexDiff</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">abs(nums[i] - nums[j]) <= valueDiff</code></li>
+                </ul>
+                <p class="text-gray-700">Return <code class="bg-gray-100 px-1 rounded">true</code> if such pair exists or <code class="bg-gray-100 px-1 rounded">false</code> otherwise.</p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [1,2,3,1], indexDiff = 3, valueDiff = 0
+Output: true
+Explanation: We can choose (i, j) = (0, 3).
+We satisfy the three conditions:
+i != j --> 0 != 3
+abs(i - j) <= indexDiff --> abs(0 - 3) <= 3
+abs(nums[i] - nums[j]) <= valueDiff --> abs(1 - 1) <= 0</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [1,5,9,1,5,9], indexDiff = 2, valueDiff = 3
+Output: false
+Explanation: No pair satisfies all conditions.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">2 <= nums.length <= 10^5</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10^9 <= nums[i] <= 10^9</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= indexDiff <= nums.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= valueDiff <= 10^9</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>from sortedcontainers import SortedList
+
+class Solution:
+    def containsNearbyAlmostDuplicate(self, nums: List[int], indexDiff: int, valueDiff: int) -> bool:
+        window = SortedList()
+        
+        for i, num in enumerate(nums):
+            # If window size exceeds indexDiff + 1, remove leftmost element
+            if i > indexDiff:
+                window.remove(nums[i - indexDiff - 1])
+            
+            # Find position where num should be inserted
+            pos = window.bisect_left(num - valueDiff)
+            
+            # Check if any number in window satisfies the valueDiff condition
+            if pos < len(window) and window[pos] <= num + valueDiff:
+                return True
+                
+            window.add(num)
+            
+        return False</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and k is indexDiff.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For the sliding window.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+        if (nums == null || nums.length < 2 || indexDiff < 1 || valueDiff < 0) {
+            return false;
+        }
+        
+        TreeSet<Long> window = new TreeSet<>();
+        
+        for (int i = 0; i < nums.length; i++) {
+            // Find the smallest number >= nums[i] - valueDiff
+            Long ceiling = window.ceiling((long)nums[i] - valueDiff);
+            
+            // Check if any number in window satisfies the valueDiff condition
+            if (ceiling != null && ceiling <= (long)nums[i] + valueDiff) {
+                return true;
+            }
+            
+            // Add current number to window
+            window.add((long)nums[i]);
+            
+            // Remove leftmost element if window size exceeds indexDiff
+            if (i >= indexDiff) {
+                window.remove((long)nums[i - indexDiff]);
+            }
+        }
+        
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and k is indexDiff.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For the TreeSet window.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int indexDiff, int valueDiff) {
+        if (nums.size() < 2 || indexDiff < 1 || valueDiff < 0) {
+            return false;
+        }
+        
+        set<long long> window;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            // Find the smallest number >= nums[i] - valueDiff
+            auto it = window.lower_bound((long long)nums[i] - valueDiff);
+            
+            // Check if any number in window satisfies the valueDiff condition
+            if (it != window.end() && *it <= (long long)nums[i] + valueDiff) {
+                return true;
+            }
+            
+            // Add current number to window
+            window.insert(nums[i]);
+            
+            // Remove leftmost element if window size exceeds indexDiff
+            if (i >= indexDiff) {
+                window.erase(nums[i - indexDiff]);
+            }
+        }
+        
+        return false;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and k is indexDiff.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For the set window.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ * @param {number} indexDiff
+ * @param {number} valueDiff
+ * @return {boolean}
+ */
+var containsNearbyAlmostDuplicate = function(nums, indexDiff, valueDiff) {
+    if (nums.length < 2 || indexDiff < 1 || valueDiff < 0) {
+        return false;
+    }
+    
+    // Bucket approach since JavaScript doesn't have TreeSet
+    const bucket = new Map();
+    const w = valueDiff + 1;
+    
+    for (let i = 0; i < nums.length; i++) {
+        const bucketId = Math.floor(nums[i] / w);
+        
+        // Check current bucket
+        if (bucket.has(bucketId)) {
+            return true;
+        }
+        
+        // Check adjacent buckets
+        if (bucket.has(bucketId - 1) && Math.abs(nums[i] - bucket.get(bucketId - 1)) < w) {
+            return true;
+        }
+        if (bucket.has(bucketId + 1) && Math.abs(nums[i] - bucket.get(bucketId + 1)) < w) {
+            return true;
+        }
+        
+        // Add current number to bucket
+        bucket.set(bucketId, nums[i]);
+        
+        // Remove old bucket
+        if (i >= indexDiff) {
+            const oldBucketId = Math.floor(nums[i - indexDiff] / w);
+            bucket.delete(oldBucketId);
+        }
+    }
+    
+    return false;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of nums.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For the bucket map.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool ContainsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+        if (nums == null || nums.Length < 2 || indexDiff < 1 || valueDiff < 0) {
+            return false;
+        }
+        
+        SortedSet<long> window = new SortedSet<long>();
+        
+        for (int i = 0; i < nums.Length; i++) {
+            // Find the smallest number >= nums[i] - valueDiff
+            var ceiling = window.GetViewBetween((long)nums[i] - valueDiff, long.MaxValue).Min;
+            
+            // Check if any number in window satisfies the valueDiff condition
+            if (ceiling <= (long)nums[i] + valueDiff) {
+                return true;
+            }
+            
+            // Add current number to window
+            window.Add(nums[i]);
+            
+            // Remove leftmost element if window size exceeds indexDiff
+            if (i >= indexDiff) {
+                window.Remove(nums[i - indexDiff]);
+            }
+        }
+        
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log k)</h4>
+                    <p class="text-gray-700">Where n is the length of nums and k is indexDiff.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(k)</h4>
+                    <p class="text-gray-700">For the SortedSet window.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    This problem can be solved using several approaches, but the most efficient ones are:
+                </p>
+                
+                <h3 class="text-lg font-semibold">1. Sliding Window with Ordered Set:</h3>
+                <ul class="list-disc list-inside text-gray-700 ml-4">
+                    <li>Maintain a sliding window of size indexDiff + 1</li>
+                    <li>Use an ordered set (TreeSet in Java, SortedList in Python) to store elements</li>
+                    <li>For each number, find the closest numbers within valueDiff range</li>
+                    <li>Remove elements outside the window</li>
+                </ul>
+
+                <h3 class="text-lg font-semibold mt-4">2. Bucket Approach (JavaScript):</h3>
+                <ul class="list-disc list-inside text-gray-700 ml-4">
+                    <li>Use buckets of size valueDiff + 1</li>
+                    <li>Numbers in the same or adjacent buckets might satisfy the condition</li>
+                    <li>Maintain a sliding window by removing old buckets</li>
+                    <li>This approach achieves O(n) time complexity</li>
+                </ul>
+
+                <p class="text-gray-700 mt-4">
+                    The choice between approaches depends on the language's available data structures
+                    and the specific constraints of the problem. The bucket approach is particularly
+                    useful in JavaScript where self-balancing trees are not available.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

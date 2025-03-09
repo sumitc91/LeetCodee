@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Count of Smaller Numbers After Self - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">315. Count of Smaller Numbers After Self</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an integer array <code class="bg-gray-100 px-1 rounded">nums</code>, return an integer array <code class="bg-gray-100 px-1 rounded">counts</code> where <code class="bg-gray-100 px-1 rounded">counts[i]</code> is the number of smaller elements to the right of <code class="bg-gray-100 px-1 rounded">nums[i]</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [5,2,6,1]
+Output: [2,1,1,0]
+Explanation:
+To the right of 5 there are 2 smaller elements (2 and 1).
+To the right of 2 there is only 1 smaller element (1).
+To the right of 6 there is 1 smaller element (1).
+To the right of 1 there is 0 smaller element.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [-1]
+Output: [0]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [-1,-1]
+Output: [0,0]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums.length <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁴ <= nums[i] <= 10⁴</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def countSmaller(self, nums: List[int]) -> List[int]:
+        def mergeSort(enum):
+            if len(enum) <= 1:
+                return enum
+            
+            mid = len(enum) // 2
+            left = mergeSort(enum[:mid])
+            right = mergeSort(enum[mid:])
+            
+            for i in range(len(enum) - 1, -1, -1):
+                if not right or (left and left[-1][1] > right[-1][1]):
+                    result[left[-1][0]] += len(right)
+                    enum[i] = left.pop()
+                else:
+                    enum[i] = right.pop()
+                    
+            return enum
+        
+        result = [0] * len(nums)
+        # Create list of tuples with (index, value)
+        enum = list(enumerate(nums))
+        mergeSort(enum)
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Using merge sort approach.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the enumerated array and result.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private int[] count;
+    private int[] indexes;
+    private int[] temp;
+    private int[] tempIndexes;
+    
+    public List<Integer> countSmaller(int[] nums) {
+        int n = nums.length;
+        count = new int[n];
+        indexes = new int[n];
+        temp = new int[n];
+        tempIndexes = new int[n];
+        
+        // Initialize indexes array
+        for (int i = 0; i < n; i++) {
+            indexes[i] = i;
+        }
+        
+        // Perform merge sort
+        mergeSort(nums, 0, n - 1);
+        
+        // Convert count array to List
+        List<Integer> result = new ArrayList<>();
+        for (int c : count) {
+            result.add(c);
+        }
+        return result;
+    }
+    
+    private void mergeSort(int[] nums, int left, int right) {
+        if (left >= right) return;
+        
+        int mid = left + (right - left) / 2;
+        mergeSort(nums, left, mid);
+        mergeSort(nums, mid + 1, right);
+        merge(nums, left, mid, right);
+    }
+    
+    private void merge(int[] nums, int left, int mid, int right) {
+        int i = left;
+        int j = mid + 1;
+        int k = left;
+        int rightCount = 0;
+        
+        while (i <= mid && j <= right) {
+            if (nums[indexes[i]] <= nums[indexes[j]]) {
+                count[indexes[i]] += rightCount;
+                temp[k] = nums[indexes[i]];
+                tempIndexes[k] = indexes[i];
+                i++;
+            } else {
+                rightCount++;
+                temp[k] = nums[indexes[j]];
+                tempIndexes[k] = indexes[j];
+                j++;
+            }
+            k++;
+        }
+        
+        while (i <= mid) {
+            count[indexes[i]] += rightCount;
+            temp[k] = nums[indexes[i]];
+            tempIndexes[k] = indexes[i];
+            i++;
+            k++;
+        }
+        
+        while (j <= right) {
+            temp[k] = nums[indexes[j]];
+            tempIndexes[k] = indexes[j];
+            j++;
+            k++;
+        }
+        
+        for (i = left; i <= right; i++) {
+            nums[indexes[i]] = temp[i];
+            indexes[i] = tempIndexes[i];
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Using merge sort approach.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing temporary arrays during merge sort.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    vector<int> count;
+    vector<pair<int, int>> temp;
+    
+    void mergeSort(vector<pair<int, int>>& arr, int left, int right) {
+        if (left >= right) return;
+        
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+    
+    void merge(vector<pair<int, int>>& arr, int left, int mid, int right) {
+        int i = left;
+        int j = mid + 1;
+        int k = left;
+        int rightCount = 0;
+        
+        temp.clear();
+        temp.resize(right - left + 1);
+        
+        while (i <= mid && j <= right) {
+            if (arr[i].first <= arr[j].first) {
+                count[arr[i].second] += rightCount;
+                temp[k - left] = arr[i];
+                i++;
+            } else {
+                rightCount++;
+                temp[k - left] = arr[j];
+                j++;
+            }
+            k++;
+        }
+        
+        while (i <= mid) {
+            count[arr[i].second] += rightCount;
+            temp[k - left] = arr[i];
+            i++;
+            k++;
+        }
+        
+        while (j <= right) {
+            temp[k - left] = arr[j];
+            j++;
+            k++;
+        }
+        
+        for (i = left; i <= right; i++) {
+            arr[i] = temp[i - left];
+        }
+    }
+    
+public:
+    vector<int> countSmaller(vector<int>& nums) {
+        int n = nums.size();
+        count.resize(n, 0);
+        vector<pair<int, int>> arr(n);
+        
+        // Create pairs of (value, index)
+        for (int i = 0; i < n; i++) {
+            arr[i] = {nums[i], i};
+        }
+        
+        mergeSort(arr, 0, n - 1);
+        return count;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Using merge sort approach.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing temporary arrays during merge sort.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var countSmaller = function(nums) {
+    const result = new Array(nums.length).fill(0);
+    const indexes = nums.map((val, idx) => idx);
+    const temp = new Array(nums.length);
+    const tempIndexes = new Array(nums.length);
+    
+    function mergeSort(left, right) {
+        if (left >= right) return;
+        
+        const mid = Math.floor((left + right) / 2);
+        mergeSort(left, mid);
+        mergeSort(mid + 1, right);
+        merge(left, mid, right);
+    }
+    
+    function merge(left, mid, right) {
+        let i = left;
+        let j = mid + 1;
+        let k = left;
+        let rightCount = 0;
+        
+        while (i <= mid && j <= right) {
+            if (nums[indexes[i]] <= nums[indexes[j]]) {
+                result[indexes[i]] += rightCount;
+                temp[k] = nums[indexes[i]];
+                tempIndexes[k] = indexes[i];
+                i++;
+            } else {
+                rightCount++;
+                temp[k] = nums[indexes[j]];
+                tempIndexes[k] = indexes[j];
+                j++;
+            }
+            k++;
+        }
+        
+        while (i <= mid) {
+            result[indexes[i]] += rightCount;
+            temp[k] = nums[indexes[i]];
+            tempIndexes[k] = indexes[i];
+            i++;
+            k++;
+        }
+        
+        while (j <= right) {
+            temp[k] = nums[indexes[j]];
+            tempIndexes[k] = indexes[j];
+            j++;
+            k++;
+        }
+        
+        for (i = left; i <= right; i++) {
+            nums[indexes[i]] = temp[i];
+            indexes[i] = tempIndexes[i];
+        }
+    }
+    
+    mergeSort(0, nums.length - 1);
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Using merge sort approach.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing temporary arrays during merge sort.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private int[] count;
+    private int[] indexes;
+    private int[] temp;
+    private int[] tempIndexes;
+    
+    public IList<int> CountSmaller(int[] nums) {
+        int n = nums.Length;
+        count = new int[n];
+        indexes = new int[n];
+        temp = new int[n];
+        tempIndexes = new int[n];
+        
+        // Initialize indexes array
+        for (int i = 0; i < n; i++) {
+            indexes[i] = i;
+        }
+        
+        // Perform merge sort
+        MergeSort(nums, 0, n - 1);
+        
+        return count.ToList();
+    }
+    
+    private void MergeSort(int[] nums, int left, int right) {
+        if (left >= right) return;
+        
+        int mid = left + (right - left) / 2;
+        MergeSort(nums, left, mid);
+        MergeSort(nums, mid + 1, right);
+        Merge(nums, left, mid, right);
+    }
+    
+    private void Merge(int[] nums, int left, int mid, int right) {
+        int i = left;
+        int j = mid + 1;
+        int k = left;
+        int rightCount = 0;
+        
+        while (i <= mid && j <= right) {
+            if (nums[indexes[i]] <= nums[indexes[j]]) {
+                count[indexes[i]] += rightCount;
+                temp[k] = nums[indexes[i]];
+                tempIndexes[k] = indexes[i];
+                i++;
+            } else {
+                rightCount++;
+                temp[k] = nums[indexes[j]];
+                tempIndexes[k] = indexes[j];
+                j++;
+            }
+            k++;
+        }
+        
+        while (i <= mid) {
+            count[indexes[i]] += rightCount;
+            temp[k] = nums[indexes[i]];
+            tempIndexes[k] = indexes[i];
+            i++;
+            k++;
+        }
+        
+        while (j <= right) {
+            temp[k] = nums[indexes[j]];
+            tempIndexes[k] = indexes[j];
+            j++;
+            k++;
+        }
+        
+        for (i = left; i <= right; i++) {
+            nums[indexes[i]] = temp[i];
+            indexes[i] = tempIndexes[i];
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n log n)</h4>
+                    <p class="text-gray-700">Using merge sort approach.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing temporary arrays during merge sort.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a modified merge sort approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Count inversions during merge</li>
+                            <li>Track original indices</li>
+                            <li>Maintain sorted order</li>
+                            <li>Efficient counting</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize count array</li>
+                            <li>Perform merge sort</li>
+                            <li>Count smaller elements</li>
+                            <li>Track original positions</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>nums = [5,2,6,1]</li>
+                        <li>Track indices while sorting</li>
+                        <li>Count smaller elements</li>
+                        <li>Update result array</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Avoid repeated counting</li>
+                        <li>Efficient merging</li>
+                        <li>Space optimization</li>
+                        <li>Index tracking</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty array</li>
+                        <li>Single element</li>
+                        <li>Duplicate elements</li>
+                        <li>Sorted array</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

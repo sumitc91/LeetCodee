@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Time to Buy and Sell Stock with Cooldown - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">309. Best Time to Buy and Sell Stock with Cooldown</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given an array <code class="bg-gray-100 px-1 rounded">prices</code> where <code class="bg-gray-100 px-1 rounded">prices[i]</code> is the price of a given stock on the <code class="bg-gray-100 px-1 rounded">i<sup>th</sup></code> day.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day)</li>
+                    <li>Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again)</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: prices = [1,2,3,0,2]
+Output: 3
+Explanation: transactions = [buy, sell, cooldown, buy, sell]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: prices = [1]
+Output: 0</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= prices.length <= 5000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= prices[i] <= 1000</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices:
+            return 0
+        
+        n = len(prices)
+        # hold[i]: max profit if we hold stock at day i
+        # sold[i]: max profit if we sold stock at day i
+        # rest[i]: max profit if we rest at day i
+        hold = [0] * n
+        sold = [0] * n
+        rest = [0] * n
+        
+        # Initialize first day
+        hold[0] = -prices[0]  # Buy stock
+        
+        for i in range(1, n):
+            # If we hold stock at day i, either we held it from day i-1,
+            # or we buy it after resting on day i-1
+            hold[i] = max(hold[i-1], rest[i-1] - prices[i])
+            
+            # If we sold stock at day i, we must have held it at day i-1
+            sold[i] = hold[i-1] + prices[i]
+            
+            # If we rest at day i, we take the max profit from either
+            # resting or selling at day i-1
+            rest[i] = max(rest[i-1], sold[i-1])
+        
+        # Return the max of the last day's sold or rest state
+        return max(sold[n-1], rest[n-1])</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the prices array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the dynamic programming arrays.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length <= 1) return 0;
+        
+        int n = prices.length;
+        int[] hold = new int[n];
+        int[] sold = new int[n];
+        int[] rest = new int[n];
+        
+        // Initialize first day
+        hold[0] = -prices[0];
+        
+        for (int i = 1; i < n; i++) {
+            hold[i] = Math.max(hold[i-1], rest[i-1] - prices[i]);
+            sold[i] = hold[i-1] + prices[i];
+            rest[i] = Math.max(rest[i-1], sold[i-1]);
+        }
+        
+        return Math.max(sold[n-1], rest[n-1]);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the prices array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the dynamic programming arrays.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if (prices.empty()) return 0;
+        
+        int n = prices.size();
+        vector<int> hold(n, 0);
+        vector<int> sold(n, 0);
+        vector<int> rest(n, 0);
+        
+        // Initialize first day
+        hold[0] = -prices[0];
+        
+        for (int i = 1; i < n; i++) {
+            hold[i] = max(hold[i-1], rest[i-1] - prices[i]);
+            sold[i] = hold[i-1] + prices[i];
+            rest[i] = max(rest[i-1], sold[i-1]);
+        }
+        
+        return max(sold[n-1], rest[n-1]);
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the prices array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the dynamic programming arrays.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function(prices) {
+    if (!prices.length) return 0;
+    
+    const n = prices.length;
+    const hold = new Array(n).fill(0);
+    const sold = new Array(n).fill(0);
+    const rest = new Array(n).fill(0);
+    
+    // Initialize first day
+    hold[0] = -prices[0];
+    
+    for (let i = 1; i < n; i++) {
+        hold[i] = Math.max(hold[i-1], rest[i-1] - prices[i]);
+        sold[i] = hold[i-1] + prices[i];
+        rest[i] = Math.max(rest[i-1], sold[i-1]);
+    }
+    
+    return Math.max(sold[n-1], rest[n-1]);
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the prices array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the dynamic programming arrays.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int MaxProfit(int[] prices) {
+        if (prices == null || prices.Length <= 1) return 0;
+        
+        int n = prices.Length;
+        int[] hold = new int[n];
+        int[] sold = new int[n];
+        int[] rest = new int[n];
+        
+        // Initialize first day
+        hold[0] = -prices[0];
+        
+        for (int i = 1; i < n; i++) {
+            hold[i] = Math.Max(hold[i-1], rest[i-1] - prices[i]);
+            sold[i] = hold[i-1] + prices[i];
+            rest[i] = Math.Max(rest[i-1], sold[i-1]);
+        }
+        
+        return Math.Max(sold[n-1], rest[n-1]);
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the prices array.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the dynamic programming arrays.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses dynamic programming with state machine approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Three possible states: hold, sold, rest</li>
+                            <li>State transitions with cooldown</li>
+                            <li>Maximum profit tracking</li>
+                            <li>Optimal substructure</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize state arrays</li>
+                            <li>Define state transitions</li>
+                            <li>Handle cooldown period</li>
+                            <li>Track maximum profit</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>prices = [1,2,3,0,2]</li>
+                        <li>Track states for each day</li>
+                        <li>Consider cooldown after selling</li>
+                        <li>Find optimal sequence</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Space optimization possible</li>
+                        <li>State compression</li>
+                        <li>Early termination</li>
+                        <li>Pattern recognition</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty price array</li>
+                        <li>Single price</li>
+                        <li>Decreasing prices</li>
+                        <li>Alternating prices</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

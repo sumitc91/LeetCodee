@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Additive Number - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">306. Additive Number</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    An additive number is a string whose digits can form an additive sequence.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A valid additive sequence should contain at least three numbers. Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given a string containing only digits, return <code class="bg-gray-100 px-1 rounded">true</code> if it is an additive number or <code class="bg-gray-100 px-1 rounded">false</code> otherwise.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Note: Numbers in the additive sequence cannot have leading zeros, so sequence <code class="bg-gray-100 px-1 rounded">1, 2, 03</code> or <code class="bg-gray-100 px-1 rounded">1, 02, 3</code> is invalid.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: "112358"
+Output: true
+Explanation: The digits can form an additive sequence: 1, 1, 2, 3, 5, 8
+1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: "199100199"
+Output: true
+Explanation: The additive sequence is: 1, 99, 100, 199
+1 + 99 = 100, 99 + 100 = 199</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= num.length <= 35</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">num</code> consists only of digits.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def isAdditiveNumber(self, num: str) -> bool:
+        n = len(num)
+        for i in range(1, n//2 + 1):
+            if num[0] == '0' and i > 1:
+                break
+            for j in range(1, (n-i)//2 + 1):
+                if num[i] == '0' and j > 1:
+                    break
+                first = int(num[:i])
+                second = int(num[i:i+j])
+                start = i + j
+                
+                while start < n:
+                    third = first + second
+                    third_str = str(third)
+                    third_len = len(third_str)
+                    
+                    if start + third_len > n or num[start:start+third_len] != third_str:
+                        break
+                        
+                    first = second
+                    second = third
+                    start += third_len
+                    
+                if start == n:
+                    return True
+                    
+        return False</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n³)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only using a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean isAdditiveNumber(String num) {
+        int n = num.length();
+        for (int i = 1; i <= n/2; i++) {
+            if (num.charAt(0) == '0' && i > 1) break;
+            for (int j = 1; j <= (n-i)/2; j++) {
+                if (num.charAt(i) == '0' && j > 1) break;
+                
+                long first = Long.parseLong(num.substring(0, i));
+                long second = Long.parseLong(num.substring(i, i+j));
+                int start = i + j;
+                
+                if (isValid(num, first, second, start)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean isValid(String num, long first, long second, int start) {
+        if (start == num.length()) return true;
+        
+        long sum = first + second;
+        String sumStr = String.valueOf(sum);
+        if (start + sumStr.length() > num.length() || 
+            !num.substring(start, start + sumStr.length()).equals(sumStr)) {
+            return false;
+        }
+        
+        return isValid(num, second, sum, start + sumStr.length());
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n³)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Due to recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool isAdditiveNumber(string num) {
+        int n = num.length();
+        for (int i = 1; i <= n/2; i++) {
+            if (num[0] == '0' && i > 1) break;
+            for (int j = 1; j <= (n-i)/2; j++) {
+                if (num[i] == '0' && j > 1) break;
+                
+                string first = num.substr(0, i);
+                string second = num.substr(i, j);
+                int start = i + j;
+                
+                if (isValid(num, first, second, start)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+private:
+    bool isValid(string& num, string first, string second, int start) {
+        if (start == num.length()) return true;
+        
+        string sum = add(first, second);
+        if (start + sum.length() > num.length() || 
+            num.substr(start, sum.length()) != sum) {
+            return false;
+        }
+        
+        return isValid(num, second, sum, start + sum.length());
+    }
+    
+    string add(string& a, string& b) {
+        string res;
+        int carry = 0;
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        
+        while (i >= 0 || j >= 0 || carry) {
+            int sum = carry;
+            if (i >= 0) sum += a[i--] - '0';
+            if (j >= 0) sum += b[j--] - '0';
+            carry = sum / 10;
+            res = char(sum % 10 + '0') + res;
+        }
+        
+        return res;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n³)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing string sums and recursion stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} num
+ * @return {boolean}
+ */
+var isAdditiveNumber = function(num) {
+    const n = num.length;
+    
+    for (let i = 1; i <= n/2; i++) {
+        if (num[0] === '0' && i > 1) break;
+        for (let j = 1; j <= (n-i)/2; j++) {
+            if (num[i] === '0' && j > 1) break;
+            
+            const first = num.slice(0, i);
+            const second = num.slice(i, i+j);
+            let start = i + j;
+            
+            let num1 = BigInt(first);
+            let num2 = BigInt(second);
+            
+            while (start < n) {
+                const sum = num1 + num2;
+                const sumStr = sum.toString();
+                const len = sumStr.length;
+                
+                if (start + len > n || num.slice(start, start + len) !== sumStr) {
+                    break;
+                }
+                
+                num1 = num2;
+                num2 = sum;
+                start += len;
+            }
+            
+            if (start === n) return true;
+        }
+    }
+    
+    return false;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n³)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing string slices and BigInt conversions.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool IsAdditiveNumber(string num) {
+        int n = num.Length;
+        for (int i = 1; i <= n/2; i++) {
+            if (num[0] == '0' && i > 1) break;
+            for (int j = 1; j <= (n-i)/2; j++) {
+                if (num[i] == '0' && j > 1) break;
+                
+                string first = num.Substring(0, i);
+                string second = num.Substring(i, j);
+                int start = i + j;
+                
+                if (IsValid(num, first, second, start)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private bool IsValid(string num, string first, string second, int start) {
+        if (start == num.Length) return true;
+        
+        string sum = Add(first, second);
+        if (start + sum.Length > num.Length || 
+            num.Substring(start, sum.Length) != sum) {
+            return false;
+        }
+        
+        return IsValid(num, second, sum, start + sum.Length);
+    }
+    
+    private string Add(string a, string b) {
+        StringBuilder res = new StringBuilder();
+        int carry = 0;
+        int i = a.Length - 1;
+        int j = b.Length - 1;
+        
+        while (i >= 0 || j >= 0 || carry > 0) {
+            int sum = carry;
+            if (i >= 0) sum += a[i--] - '0';
+            if (j >= 0) sum += b[j--] - '0';
+            carry = sum / 10;
+            res.Insert(0, (char)(sum % 10 + '0'));
+        }
+        
+        return res.ToString();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n³)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing string sums and recursion stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses backtracking to find valid additive sequences:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Try all possible first two numbers</li>
+                            <li>Check if sequence can be formed</li>
+                            <li>Handle leading zeros</li>
+                            <li>Handle large numbers</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Generate first two numbers</li>
+                            <li>Validate remaining sequence</li>
+                            <li>Check sum property</li>
+                            <li>Handle edge cases</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Input: "112358"</li>
+                        <li>First two numbers: 1, 1</li>
+                        <li>Check sequence: 2, 3, 5, 8</li>
+                        <li>Verify each sum</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Length constraints</li>
+                        <li>Leading zero check</li>
+                        <li>String arithmetic</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Leading zeros</li>
+                        <li>Large numbers</li>
+                        <li>Short sequences</li>
+                        <li>Invalid sequences</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implement Stack using Queues - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">225. Implement Stack using Queues</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (<code class="bg-gray-100 px-1 rounded">push</code>, <code class="bg-gray-100 px-1 rounded">pop</code>, <code class="bg-gray-100 px-1 rounded">top</code>, and <code class="bg-gray-100 px-1 rounded">empty</code>).
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">MyStack</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">void push(int x)</code> Pushes element x to the top of the stack.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int pop()</code> Removes the element on the top of the stack and returns it.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int top()</code> Returns the element on the top of the stack.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">boolean empty()</code> Returns <code class="bg-gray-100 px-1 rounded">true</code> if the stack is empty, <code class="bg-gray-100 px-1 rounded">false</code> otherwise.</li>
+                </ul>
+                <p class="text-gray-700">
+                    Notes:
+                </p>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>You must use only standard operations of a queue, which means that only <code class="bg-gray-100 px-1 rounded">push to back</code>, <code class="bg-gray-100 px-1 rounded">peek/pop from front</code>, <code class="bg-gray-100 px-1 rounded">size</code>, and <code class="bg-gray-100 px-1 rounded">is empty</code> operations are valid.</li>
+                    <li>Depending on your language, the queue may not be supported natively. You may simulate a queue using a list or deque (double-ended queue) as long as you use only a queue's standard operations.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["MyStack", "push", "push", "top", "pop", "empty"]
+[[], [1], [2], [], [], []]
+Output
+[null, null, null, 2, 2, false]
+
+Explanation
+MyStack myStack = new MyStack();
+myStack.push(1);
+myStack.push(2);
+myStack.top(); // return 2
+myStack.pop(); // return 2
+myStack.empty(); // return False</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= x <= 9</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">100</code> calls will be made to <code class="bg-gray-100 px-1 rounded">push</code>, <code class="bg-gray-100 px-1 rounded">pop</code>, <code class="bg-gray-100 px-1 rounded">top</code>, and <code class="bg-gray-100 px-1 rounded">empty</code></li>
+                    <li>All the calls to <code class="bg-gray-100 px-1 rounded">pop</code> and <code class="bg-gray-100 px-1 rounded">top</code> are valid</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>from collections import deque
+
+class MyStack:
+    def __init__(self):
+        self.q1 = deque()
+        self.q2 = deque()
+
+    def push(self, x: int) -> None:
+        # Add new element to q2
+        self.q2.append(x)
+        # Move all elements from q1 to q2
+        while self.q1:
+            self.q2.append(self.q1.popleft())
+        # Swap q1 and q2
+        self.q1, self.q2 = self.q2, self.q1
+
+    def pop(self) -> int:
+        return self.q1.popleft()
+
+    def top(self) -> int:
+        return self.q1[0]
+
+    def empty(self) -> bool:
+        return len(self.q1) == 0</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>push: O(n)</li>
+                        <li>pop: O(1)</li>
+                        <li>top: O(1)</li>
+                        <li>empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the stack.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class MyStack {
+    private Queue<Integer> q1;
+    private Queue<Integer> q2;
+
+    public MyStack() {
+        q1 = new LinkedList<>();
+        q2 = new LinkedList<>();
+    }
+    
+    public void push(int x) {
+        // Add new element to q2
+        q2.offer(x);
+        // Move all elements from q1 to q2
+        while (!q1.isEmpty()) {
+            q2.offer(q1.poll());
+        }
+        // Swap q1 and q2
+        Queue<Integer> temp = q1;
+        q1 = q2;
+        q2 = temp;
+    }
+    
+    public int pop() {
+        return q1.poll();
+    }
+    
+    public int top() {
+        return q1.peek();
+    }
+    
+    public boolean empty() {
+        return q1.isEmpty();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>push: O(n)</li>
+                        <li>pop: O(1)</li>
+                        <li>top: O(1)</li>
+                        <li>empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the stack.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class MyStack {
+private:
+    queue<int> q1;
+    queue<int> q2;
+    
+public:
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        // Add new element to q2
+        q2.push(x);
+        // Move all elements from q1 to q2
+        while (!q1.empty()) {
+            q2.push(q1.front());
+            q1.pop();
+        }
+        // Swap q1 and q2
+        swap(q1, q2);
+    }
+    
+    int pop() {
+        int val = q1.front();
+        q1.pop();
+        return val;
+    }
+    
+    int top() {
+        return q1.front();
+    }
+    
+    bool empty() {
+        return q1.empty();
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>push: O(n)</li>
+                        <li>pop: O(1)</li>
+                        <li>top: O(1)</li>
+                        <li>empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the stack.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>var MyStack = function() {
+    this.q1 = [];
+    this.q2 = [];
+};
+
+/** 
+ * @param {number} x
+ * @return {void}
+ */
+MyStack.prototype.push = function(x) {
+    // Add new element to q2
+    this.q2.push(x);
+    // Move all elements from q1 to q2
+    while (this.q1.length > 0) {
+        this.q2.push(this.q1.shift());
+    }
+    // Swap q1 and q2
+    [this.q1, this.q2] = [this.q2, this.q1];
+};
+
+/**
+ * @return {number}
+ */
+MyStack.prototype.pop = function() {
+    return this.q1.shift();
+};
+
+/**
+ * @return {number}
+ */
+MyStack.prototype.top = function() {
+    return this.q1[0];
+};
+
+/**
+ * @return {boolean}
+ */
+MyStack.prototype.empty = function() {
+    return this.q1.length === 0;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>push: O(n)</li>
+                        <li>pop: O(1)</li>
+                        <li>top: O(1)</li>
+                        <li>empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the stack.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class MyStack {
+    private Queue<int> q1;
+    private Queue<int> q2;
+
+    public MyStack() {
+        q1 = new Queue<int>();
+        q2 = new Queue<int>();
+    }
+    
+    public void Push(int x) {
+        // Add new element to q2
+        q2.Enqueue(x);
+        // Move all elements from q1 to q2
+        while (q1.Count > 0) {
+            q2.Enqueue(q1.Dequeue());
+        }
+        // Swap q1 and q2
+        var temp = q1;
+        q1 = q2;
+        q2 = temp;
+    }
+    
+    public int Pop() {
+        return q1.Dequeue();
+    }
+    
+    public int Top() {
+        return q1.Peek();
+    }
+    
+    public bool Empty() {
+        return q1.Count == 0;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>push: O(n)</li>
+                        <li>pop: O(1)</li>
+                        <li>top: O(1)</li>
+                        <li>empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the stack.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses two queues to implement a stack. Here's how it works:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>We maintain two queues: q1 and q2
+                        <ul class="list-disc list-inside ml-8">
+                            <li>q1 always contains the stack elements in the correct order</li>
+                            <li>q2 is used as a temporary queue during push operations</li>
+                        </ul>
+                    </li>
+                    <li>For the push operation:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Add the new element to q2</li>
+                            <li>Move all elements from q1 to q2</li>
+                            <li>Swap q1 and q2</li>
+                        </ul>
+                    </li>
+                    <li>For other operations:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>pop: Remove and return the first element from q1</li>
+                            <li>top: Return the first element from q1 without removing it</li>
+                            <li>empty: Check if q1 is empty</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    The key insight is that we maintain the stack order by always adding new elements first and then moving all existing elements after it.
+                    This ensures that the most recently added element is always at the front of q1, mimicking a stack's LIFO behavior.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

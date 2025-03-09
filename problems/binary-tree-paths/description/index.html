@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Tree Paths - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">257. Binary Tree Paths</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given the <code class="bg-gray-100 px-1 rounded">root</code> of a binary tree, return all root-to-leaf paths in any order.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A leaf is a node with no children.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: root = [1,2,3,null,5]
+Output: ["1->2->5","1->3"]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: root = [1]
+Output: ["1"]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>The number of nodes in the tree is in the range <code class="bg-gray-100 px-1 rounded">[1, 100]</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-100 <= Node.val <= 100</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def binaryTreePaths(self, root: Optional[TreeNode]) -> List[str]:
+        def dfs(node, path, paths):
+            if not node:
+                return
+                
+            # Add current node to path
+            path.append(str(node.val))
+            
+            # If leaf node, add path to result
+            if not node.left and not node.right:
+                paths.append('->'.join(path))
+            else:
+                # Recursively traverse left and right subtrees
+                dfs(node.left, path, paths)
+                dfs(node.right, path, paths)
+                
+            # Backtrack by removing current node
+            path.pop()
+            
+        paths = []
+        dfs(root, [], paths)
+        return paths</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes. We visit each node once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursive call stack and path storage.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> paths = new ArrayList<>();
+        if (root == null) {
+            return paths;
+        }
+        
+        dfs(root, "", paths);
+        return paths;
+    }
+    
+    private void dfs(TreeNode node, String path, List<String> paths) {
+        // Add current node to path
+        path += (path.isEmpty() ? "" : "->") + node.val;
+        
+        // If leaf node, add path to result
+        if (node.left == null && node.right == null) {
+            paths.add(path);
+            return;
+        }
+        
+        // Recursively traverse left and right subtrees
+        if (node.left != null) {
+            dfs(node.left, path, paths);
+        }
+        if (node.right != null) {
+            dfs(node.right, path, paths);
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes. We visit each node once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursive call stack and path storage.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> paths;
+        if (!root) {
+            return paths;
+        }
+        
+        dfs(root, "", paths);
+        return paths;
+    }
+    
+private:
+    void dfs(TreeNode* node, string path, vector<string>& paths) {
+        // Add current node to path
+        path += (path.empty() ? "" : "->") + to_string(node->val);
+        
+        // If leaf node, add path to result
+        if (!node->left && !node->right) {
+            paths.push_back(path);
+            return;
+        }
+        
+        // Recursively traverse left and right subtrees
+        if (node->left) {
+            dfs(node->left, path, paths);
+        }
+        if (node->right) {
+            dfs(node->right, path, paths);
+        }
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes. We visit each node once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursive call stack and path storage.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {string[]}
+ */
+var binaryTreePaths = function(root) {
+    const paths = [];
+    if (!root) {
+        return paths;
+    }
+    
+    function dfs(node, path) {
+        // Add current node to path
+        path += (path ? '->' : '') + node.val;
+        
+        // If leaf node, add path to result
+        if (!node.left && !node.right) {
+            paths.push(path);
+            return;
+        }
+        
+        // Recursively traverse left and right subtrees
+        if (node.left) {
+            dfs(node.left, path);
+        }
+        if (node.right) {
+            dfs(node.right, path);
+        }
+    }
+    
+    dfs(root, '');
+    return paths;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes. We visit each node once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursive call stack and path storage.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<string> BinaryTreePaths(TreeNode root) {
+        var paths = new List<string>();
+        if (root == null) {
+            return paths;
+        }
+        
+        DFS(root, "", paths);
+        return paths;
+    }
+    
+    private void DFS(TreeNode node, string path, List<string> paths) {
+        // Add current node to path
+        path += (path == "" ? "" : "->") + node.val;
+        
+        // If leaf node, add path to result
+        if (node.left == null && node.right == null) {
+            paths.Add(path);
+            return;
+        }
+        
+        // Recursively traverse left and right subtrees
+        if (node.left != null) {
+            DFS(node.left, path, paths);
+        }
+        if (node.right != null) {
+            DFS(node.right, path, paths);
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes. We visit each node once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(h)</h4>
+                    <p class="text-gray-700">Where h is the height of the tree, for the recursive call stack and path storage.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses depth-first search (DFS) to find all root-to-leaf paths:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Use DFS to traverse from root to leaves</li>
+                            <li>Maintain current path during traversal</li>
+                            <li>Add path to result when reaching a leaf</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Start DFS from root node</li>
+                            <li>For each node:
+                                <ul class="list-disc list-inside ml-8">
+                                    <li>Add current node value to path</li>
+                                    <li>If leaf node, add path to result</li>
+                                    <li>Otherwise, recurse on children</li>
+                                </ul>
+                            </li>
+                            <li>Return all collected paths</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough for [1,2,3,null,5]:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Start at root (1)</li>
+                        <li>Path "1", go left to 2:
+                            <ul class="list-disc list-inside ml-8">
+                                <li>Path "1->2", go right to 5</li>
+                                <li>Path "1->2->5" (leaf), add to result</li>
+                            </ul>
+                        </li>
+                        <li>Back to root, go right to 3:
+                            <ul class="list-disc list-inside ml-8">
+                                <li>Path "1->3" (leaf), add to result</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Key insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>DFS ensures complete paths</li>
+                        <li>String concatenation vs array joining</li>
+                        <li>Path maintenance during recursion</li>
+                        <li>Leaf node detection</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ugly Number II - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">264. Ugly Number II</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    An ugly number is a positive integer whose prime factors are limited to <code class="bg-gray-100 px-1 rounded">2</code>, <code class="bg-gray-100 px-1 rounded">3</code>, and <code class="bg-gray-100 px-1 rounded">5</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given an integer <code class="bg-gray-100 px-1 rounded">n</code>, return the <code class="bg-gray-100 px-1 rounded">n<sup>th</sup></code> ugly number.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 10
+Output: 12
+Explanation: [1,2,3,4,5,6,8,9,10,12] is the sequence of the first 10 ugly numbers.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 1
+Output: 1
+Explanation: 1 has no prime factors, therefore all of its prime factors are limited to 2, 3, and 5.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n <= 1690</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def nthUglyNumber(self, n: int) -> int:
+        # Initialize array to store ugly numbers
+        ugly = [1]
+        
+        # Initialize pointers for 2, 3, and 5
+        i2 = i3 = i5 = 0
+        
+        # Generate ugly numbers
+        while len(ugly) < n:
+            # Get next candidates
+            next2 = ugly[i2] * 2
+            next3 = ugly[i3] * 3
+            next5 = ugly[i5] * 5
+            
+            # Get minimum of candidates
+            next_ugly = min(next2, next3, next5)
+            
+            # Move pointers
+            if next_ugly == next2:
+                i2 += 1
+            if next_ugly == next3:
+                i3 += 1
+            if next_ugly == next5:
+                i5 += 1
+                
+            ugly.append(next_ugly)
+            
+        return ugly[-1]</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate n ugly numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to store n ugly numbers.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int nthUglyNumber(int n) {
+        // Initialize array to store ugly numbers
+        int[] ugly = new int[n];
+        ugly[0] = 1;
+        
+        // Initialize pointers for 2, 3, and 5
+        int i2 = 0, i3 = 0, i5 = 0;
+        
+        // Generate ugly numbers
+        for (int i = 1; i < n; i++) {
+            // Get next candidates
+            int next2 = ugly[i2] * 2;
+            int next3 = ugly[i3] * 3;
+            int next5 = ugly[i5] * 5;
+            
+            // Get minimum of candidates
+            int nextUgly = Math.min(next2, Math.min(next3, next5));
+            
+            // Move pointers
+            if (nextUgly == next2) i2++;
+            if (nextUgly == next3) i3++;
+            if (nextUgly == next5) i5++;
+            
+            ugly[i] = nextUgly;
+        }
+        
+        return ugly[n - 1];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate n ugly numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to store n ugly numbers.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int nthUglyNumber(int n) {
+        // Initialize array to store ugly numbers
+        vector<int> ugly(n);
+        ugly[0] = 1;
+        
+        // Initialize pointers for 2, 3, and 5
+        int i2 = 0, i3 = 0, i5 = 0;
+        
+        // Generate ugly numbers
+        for (int i = 1; i < n; i++) {
+            // Get next candidates
+            int next2 = ugly[i2] * 2;
+            int next3 = ugly[i3] * 3;
+            int next5 = ugly[i5] * 5;
+            
+            // Get minimum of candidates
+            int nextUgly = min({next2, next3, next5});
+            
+            // Move pointers
+            if (nextUgly == next2) i2++;
+            if (nextUgly == next3) i3++;
+            if (nextUgly == next5) i5++;
+            
+            ugly[i] = nextUgly;
+        }
+        
+        return ugly[n - 1];
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate n ugly numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to store n ugly numbers.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} n
+ * @return {number}
+ */
+var nthUglyNumber = function(n) {
+    // Initialize array to store ugly numbers
+    const ugly = [1];
+    
+    // Initialize pointers for 2, 3, and 5
+    let i2 = 0, i3 = 0, i5 = 0;
+    
+    // Generate ugly numbers
+    while (ugly.length < n) {
+        // Get next candidates
+        const next2 = ugly[i2] * 2;
+        const next3 = ugly[i3] * 3;
+        const next5 = ugly[i5] * 5;
+        
+        // Get minimum of candidates
+        const nextUgly = Math.min(next2, next3, next5);
+        
+        // Move pointers
+        if (nextUgly === next2) i2++;
+        if (nextUgly === next3) i3++;
+        if (nextUgly === next5) i5++;
+        
+        ugly.push(nextUgly);
+    }
+    
+    return ugly[n - 1];
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate n ugly numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to store n ugly numbers.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int NthUglyNumber(int n) {
+        // Initialize array to store ugly numbers
+        int[] ugly = new int[n];
+        ugly[0] = 1;
+        
+        // Initialize pointers for 2, 3, and 5
+        int i2 = 0, i3 = 0, i5 = 0;
+        
+        // Generate ugly numbers
+        for (int i = 1; i < n; i++) {
+            // Get next candidates
+            int next2 = ugly[i2] * 2;
+            int next3 = ugly[i3] * 3;
+            int next5 = ugly[i5] * 5;
+            
+            // Get minimum of candidates
+            int nextUgly = Math.Min(next2, Math.Min(next3, next5));
+            
+            // Move pointers
+            if (nextUgly == next2) i2++;
+            if (nextUgly == next3) i3++;
+            if (nextUgly == next5) i5++;
+            
+            ugly[i] = nextUgly;
+        }
+        
+        return ugly[n - 1];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to generate n ugly numbers.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">We need to store n ugly numbers.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses dynamic programming with three pointers:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Every ugly number is a product of smaller ugly numbers</li>
+                            <li>Use three pointers for multiplying by 2, 3, and 5</li>
+                            <li>Generate numbers in sorted order</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Start with first ugly number (1)</li>
+                            <li>Generate next candidates by multiplying with 2, 3, 5</li>
+                            <li>Take minimum of candidates</li>
+                            <li>Move pointers accordingly</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough for first few numbers:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Start: [1], i2=i3=i5=0</li>
+                        <li>Candidates: 1×2=2, 1×3=3, 1×5=5 → Add 2</li>
+                        <li>Candidates: 2×2=4, 1×3=3, 1×5=5 → Add 3</li>
+                        <li>Candidates: 2×2=4, 2×3=6, 1×5=5 → Add 4</li>
+                        <li>And so on...</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Key insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Numbers are generated in sorted order</li>
+                        <li>Multiple pointers may move for same value</li>
+                        <li>Efficient dynamic programming approach</li>
+                        <li>No need to check primality</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>n = 1 (first number)</li>
+                        <li>Duplicate numbers</li>
+                        <li>Integer overflow considerations</li>
+                        <li>Maximum n value (1690)</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

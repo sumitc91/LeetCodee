@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range Sum Query - Mutable - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">307. Range Sum Query - Mutable</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an integer array <code class="bg-gray-100 px-1 rounded">nums</code>, handle multiple queries of the following types:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Update the value of an element in <code class="bg-gray-100 px-1 rounded">nums</code>.</li>
+                    <li>Calculate the sum of the elements of <code class="bg-gray-100 px-1 rounded">nums</code> between indices <code class="bg-gray-100 px-1 rounded">left</code> and <code class="bg-gray-100 px-1 rounded">right</code> inclusive where <code class="bg-gray-100 px-1 rounded">left <= right</code>.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">NumArray</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">NumArray(int[] nums)</code> Initializes the object with the integer array nums.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">void update(int index, int val)</code> Updates the value of <code class="bg-gray-100 px-1 rounded">nums[index]</code> to be <code class="bg-gray-100 px-1 rounded">val</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int sumRange(int left, int right)</code> Returns the sum of the elements of nums between indices left and right inclusive.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["NumArray", "sumRange", "update", "sumRange"]
+[[[1, 3, 5]], [0, 2], [1, 2], [0, 2]]
+Output
+[null, 9, null, 8]
+
+Explanation
+NumArray numArray = new NumArray([1, 3, 5]);
+numArray.sumRange(0, 2); // return 1 + 3 + 5 = 9
+numArray.update(1, 2);   // nums = [1, 2, 5]
+numArray.sumRange(0, 2); // return 1 + 2 + 5 = 8</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums.length <= 3 * 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-100 <= nums[i] <= 100</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= index < nums.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-100 <= val <= 100</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= left <= right < nums.length</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">3 * 10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">update</code> and <code class="bg-gray-100 px-1 rounded">sumRange</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class NumArray:
+    def __init__(self, nums: List[int]):
+        self.n = len(nums)
+        self.tree = [0] * (2 * self.n)
+        
+        # Build the tree
+        for i in range(self.n):
+            self.tree[self.n + i] = nums[i]
+        for i in range(self.n - 1, 0, -1):
+            self.tree[i] = self.tree[2*i] + self.tree[2*i + 1]
+
+    def update(self, index: int, val: int) -> None:
+        # Get to the leaf
+        pos = self.n + index
+        
+        # Update the value
+        self.tree[pos] = val
+        
+        # Update parent nodes
+        while pos > 1:
+            left = pos
+            right = pos
+            if pos % 2 == 0:
+                right = pos + 1
+            else:
+                left = pos - 1
+            self.tree[pos // 2] = self.tree[left] + self.tree[right]
+            pos //= 2
+
+    def sumRange(self, left: int, right: int) -> int:
+        # Get leaf with left and right
+        left += self.n
+        right += self.n
+        
+        sum = 0
+        while left <= right:
+            if left % 2 == 1:
+                sum += self.tree[left]
+                left += 1
+            if right % 2 == 0:
+                sum += self.tree[right]
+                right -= 1
+            left //= 2
+            right //= 2
+            
+        return sum</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n)</li>
+                        <li>update: O(log n)</li>
+                        <li>sumRange: O(log n)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the segment tree.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class NumArray {
+    private int[] tree;
+    private int n;
+
+    public NumArray(int[] nums) {
+        n = nums.length;
+        tree = new int[2 * n];
+        
+        // Build the tree
+        for (int i = 0; i < n; i++) {
+            tree[n + i] = nums[i];
+        }
+        for (int i = n - 1; i > 0; i--) {
+            tree[i] = tree[2*i] + tree[2*i + 1];
+        }
+    }
+    
+    public void update(int index, int val) {
+        // Get to the leaf
+        int pos = n + index;
+        
+        // Update the value
+        tree[pos] = val;
+        
+        // Update parent nodes
+        while (pos > 1) {
+            int left = pos;
+            int right = pos;
+            if (pos % 2 == 0) {
+                right = pos + 1;
+            } else {
+                left = pos - 1;
+            }
+            tree[pos / 2] = tree[left] + tree[right];
+            pos /= 2;
+        }
+    }
+    
+    public int sumRange(int left, int right) {
+        // Get leaf with left and right
+        left += n;
+        right += n;
+        
+        int sum = 0;
+        while (left <= right) {
+            if (left % 2 == 1) {
+                sum += tree[left];
+                left++;
+            }
+            if (right % 2 == 0) {
+                sum += tree[right];
+                right--;
+            }
+            left /= 2;
+            right /= 2;
+        }
+        
+        return sum;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n)</li>
+                        <li>update: O(log n)</li>
+                        <li>sumRange: O(log n)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the segment tree.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class NumArray {
+private:
+    vector<int> tree;
+    int n;
+    
+public:
+    NumArray(vector<int>& nums) {
+        n = nums.size();
+        tree.resize(2 * n);
+        
+        // Build the tree
+        for (int i = 0; i < n; i++) {
+            tree[n + i] = nums[i];
+        }
+        for (int i = n - 1; i > 0; i--) {
+            tree[i] = tree[2*i] + tree[2*i + 1];
+        }
+    }
+    
+    void update(int index, int val) {
+        // Get to the leaf
+        int pos = n + index;
+        
+        // Update the value
+        tree[pos] = val;
+        
+        // Update parent nodes
+        while (pos > 1) {
+            int left = pos;
+            int right = pos;
+            if (pos % 2 == 0) {
+                right = pos + 1;
+            } else {
+                left = pos - 1;
+            }
+            tree[pos / 2] = tree[left] + tree[right];
+            pos /= 2;
+        }
+    }
+    
+    int sumRange(int left, int right) {
+        // Get leaf with left and right
+        left += n;
+        right += n;
+        
+        int sum = 0;
+        while (left <= right) {
+            if (left % 2 == 1) {
+                sum += tree[left];
+                left++;
+            }
+            if (right % 2 == 0) {
+                sum += tree[right];
+                right--;
+            }
+            left /= 2;
+            right /= 2;
+        }
+        
+        return sum;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n)</li>
+                        <li>update: O(log n)</li>
+                        <li>sumRange: O(log n)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the segment tree.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ */
+var NumArray = function(nums) {
+    this.n = nums.length;
+    this.tree = new Array(2 * this.n).fill(0);
+    
+    // Build the tree
+    for (let i = 0; i < this.n; i++) {
+        this.tree[this.n + i] = nums[i];
+    }
+    for (let i = this.n - 1; i > 0; i--) {
+        this.tree[i] = this.tree[2*i] + this.tree[2*i + 1];
+    }
+};
+
+/** 
+ * @param {number} index 
+ * @param {number} val
+ * @return {void}
+ */
+NumArray.prototype.update = function(index, val) {
+    // Get to the leaf
+    let pos = this.n + index;
+    
+    // Update the value
+    this.tree[pos] = val;
+    
+    // Update parent nodes
+    while (pos > 1) {
+        let left = pos;
+        let right = pos;
+        if (pos % 2 === 0) {
+            right = pos + 1;
+        } else {
+            left = pos - 1;
+        }
+        this.tree[Math.floor(pos / 2)] = this.tree[left] + this.tree[right];
+        pos = Math.floor(pos / 2);
+    }
+};
+
+/** 
+ * @param {number} left 
+ * @param {number} right
+ * @return {number}
+ */
+NumArray.prototype.sumRange = function(left, right) {
+    // Get leaf with left and right
+    left += this.n;
+    right += this.n;
+    
+    let sum = 0;
+    while (left <= right) {
+        if (left % 2 === 1) {
+            sum += this.tree[left];
+            left++;
+        }
+        if (right % 2 === 0) {
+            sum += this.tree[right];
+            right--;
+        }
+        left = Math.floor(left / 2);
+        right = Math.floor(right / 2);
+    }
+    
+    return sum;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n)</li>
+                        <li>update: O(log n)</li>
+                        <li>sumRange: O(log n)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the segment tree.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class NumArray {
+    private int[] tree;
+    private int n;
+
+    public NumArray(int[] nums) {
+        n = nums.Length;
+        tree = new int[2 * n];
+        
+        // Build the tree
+        for (int i = 0; i < n; i++) {
+            tree[n + i] = nums[i];
+        }
+        for (int i = n - 1; i > 0; i--) {
+            tree[i] = tree[2*i] + tree[2*i + 1];
+        }
+    }
+    
+    public void Update(int index, int val) {
+        // Get to the leaf
+        int pos = n + index;
+        
+        // Update the value
+        tree[pos] = val;
+        
+        // Update parent nodes
+        while (pos > 1) {
+            int left = pos;
+            int right = pos;
+            if (pos % 2 == 0) {
+                right = pos + 1;
+            } else {
+                left = pos - 1;
+            }
+            tree[pos / 2] = tree[left] + tree[right];
+            pos /= 2;
+        }
+    }
+    
+    public int SumRange(int left, int right) {
+        // Get leaf with left and right
+        left += n;
+        right += n;
+        
+        int sum = 0;
+        while (left <= right) {
+            if (left % 2 == 1) {
+                sum += tree[left];
+                left++;
+            }
+            if (right % 2 == 0) {
+                sum += tree[right];
+                right--;
+            }
+            left /= 2;
+            right /= 2;
+        }
+        
+        return sum;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(n)</li>
+                        <li>update: O(log n)</li>
+                        <li>sumRange: O(log n)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the segment tree.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a Segment Tree data structure:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Use segment tree for range queries</li>
+                            <li>Efficient updates and range sums</li>
+                            <li>Binary tree representation</li>
+                            <li>Parent-child relationships</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Build segment tree</li>
+                            <li>Update values efficiently</li>
+                            <li>Calculate range sums</li>
+                            <li>Maintain tree property</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Build tree from array</li>
+                        <li>Update propagates up</li>
+                        <li>Range sum uses tree structure</li>
+                        <li>Logarithmic operations</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Alternative approaches:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Binary Indexed Tree</li>
+                        <li>Square Root Decomposition</li>
+                        <li>Sparse Table (static)</li>
+                        <li>Direct array updates</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single element array</li>
+                        <li>Full range query</li>
+                        <li>Frequent updates</li>
+                        <li>Large arrays</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

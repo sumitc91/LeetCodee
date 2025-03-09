@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number of Digit One - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">233. Number of Digit One</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given an integer <code class="bg-gray-100 px-1 rounded">n</code>, count the total number of digit <code class="bg-gray-100 px-1 rounded">1</code> appearing in all non-negative integers less than or equal to <code class="bg-gray-100 px-1 rounded">n</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 13
+Output: 6
+Explanation: Digit 1 occurred in the following numbers: 1, 10, 11, 12, 13.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 0
+Output: 0</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= n <= 10⁹</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def countDigitOne(self, n: int) -> int:
+        if n <= 0:
+            return 0
+            
+        count = 0
+        i = 1  # current digit position
+        
+        while i <= n:
+            # Calculate the count of 1's at current digit position
+            divider = i * 10
+            quotient = n // divider
+            remainder = n % divider
+            
+            # Count complete groups of 1's
+            count += quotient * i
+            
+            # Count additional 1's in the current digit
+            if remainder >= i * 2 - 1:
+                count += i
+            elif remainder >= i:
+                count += remainder - i + 1
+            
+            i *= 10
+            
+        return count</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">We process each digit position, and there are log₁₀(n) digits.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int countDigitOne(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        
+        int count = 0;
+        long i = 1;  // Use long to avoid overflow
+        
+        while (i <= n) {
+            // Calculate the count of 1's at current digit position
+            long divider = i * 10;
+            long quotient = n / divider;
+            long remainder = n % divider;
+            
+            // Count complete groups of 1's
+            count += quotient * i;
+            
+            // Count additional 1's in the current digit
+            if (remainder >= i * 2 - 1) {
+                count += i;
+            } else if (remainder >= i) {
+                count += remainder - i + 1;
+            }
+            
+            i *= 10;
+        }
+        
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">We process each digit position, and there are log₁₀(n) digits.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int countDigitOne(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        
+        int count = 0;
+        long long i = 1;  // Use long long to avoid overflow
+        
+        while (i <= n) {
+            // Calculate the count of 1's at current digit position
+            long long divider = i * 10;
+            long long quotient = n / divider;
+            long long remainder = n % divider;
+            
+            // Count complete groups of 1's
+            count += quotient * i;
+            
+            // Count additional 1's in the current digit
+            if (remainder >= i * 2 - 1) {
+                count += i;
+            } else if (remainder >= i) {
+                count += remainder - i + 1;
+            }
+            
+            i *= 10;
+        }
+        
+        return count;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">We process each digit position, and there are log₁₀(n) digits.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} n
+ * @return {number}
+ */
+var countDigitOne = function(n) {
+    if (n <= 0) {
+        return 0;
+    }
+    
+    let count = 0;
+    let i = 1;  // current digit position
+    
+    while (i <= n) {
+        // Calculate the count of 1's at current digit position
+        const divider = i * 10;
+        const quotient = Math.floor(n / divider);
+        const remainder = n % divider;
+        
+        // Count complete groups of 1's
+        count += quotient * i;
+        
+        // Count additional 1's in the current digit
+        if (remainder >= i * 2 - 1) {
+            count += i;
+        } else if (remainder >= i) {
+            count += remainder - i + 1;
+        }
+        
+        i *= 10;
+    }
+    
+    return count;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">We process each digit position, and there are log₁₀(n) digits.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int CountDigitOne(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        
+        int count = 0;
+        long i = 1;  // Use long to avoid overflow
+        
+        while (i <= n) {
+            // Calculate the count of 1's at current digit position
+            long divider = i * 10;
+            long quotient = n / divider;
+            long remainder = n % divider;
+            
+            // Count complete groups of 1's
+            count += (int)(quotient * i);
+            
+            // Count additional 1's in the current digit
+            if (remainder >= i * 2 - 1) {
+                count += (int)i;
+            } else if (remainder >= i) {
+                count += (int)(remainder - i + 1);
+            }
+            
+            i *= 10;
+        }
+        
+        return count;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(log n)</h4>
+                    <p class="text-gray-700">We process each digit position, and there are log₁₀(n) digits.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only uses a constant amount of extra space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a mathematical approach to count digit ones. Here's how it works:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>For each digit position:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Calculate complete groups of 1's (quotient * i)</li>
+                            <li>Handle additional 1's in the current position</li>
+                            <li>Move to the next digit position (multiply by 10)</li>
+                        </ul>
+                    </li>
+                    <li>For each position, consider:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Complete groups: How many full sets of 1's occur</li>
+                            <li>Partial groups: Additional 1's in the remainder</li>
+                            <li>Edge cases: When remainder is large enough for all 1's</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example breakdown for n = 213:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Ones digit: 21 complete groups of 1's, plus 1 more (total: 22)</li>
+                        <li>Tens digit: 2 complete groups of 10 1's, plus 4 more (total: 24)</li>
+                        <li>Hundreds digit: 1 complete group of 100 1's (total: 100)</li>
+                        <li>Final total: 146 ones</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Key insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Pattern repeats every 10 positions</li>
+                        <li>Need to handle overflow in some languages</li>
+                        <li>Can be solved without converting to string</li>
+                        <li>Mathematical approach is more efficient than counting</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

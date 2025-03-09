@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimum Height Trees - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">310. Minimum Height Trees</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    A tree is an undirected graph in which any two vertices are connected by exactly one path. In other words, any connected graph without simple cycles is a tree.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Given a tree of <code class="bg-gray-100 px-1 rounded">n</code> nodes labeled from <code class="bg-gray-100 px-1 rounded">0</code> to <code class="bg-gray-100 px-1 rounded">n - 1</code>, and an array of <code class="bg-gray-100 px-1 rounded">n - 1</code> edges where <code class="bg-gray-100 px-1 rounded">edges[i] = [ai, bi]</code> indicates that there is an undirected edge between nodes <code class="bg-gray-100 px-1 rounded">ai</code> and <code class="bg-gray-100 px-1 rounded">bi</code> in the tree, you can choose any node of the tree as the root. When you select a node <code class="bg-gray-100 px-1 rounded">x</code> as the root, the result tree has height <code class="bg-gray-100 px-1 rounded">h</code>. Among all possible rooted trees, those with minimum height (i.e. <code class="bg-gray-100 px-1 rounded">min(h)</code>) are called minimum height trees (MHTs).
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return a list of all MHTs' root labels. You can return the answer in any order.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The height of a rooted tree is the number of edges on the longest downward path between the root and a leaf.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 4, edges = [[1,0],[1,2],[1,3]]
+Output: [1]
+Explanation: As shown, the height of the tree is 1 when the root is the node with label 1 which is the only MHT.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: n = 6, edges = [[3,0],[3,1],[3,2],[3,4],[5,4]]
+Output: [3,4]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n <= 2 * 10⁴</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">edges.length == n - 1</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= ai, bi < n</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">ai != bi</code></li>
+                    <li>All pairs <code class="bg-gray-100 px-1 rounded">(ai, bi)</code> are distinct</li>
+                    <li>The given input is guaranteed to be a tree and there will be no repeated edges</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:
+        if n <= 2:
+            return [i for i in range(n)]
+            
+        # Build the graph
+        graph = [set() for _ in range(n)]
+        for u, v in edges:
+            graph[u].add(v)
+            graph[v].add(u)
+            
+        # Find leaves (nodes with only one neighbor)
+        leaves = [i for i in range(n) if len(graph[i]) == 1]
+        
+        # Remove leaves layer by layer until reaching the centroids
+        remaining_nodes = n
+        while remaining_nodes > 2:
+            remaining_nodes -= len(leaves)
+            new_leaves = []
+            
+            # Remove current leaves and find new ones
+            for leaf in leaves:
+                # Get the only neighbor of current leaf
+                neighbor = graph[leaf].pop()
+                # Remove the leaf from its neighbor's neighbors
+                graph[neighbor].remove(leaf)
+                # If the neighbor becomes a leaf, add it to new leaves
+                if len(graph[neighbor]) == 1:
+                    new_leaves.append(neighbor)
+                    
+            leaves = new_leaves
+            
+        return leaves</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the graph and leaves.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        if (n <= 2) {
+            List<Integer> centroids = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                centroids.add(i);
+            }
+            return centroids;
+        }
+        
+        // Build the graph
+        List<Set<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new HashSet<>());
+        }
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        
+        // Find leaves
+        List<Integer> leaves = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (graph.get(i).size() == 1) {
+                leaves.add(i);
+            }
+        }
+        
+        // Remove leaves layer by layer
+        int remainingNodes = n;
+        while (remainingNodes > 2) {
+            remainingNodes -= leaves.size();
+            List<Integer> newLeaves = new ArrayList<>();
+            
+            for (int leaf : leaves) {
+                int neighbor = graph.get(leaf).iterator().next();
+                graph.get(neighbor).remove(leaf);
+                if (graph.get(neighbor).size() == 1) {
+                    newLeaves.add(neighbor);
+                }
+            }
+            
+            leaves = newLeaves;
+        }
+        
+        return leaves;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the graph and leaves.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        if (n <= 2) {
+            vector<int> centroids;
+            for (int i = 0; i < n; i++) {
+                centroids.push_back(i);
+            }
+            return centroids;
+        }
+        
+        // Build the graph
+        vector<unordered_set<int>> graph(n);
+        for (const auto& edge : edges) {
+            graph[edge[0]].insert(edge[1]);
+            graph[edge[1]].insert(edge[0]);
+        }
+        
+        // Find leaves
+        vector<int> leaves;
+        for (int i = 0; i < n; i++) {
+            if (graph[i].size() == 1) {
+                leaves.push_back(i);
+            }
+        }
+        
+        // Remove leaves layer by layer
+        int remainingNodes = n;
+        while (remainingNodes > 2) {
+            remainingNodes -= leaves.size();
+            vector<int> newLeaves;
+            
+            for (int leaf : leaves) {
+                int neighbor = *graph[leaf].begin();
+                graph[neighbor].erase(leaf);
+                if (graph[neighbor].size() == 1) {
+                    newLeaves.push_back(neighbor);
+                }
+            }
+            
+            leaves = move(newLeaves);
+        }
+        
+        return leaves;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the graph and leaves.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @return {number[]}
+ */
+var findMinHeightTrees = function(n, edges) {
+    if (n <= 2) {
+        return Array.from({length: n}, (_, i) => i);
+    }
+    
+    // Build the graph
+    const graph = Array.from({length: n}, () => new Set());
+    for (const [u, v] of edges) {
+        graph[u].add(v);
+        graph[v].add(u);
+    }
+    
+    // Find leaves
+    let leaves = [];
+    for (let i = 0; i < n; i++) {
+        if (graph[i].size === 1) {
+            leaves.push(i);
+        }
+    }
+    
+    // Remove leaves layer by layer
+    let remainingNodes = n;
+    while (remainingNodes > 2) {
+        remainingNodes -= leaves.length;
+        const newLeaves = [];
+        
+        for (const leaf of leaves) {
+            const [neighbor] = graph[leaf];
+            graph[neighbor].delete(leaf);
+            if (graph[neighbor].size === 1) {
+                newLeaves.push(neighbor);
+            }
+        }
+        
+        leaves = newLeaves;
+    }
+    
+    return leaves;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the graph and leaves.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public IList<int> FindMinHeightTrees(int n, int[][] edges) {
+        if (n <= 2) {
+            return Enumerable.Range(0, n).ToList();
+        }
+        
+        // Build the graph
+        var graph = new List<HashSet<int>>();
+        for (int i = 0; i < n; i++) {
+            graph.Add(new HashSet<int>());
+        }
+        foreach (var edge in edges) {
+            graph[edge[0]].Add(edge[1]);
+            graph[edge[1]].Add(edge[0]);
+        }
+        
+        // Find leaves
+        var leaves = new List<int>();
+        for (int i = 0; i < n; i++) {
+            if (graph[i].Count == 1) {
+                leaves.Add(i);
+            }
+        }
+        
+        // Remove leaves layer by layer
+        int remainingNodes = n;
+        while (remainingNodes > 2) {
+            remainingNodes -= leaves.Count;
+            var newLeaves = new List<int>();
+            
+            foreach (var leaf in leaves) {
+                var neighbor = graph[leaf].First();
+                graph[neighbor].Remove(leaf);
+                if (graph[neighbor].Count == 1) {
+                    newLeaves.Add(neighbor);
+                }
+            }
+            
+            leaves = newLeaves;
+        }
+        
+        return leaves;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of nodes in the tree.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the graph and leaves.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a topological sorting approach to find the centroids:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>MHT roots are centroids of the tree</li>
+                            <li>At most 2 centroids exist</li>
+                            <li>Remove leaf nodes iteratively</li>
+                            <li>Remaining nodes are centroids</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Build undirected graph</li>
+                            <li>Find initial leaves</li>
+                            <li>Remove leaves layer by layer</li>
+                            <li>Stop when 1 or 2 nodes remain</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Build adjacency list</li>
+                        <li>Identify leaf nodes</li>
+                        <li>Remove leaves iteratively</li>
+                        <li>Find centroids</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination for n ≤ 2</li>
+                        <li>Efficient graph representation</li>
+                        <li>Set operations for O(1) lookup</li>
+                        <li>Layer-wise processing</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single node</li>
+                        <li>Two nodes</li>
+                        <li>Linear tree</li>
+                        <li>Star topology</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

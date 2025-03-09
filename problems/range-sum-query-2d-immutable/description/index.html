@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range Sum Query 2D - Immutable - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">304. Range Sum Query 2D - Immutable</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a 2D matrix <code class="bg-gray-100 px-1 rounded">matrix</code>, handle multiple queries of the following type:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Calculate the sum of the elements of <code class="bg-gray-100 px-1 rounded">matrix</code> inside the rectangle defined by its upper left corner <code class="bg-gray-100 px-1 rounded">(row1, col1)</code> and lower right corner <code class="bg-gray-100 px-1 rounded">(row2, col2)</code>.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">NumMatrix</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">NumMatrix(int[][] matrix)</code> Initializes the object with the integer matrix matrix.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int sumRegion(int row1, int col1, int row2, int col2)</code> Returns the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["NumMatrix", "sumRegion", "sumRegion", "sumRegion"]
+[[[[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]], [2, 1, 4, 3], [1, 1, 2, 2], [1, 2, 2, 4]]
+Output
+[null, 8, 11, 12]
+
+Explanation
+NumMatrix numMatrix = new NumMatrix([[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]);
+numMatrix.sumRegion(2, 1, 4, 3); // return 8 (i.e sum of the red rectangle)
+numMatrix.sumRegion(1, 1, 2, 2); // return 11 (i.e sum of the green rectangle)
+numMatrix.sumRegion(1, 2, 2, 4); // return 12 (i.e sum of the blue rectangle)</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">m == matrix.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == matrix[i].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= m, n <= 200</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁵ <= matrix[i][j] <= 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= row1 <= row2 < m</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= col1 <= col2 < n</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">sumRegion</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class NumMatrix:
+    def __init__(self, matrix: List[List[int]]):
+        if not matrix or not matrix[0]:
+            return
+            
+        m, n = len(matrix), len(matrix[0])
+        self.dp = [[0] * (n + 1) for _ in range(m + 1)]
+        
+        # Calculate prefix sum for each cell
+        for i in range(m):
+            for j in range(n):
+                self.dp[i + 1][j + 1] = (self.dp[i + 1][j] + 
+                                        self.dp[i][j + 1] - 
+                                        self.dp[i][j] + 
+                                        matrix[i][j])
+
+    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -> int:
+        return (self.dp[row2 + 1][col2 + 1] - 
+                self.dp[row2 + 1][col1] - 
+                self.dp[row1][col2 + 1] + 
+                self.dp[row1][col1])</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(m * n)</li>
+                        <li>sumRegion: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the 2D prefix sum array.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class NumMatrix {
+    private int[][] dp;
+
+    public NumMatrix(int[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return;
+        
+        int m = matrix.length;
+        int n = matrix[0].length;
+        dp = new int[m + 1][n + 1];
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i + 1][j + 1] = dp[i + 1][j] + dp[i][j + 1] - dp[i][j] + matrix[i][j];
+            }
+        }
+    }
+    
+    public int sumRegion(int row1, int col1, int row2, int col2) {
+        return dp[row2 + 1][col2 + 1] - dp[row2 + 1][col1] - dp[row1][col2 + 1] + dp[row1][col1];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(m * n)</li>
+                        <li>sumRegion: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the 2D prefix sum array.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class NumMatrix {
+private:
+    vector<vector<int>> dp;
+    
+public:
+    NumMatrix(vector<vector<int>>& matrix) {
+        if (matrix.empty() || matrix[0].empty()) return;
+        
+        int m = matrix.size();
+        int n = matrix[0].size();
+        dp = vector<vector<int>>(m + 1, vector<int>(n + 1, 0));
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i + 1][j + 1] = dp[i + 1][j] + dp[i][j + 1] - dp[i][j] + matrix[i][j];
+            }
+        }
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return dp[row2 + 1][col2 + 1] - dp[row2 + 1][col1] - dp[row1][col2 + 1] + dp[row1][col1];
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(m * n)</li>
+                        <li>sumRegion: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the 2D prefix sum array.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} matrix
+ */
+var NumMatrix = function(matrix) {
+    if (!matrix.length || !matrix[0].length) return;
+    
+    const m = matrix.length;
+    const n = matrix[0].length;
+    this.dp = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
+    
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            this.dp[i + 1][j + 1] = this.dp[i + 1][j] + 
+                                   this.dp[i][j + 1] - 
+                                   this.dp[i][j] + 
+                                   matrix[i][j];
+        }
+    }
+};
+
+/** 
+ * @param {number} row1 
+ * @param {number} col1 
+ * @param {number} row2 
+ * @param {number} col2
+ * @return {number}
+ */
+NumMatrix.prototype.sumRegion = function(row1, col1, row2, col2) {
+    return this.dp[row2 + 1][col2 + 1] - 
+           this.dp[row2 + 1][col1] - 
+           this.dp[row1][col2 + 1] + 
+           this.dp[row1][col1];
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(m * n)</li>
+                        <li>sumRegion: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the 2D prefix sum array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class NumMatrix {
+    private int[,] dp;
+    
+    public NumMatrix(int[][] matrix) {
+        if (matrix == null || matrix.Length == 0 || matrix[0].Length == 0) return;
+        
+        int m = matrix.Length;
+        int n = matrix[0].Length;
+        dp = new int[m + 1, n + 1];
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i + 1, j + 1] = dp[i + 1, j] + dp[i, j + 1] - dp[i, j] + matrix[i][j];
+            }
+        }
+    }
+    
+    public int SumRegion(int row1, int col1, int row2, int col2) {
+        return dp[row2 + 1, col2 + 1] - dp[row2 + 1, col1] - dp[row1, col2 + 1] + dp[row1, col1];
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Constructor: O(m * n)</li>
+                        <li>sumRegion: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m * n)</h4>
+                    <p class="text-gray-700">For storing the 2D prefix sum array.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses 2D prefix sum array for efficient region queries:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Extend 1D prefix sum to 2D</li>
+                            <li>Use inclusion-exclusion principle</li>
+                            <li>Trade space for time</li>
+                            <li>O(1) region queries</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize 2D prefix sum array</li>
+                            <li>Calculate cumulative sums</li>
+                            <li>Use formula for region sum</li>
+                            <li>Handle edge cases</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Calculate prefix sums for each cell</li>
+                        <li>Use formula: dp[r2+1][c2+1] - dp[r2+1][c1] - dp[r1][c2+1] + dp[r1][c1]</li>
+                        <li>Constant time lookup</li>
+                        <li>Handles any size region</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Alternative approaches:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Direct sum calculation O(m*n)</li>
+                        <li>Row-wise prefix sum O(m)</li>
+                        <li>Segment tree O(log m * log n)</li>
+                        <li>Binary Indexed Tree 2D</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty matrix</li>
+                        <li>Single cell region</li>
+                        <li>Full matrix region</li>
+                        <li>Integer overflow</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

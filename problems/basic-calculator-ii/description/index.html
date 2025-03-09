@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator II - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">227. Basic Calculator II</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">s</code> which represents an expression, evaluate this expression and return its value.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    The integer division should truncate toward zero.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    You may assume that the given expression is always valid. All intermediate results will be in the range of <code class="bg-gray-100 px-1 rounded">[-2³¹, 2³¹ - 1]</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as <code class="bg-gray-100 px-1 rounded">eval()</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = "3+2*2"
+Output: 7</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = " 3/2 "
+Output: 1</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: s = " 3+5 / 2 "
+Output: 5</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= s.length <= 3 * 10⁵</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">s</code> consists of integers and operators <code class="bg-gray-100 px-1 rounded">('+', '-', '*', '/')</code> separated by some number of spaces.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">s</code> represents a valid expression.</li>
+                    <li>All the integers in the expression are non-negative integers in the range <code class="bg-gray-100 px-1 rounded">[0, 2³¹ - 1]</code>.</li>
+                    <li>The answer is guaranteed to fit in a 32-bit integer.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def calculate(self, s: str) -> int:
+        stack = []
+        num = 0
+        op = '+'
+        
+        for i, char in enumerate(s):
+            if char.isdigit():
+                num = num * 10 + int(char)
+            
+            if (not char.isdigit() and char != ' ') or i == len(s) - 1:
+                if op == '+':
+                    stack.append(num)
+                elif op == '-':
+                    stack.append(-num)
+                elif op == '*':
+                    stack.append(stack.pop() * num)
+                elif op == '/':
+                    # Handle division by rounding towards 0
+                    prev = stack.pop()
+                    if prev < 0:
+                        stack.append(-(abs(prev) // num))
+                    else:
+                        stack.append(prev // num)
+                
+                op = char
+                num = 0
+        
+        return sum(stack)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. We process each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. The stack can store at most n/2 numbers in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int calculate(String s) {
+        Stack<Integer> stack = new Stack<>();
+        int num = 0;
+        char op = '+';
+        
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            
+            if (Character.isDigit(c)) {
+                num = num * 10 + (c - '0');
+            }
+            
+            if ((!Character.isDigit(c) && c != ' ') || i == s.length() - 1) {
+                if (op == '+') {
+                    stack.push(num);
+                } else if (op == '-') {
+                    stack.push(-num);
+                } else if (op == '*') {
+                    stack.push(stack.pop() * num);
+                } else if (op == '/') {
+                    stack.push(stack.pop() / num);
+                }
+                
+                op = c;
+                num = 0;
+            }
+        }
+        
+        int result = 0;
+        while (!stack.isEmpty()) {
+            result += stack.pop();
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. We process each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. The stack can store at most n/2 numbers in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int calculate(string s) {
+        stack<int> stack;
+        int num = 0;
+        char op = '+';
+        
+        for (int i = 0; i < s.length(); i++) {
+            char c = s[i];
+            
+            if (isdigit(c)) {
+                num = num * 10 + (c - '0');
+            }
+            
+            if ((!isdigit(c) && c != ' ') || i == s.length() - 1) {
+                if (op == '+') {
+                    stack.push(num);
+                } else if (op == '-') {
+                    stack.push(-num);
+                } else if (op == '*') {
+                    int prev = stack.top();
+                    stack.pop();
+                    stack.push(prev * num);
+                } else if (op == '/') {
+                    int prev = stack.top();
+                    stack.pop();
+                    stack.push(prev / num);
+                }
+                
+                op = c;
+                num = 0;
+            }
+        }
+        
+        int result = 0;
+        while (!stack.empty()) {
+            result += stack.top();
+            stack.pop();
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. We process each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. The stack can store at most n/2 numbers in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} s
+ * @return {number}
+ */
+var calculate = function(s) {
+    const stack = [];
+    let num = 0;
+    let op = '+';
+    
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
+        
+        if (/\d/.test(char)) {
+            num = num * 10 + parseInt(char);
+        }
+        
+        if (!/\d/.test(char) && char !== ' ' || i === s.length - 1) {
+            if (op === '+') {
+                stack.push(num);
+            } else if (op === '-') {
+                stack.push(-num);
+            } else if (op === '*') {
+                stack.push(stack.pop() * num);
+            } else if (op === '/') {
+                const prev = stack.pop();
+                // Handle division by rounding towards 0
+                stack.push(prev > 0 ? Math.floor(prev / num) : Math.ceil(prev / num));
+            }
+            
+            op = char;
+            num = 0;
+        }
+    }
+    
+    return stack.reduce((sum, num) => sum + num, 0);
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. We process each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. The stack can store at most n/2 numbers in the worst case.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int Calculate(string s) {
+        var stack = new Stack<int>();
+        int num = 0;
+        char op = '+';
+        
+        for (int i = 0; i < s.Length; i++) {
+            char c = s[i];
+            
+            if (char.IsDigit(c)) {
+                num = num * 10 + (c - '0');
+            }
+            
+            if ((!char.IsDigit(c) && c != ' ') || i == s.Length - 1) {
+                if (op == '+') {
+                    stack.Push(num);
+                } else if (op == '-') {
+                    stack.Push(-num);
+                } else if (op == '*') {
+                    stack.Push(stack.Pop() * num);
+                } else if (op == '/') {
+                    stack.Push(stack.Pop() / num);
+                }
+                
+                op = c;
+                num = 0;
+            }
+        }
+        
+        return stack.Sum();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. We process each character once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input string. The stack can store at most n/2 numbers in the worst case.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a stack-based approach to handle operator precedence. Here's how it works:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Process Numbers:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Build multi-digit numbers by processing digits one by one</li>
+                            <li>Skip spaces as they don't affect the calculation</li>
+                        </ul>
+                    </li>
+                    <li>Handle Operators:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>For '+' and '-': Push the number (or its negative) onto the stack</li>
+                            <li>For '*' and '/': Pop the previous number, perform the operation, and push result</li>
+                            <li>Store the current operator for the next number</li>
+                        </ul>
+                    </li>
+                    <li>Final Result:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Sum all numbers in the stack</li>
+                            <li>This works because we've already handled multiplication and division</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Key points about the solution:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Handles operator precedence without needing multiple passes</li>
+                        <li>Properly handles multi-digit numbers</li>
+                        <li>Takes care of division rounding towards zero</li>
+                        <li>Efficiently processes the expression in a single pass</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

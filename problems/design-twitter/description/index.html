@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Twitter - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">355. Design Twitter</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user's news feed.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">Twitter</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">Twitter()</code> Initializes your twitter object.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">void postTweet(int userId, int tweetId)</code> Composes a new tweet with ID <code class="bg-gray-100 px-1 rounded">tweetId</code> by the user <code class="bg-gray-100 px-1 rounded">userId</code>. Each call to this function will be made with a unique <code class="bg-gray-100 px-1 rounded">tweetId</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">List<Integer> getNewsFeed(int userId)</code> Retrieves the 10 most recent tweet IDs in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user themself. Tweets must be ordered from most recent to least recent.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">void follow(int followerId, int followeeId)</code> The user with ID <code class="bg-gray-100 px-1 rounded">followerId</code> started following the user with ID <code class="bg-gray-100 px-1 rounded">followeeId</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">void unfollow(int followerId, int followeeId)</code> The user with ID <code class="bg-gray-100 px-1 rounded">followerId</code> started unfollowing the user with ID <code class="bg-gray-100 px-1 rounded">followeeId</code>.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["Twitter", "postTweet", "getNewsFeed", "follow", "postTweet", "getNewsFeed", "unfollow", "getNewsFeed"]
+[[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]]
+Output
+[null, null, [5], null, null, [6, 5], null, [5]]
+
+Explanation
+Twitter twitter = new Twitter();
+twitter.postTweet(1, 5); // User 1 posts a new tweet (id = 5).
+twitter.getNewsFeed(1);  // User 1's news feed should return a list with 1 tweet id -> [5]. Return [5]
+twitter.follow(1, 2);    // User 1 follows user 2.
+twitter.postTweet(2, 6); // User 2 posts a new tweet (id = 6).
+twitter.getNewsFeed(1);  // User 1's news feed should return a list with 2 tweet ids -> [6, 5]. Return [6, 5]
+twitter.unfollow(1, 2);  // User 1 unfollows user 2.
+twitter.getNewsFeed(1);  // User 1's news feed should return a list with 1 tweet id -> [5], since user 1 is no longer following user 2.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= userId, followerId, followeeId <= 500</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= tweetId <= 10⁴</code></li>
+                    <li>All the tweets have <strong>unique</strong> IDs.</li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">3 * 10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">postTweet</code>, <code class="bg-gray-100 px-1 rounded">getNewsFeed</code>, <code class="bg-gray-100 px-1 rounded">follow</code>, and <code class="bg-gray-100 px-1 rounded">unfollow</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Twitter:
+    def __init__(self):
+        self.tweets = defaultdict(list)  # userId -> list of [timestamp, tweetId]
+        self.follows = defaultdict(set)  # userId -> set of followeeIds
+        self.time = 0
+
+    def postTweet(self, userId: int, tweetId: int) -> None:
+        self.tweets[userId].append([self.time, tweetId])
+        self.time -= 1  # Using negative time for max heap
+
+    def getNewsFeed(self, userId: int) -> List[int]:
+        # Get all relevant tweets
+        heap = []
+        # Add user's own tweets
+        for time, tweetId in self.tweets[userId]:
+            heap.append([time, tweetId, userId, 0])
+        # Add tweets from followees
+        for followeeId in self.follows[userId]:
+            for time, tweetId in self.tweets[followeeId]:
+                heap.append([time, tweetId, followeeId, 0])
+        # Convert to min heap (using negative time makes it work as max heap)
+        heapify(heap)
+        
+        # Get 10 most recent tweets
+        feed = []
+        while heap and len(feed) < 10:
+            time, tweetId, userId, idx = heappop(heap)
+            feed.append(tweetId)
+        
+        return feed
+
+    def follow(self, followerId: int, followeeId: int) -> None:
+        if followerId != followeeId:
+            self.follows[followerId].add(followeeId)
+
+    def unfollow(self, followerId: int, followeeId: int) -> None:
+        if followerId != followeeId:
+            self.follows[followerId].discard(followeeId)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>postTweet: O(1)</li>
+                        <li>getNewsFeed: O(N log N) where N is total tweets from user and followees</li>
+                        <li>follow: O(1)</li>
+                        <li>unfollow: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">Where N is total number of tweets and follows.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Twitter {
+    private class Tweet {
+        int tweetId;
+        int time;
+        Tweet(int tweetId, int time) {
+            this.tweetId = tweetId;
+            this.time = time;
+        }
+    }
+    
+    private Map<Integer, List<Tweet>> tweets;
+    private Map<Integer, Set<Integer>> follows;
+    private int time;
+
+    public Twitter() {
+        tweets = new HashMap<>();
+        follows = new HashMap<>();
+        time = 0;
+    }
+    
+    public void postTweet(int userId, int tweetId) {
+        tweets.putIfAbsent(userId, new ArrayList<>());
+        tweets.get(userId).add(new Tweet(tweetId, time++));
+    }
+    
+    public List<Integer> getNewsFeed(int userId) {
+        PriorityQueue<Tweet> pq = new PriorityQueue<>((a, b) -> b.time - a.time);
+        
+        // Add user's own tweets
+        if (tweets.containsKey(userId)) {
+            pq.addAll(tweets.get(userId));
+        }
+        
+        // Add tweets from followees
+        if (follows.containsKey(userId)) {
+            for (int followeeId : follows.get(userId)) {
+                if (tweets.containsKey(followeeId)) {
+                    pq.addAll(tweets.get(followeeId));
+                }
+            }
+        }
+        
+        List<Integer> feed = new ArrayList<>();
+        while (!pq.isEmpty() && feed.size() < 10) {
+            feed.add(pq.poll().tweetId);
+        }
+        
+        return feed;
+    }
+    
+    public void follow(int followerId, int followeeId) {
+        if (followerId != followeeId) {
+            follows.putIfAbsent(followerId, new HashSet<>());
+            follows.get(followerId).add(followeeId);
+        }
+    }
+    
+    public void unfollow(int followerId, int followeeId) {
+        if (followerId != followeeId && follows.containsKey(followerId)) {
+            follows.get(followerId).remove(followeeId);
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>postTweet: O(1)</li>
+                        <li>getNewsFeed: O(N log N) where N is total tweets from user and followees</li>
+                        <li>follow: O(1)</li>
+                        <li>unfollow: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">Where N is total number of tweets and follows.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Twitter {
+private:
+    struct Tweet {
+        int tweetId;
+        int time;
+        Tweet(int id, int t) : tweetId(id), time(t) {}
+    };
+    
+    unordered_map<int, vector<Tweet>> tweets;
+    unordered_map<int, unordered_set<int>> follows;
+    int time;
+    
+public:
+    Twitter() {
+        time = 0;
+    }
+    
+    void postTweet(int userId, int tweetId) {
+        tweets[userId].emplace_back(tweetId, time++);
+    }
+    
+    vector<int> getNewsFeed(int userId) {
+        auto comp = [](const Tweet& a, const Tweet& b) {
+            return a.time < b.time;
+        };
+        priority_queue<Tweet, vector<Tweet>, decltype(comp)> pq(comp);
+        
+        // Add user's own tweets
+        for (const auto& tweet : tweets[userId]) {
+            pq.push(tweet);
+        }
+        
+        // Add tweets from followees
+        for (const auto& followeeId : follows[userId]) {
+            for (const auto& tweet : tweets[followeeId]) {
+                pq.push(tweet);
+            }
+        }
+        
+        vector<int> feed;
+        while (!pq.empty() && feed.size() < 10) {
+            feed.push_back(pq.top().tweetId);
+            pq.pop();
+        }
+        
+        return feed;
+    }
+    
+    void follow(int followerId, int followeeId) {
+        if (followerId != followeeId) {
+            follows[followerId].insert(followeeId);
+        }
+    }
+    
+    void unfollow(int followerId, int followeeId) {
+        if (followerId != followeeId) {
+            follows[followerId].erase(followeeId);
+        }
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>postTweet: O(1)</li>
+                        <li>getNewsFeed: O(N log N) where N is total tweets from user and followees</li>
+                        <li>follow: O(1)</li>
+                        <li>unfollow: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">Where N is total number of tweets and follows.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>class Twitter {
+    constructor() {
+        this.tweets = new Map();  // userId -> array of [time, tweetId]
+        this.follows = new Map(); // userId -> Set of followeeIds
+        this.time = 0;
+    }
+    
+    /** 
+     * @param {number} userId 
+     * @param {number} tweetId
+     * @return {void}
+     */
+    postTweet(userId, tweetId) {
+        if (!this.tweets.has(userId)) {
+            this.tweets.set(userId, []);
+        }
+        this.tweets.get(userId).push([this.time++, tweetId]);
+    }
+    
+    /** 
+     * @param {number} userId
+     * @return {number[]}
+     */
+    getNewsFeed(userId) {
+        const tweets = [];
+        
+        // Add user's own tweets
+        if (this.tweets.has(userId)) {
+            tweets.push(...this.tweets.get(userId));
+        }
+        
+        // Add tweets from followees
+        if (this.follows.has(userId)) {
+            for (const followeeId of this.follows.get(userId)) {
+                if (this.tweets.has(followeeId)) {
+                    tweets.push(...this.tweets.get(followeeId));
+                }
+            }
+        }
+        
+        // Sort by time and get 10 most recent
+        return tweets
+            .sort((a, b) => b[0] - a[0])
+            .slice(0, 10)
+            .map(tweet => tweet[1]);
+    }
+    
+    /** 
+     * @param {number} followerId 
+     * @param {number} followeeId
+     * @return {void}
+     */
+    follow(followerId, followeeId) {
+        if (followerId !== followeeId) {
+            if (!this.follows.has(followerId)) {
+                this.follows.set(followerId, new Set());
+            }
+            this.follows.get(followerId).add(followeeId);
+        }
+    }
+    
+    /** 
+     * @param {number} followerId 
+     * @param {number} followeeId
+     * @return {void}
+     */
+    unfollow(followerId, followeeId) {
+        if (followerId !== followeeId && this.follows.has(followerId)) {
+            this.follows.get(followerId).delete(followeeId);
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>postTweet: O(1)</li>
+                        <li>getNewsFeed: O(N log N) where N is total tweets from user and followees</li>
+                        <li>follow: O(1)</li>
+                        <li>unfollow: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">Where N is total number of tweets and follows.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Twitter {
+    private class Tweet {
+        public int TweetId { get; set; }
+        public int Time { get; set; }
+        public Tweet(int tweetId, int time) {
+            TweetId = tweetId;
+            Time = time;
+        }
+    }
+    
+    private Dictionary<int, List<Tweet>> tweets;
+    private Dictionary<int, HashSet<int>> follows;
+    private int time;
+
+    public Twitter() {
+        tweets = new Dictionary<int, List<Tweet>>();
+        follows = new Dictionary<int, HashSet<int>>();
+        time = 0;
+    }
+    
+    public void PostTweet(int userId, int tweetId) {
+        if (!tweets.ContainsKey(userId)) {
+            tweets[userId] = new List<Tweet>();
+        }
+        tweets[userId].Add(new Tweet(tweetId, time++));
+    }
+    
+    public IList<int> GetNewsFeed(int userId) {
+        var allTweets = new List<Tweet>();
+        
+        // Add user's own tweets
+        if (tweets.ContainsKey(userId)) {
+            allTweets.AddRange(tweets[userId]);
+        }
+        
+        // Add tweets from followees
+        if (follows.ContainsKey(userId)) {
+            foreach (var followeeId in follows[userId]) {
+                if (tweets.ContainsKey(followeeId)) {
+                    allTweets.AddRange(tweets[followeeId]);
+                }
+            }
+        }
+        
+        return allTweets
+            .OrderByDescending(t => t.Time)
+            .Take(10)
+            .Select(t => t.TweetId)
+            .ToList();
+    }
+    
+    public void Follow(int followerId, int followeeId) {
+        if (followerId != followeeId) {
+            if (!follows.ContainsKey(followerId)) {
+                follows[followerId] = new HashSet<int>();
+            }
+            follows[followerId].Add(followeeId);
+        }
+    }
+    
+    public void Unfollow(int followerId, int followeeId) {
+        if (followerId != followeeId && follows.ContainsKey(followerId)) {
+            follows[followerId].Remove(followeeId);
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>postTweet: O(1)</li>
+                        <li>getNewsFeed: O(N log N) where N is total tweets from user and followees</li>
+                        <li>follow: O(1)</li>
+                        <li>unfollow: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(N)</h4>
+                    <p class="text-gray-700">Where N is total number of tweets and follows.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a combination of data structures for efficient operations:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Components:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Tweet storage</li>
+                            <li>Follow relationships</li>
+                            <li>Time tracking</li>
+                            <li>Feed generation</li>
+                        </ul>
+                    </li>
+                    <li>Data Structures:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Hash map for tweets</li>
+                            <li>Hash set for follows</li>
+                            <li>Priority queue for feed</li>
+                            <li>Timestamp ordering</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Implementation Details:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Efficient tweet storage</li>
+                        <li>Quick follow/unfollow</li>
+                        <li>Sorted feed retrieval</li>
+                        <li>Memory optimization</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Lazy loading</li>
+                        <li>Heap usage</li>
+                        <li>Early stopping</li>
+                        <li>Cache friendly</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Self follow/unfollow</li>
+                        <li>Empty feed</li>
+                        <li>No followers</li>
+                        <li>Duplicate follows</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flatten Nested List Iterator - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">341. Flatten Nested List Iterator</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given a nested list of integers <code class="bg-gray-100 px-1 rounded">nestedList</code>. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">NestedIterator</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">NestedIterator(List&lt;NestedInteger&gt; nestedList)</code> Initializes the iterator with the nested list <code class="bg-gray-100 px-1 rounded">nestedList</code>.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int next()</code> Returns the next integer in the nested list.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">boolean hasNext()</code> Returns <code class="bg-gray-100 px-1 rounded">true</code> if there are still some integers in the nested list and <code class="bg-gray-100 px-1 rounded">false</code> otherwise.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nestedList = [[1,1],2,[1,1]]
+Output: [1,1,2,1,1]
+Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1].</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nestedList = [1,[4,[6]]]
+Output: [1,4,6]
+Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6].</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nestedList.length <= 500</code></li>
+                    <li>The values of the integers in the nested list is in the range <code class="bg-gray-100 px-1 rounded">[-10⁶, 10⁶]</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        self.stack = []
+        # Push elements in reverse order
+        for i in range(len(nestedList) - 1, -1, -1):
+            self.stack.append(nestedList[i])
+    
+    def next(self) -> int:
+        return self.stack.pop().getInteger()
+    
+    def hasNext(self) -> bool:
+        # Process the top element until we find an integer
+        while self.stack and not self.stack[-1].isInteger():
+            nestedList = self.stack.pop().getList()
+            # Push elements in reverse order
+            for i in range(len(nestedList) - 1, -1, -1):
+                self.stack.append(nestedList[i])
+        return len(self.stack) > 0</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of integers in the nested list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(d)</h4>
+                    <p class="text-gray-700">Where d is the maximum nesting depth.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>public class NestedIterator implements Iterator<Integer> {
+    private Stack<NestedInteger> stack;
+    
+    public NestedIterator(List<NestedInteger> nestedList) {
+        stack = new Stack<>();
+        // Push elements in reverse order
+        for (int i = nestedList.size() - 1; i >= 0; i--) {
+            stack.push(nestedList.get(i));
+        }
+    }
+
+    @Override
+    public Integer next() {
+        return stack.pop().getInteger();
+    }
+
+    @Override
+    public boolean hasNext() {
+        // Process the top element until we find an integer
+        while (!stack.isEmpty() && !stack.peek().isInteger()) {
+            List<NestedInteger> nestedList = stack.pop().getList();
+            // Push elements in reverse order
+            for (int i = nestedList.size() - 1; i >= 0; i--) {
+                stack.push(nestedList.get(i));
+            }
+        }
+        return !stack.isEmpty();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of integers in the nested list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(d)</h4>
+                    <p class="text-gray-700">Where d is the maximum nesting depth.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class NestedIterator {
+private:
+    stack<NestedInteger> st;
+    
+public:
+    NestedIterator(vector<NestedInteger> &nestedList) {
+        // Push elements in reverse order
+        for (int i = nestedList.size() - 1; i >= 0; i--) {
+            st.push(nestedList[i]);
+        }
+    }
+    
+    int next() {
+        return st.top().getInteger();
+    }
+    
+    bool hasNext() {
+        // Process the top element until we find an integer
+        while (!st.empty() && !st.top().isInteger()) {
+            auto nestedList = st.top().getList();
+            st.pop();
+            // Push elements in reverse order
+            for (int i = nestedList.size() - 1; i >= 0; i--) {
+                st.push(nestedList[i]);
+            }
+        }
+        return !st.empty();
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of integers in the nested list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(d)</h4>
+                    <p class="text-gray-700">Where d is the maximum nesting depth.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @constructor
+ * @param {NestedInteger[]} nestedList
+ */
+var NestedIterator = function(nestedList) {
+    this.stack = [];
+    // Push elements in reverse order
+    for (let i = nestedList.length - 1; i >= 0; i--) {
+        this.stack.push(nestedList[i]);
+    }
+};
+
+/**
+ * @this NestedIterator
+ * @returns {boolean}
+ */
+NestedIterator.prototype.hasNext = function() {
+    // Process the top element until we find an integer
+    while (this.stack.length && !this.stack[this.stack.length - 1].isInteger()) {
+        const nestedList = this.stack.pop().getList();
+        // Push elements in reverse order
+        for (let i = nestedList.length - 1; i >= 0; i--) {
+            this.stack.push(nestedList[i]);
+        }
+    }
+    return this.stack.length > 0;
+};
+
+/**
+ * @this NestedIterator
+ * @returns {integer}
+ */
+NestedIterator.prototype.next = function() {
+    return this.stack.pop().getInteger();
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of integers in the nested list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(d)</h4>
+                    <p class="text-gray-700">Where d is the maximum nesting depth.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class NestedIterator {
+    private Stack<NestedInteger> stack;
+    
+    public NestedIterator(IList<NestedInteger> nestedList) {
+        stack = new Stack<NestedInteger>();
+        // Push elements in reverse order
+        for (int i = nestedList.Count - 1; i >= 0; i--) {
+            stack.Push(nestedList[i]);
+        }
+    }
+
+    public bool HasNext() {
+        // Process the top element until we find an integer
+        while (stack.Count > 0 && !stack.Peek().IsInteger()) {
+            var nestedList = stack.Pop().GetList();
+            // Push elements in reverse order
+            for (int i = nestedList.Count - 1; i >= 0; i--) {
+                stack.Push(nestedList[i]);
+            }
+        }
+        return stack.Count > 0;
+    }
+
+    public int Next() {
+        return stack.Pop().GetInteger();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the total number of integers in the nested list.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(d)</h4>
+                    <p class="text-gray-700">Where d is the maximum nesting depth.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a stack-based approach:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Stack usage</li>
+                            <li>Lazy evaluation</li>
+                            <li>Depth-first traversal</li>
+                            <li>Iterator pattern</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize stack</li>
+                            <li>Process nested lists</li>
+                            <li>Handle integers</li>
+                            <li>Maintain order</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Push to stack</li>
+                        <li>Process elements</li>
+                        <li>Handle nesting</li>
+                        <li>Return integers</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Lazy processing</li>
+                        <li>Memory efficient</li>
+                        <li>Order preservation</li>
+                        <li>Stack operations</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty list</li>
+                        <li>Deep nesting</li>
+                        <li>Single integer</li>
+                        <li>Mixed nesting</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

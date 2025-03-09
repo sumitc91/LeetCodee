@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palindrome Pairs - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">336. Palindrome Pairs</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given a list of <strong>unique</strong> words, return all the pairs of the <strong>distinct</strong> indices <code class="bg-gray-100 px-1 rounded">(i, j)</code> in the given list, so that the concatenation of the two words <code class="bg-gray-100 px-1 rounded">words[i] + words[j]</code> is a palindrome.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["abcd","dcba","lls","s","sssll"]
+Output: [[0,1],[1,0],[3,2],[2,4]]
+Explanation: The palindromes are ["abcddcba","dcbaabcd","slls","llssssll"]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["bat","tab","cat"]
+Output: [[0,1],[1,0]]
+Explanation: The palindromes are ["battab","tabbat"]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["a",""]
+Output: [[0,1],[1,0]]
+Explanation: The palindromes are ["a","a"]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= words.length <= 5000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= words[i].length <= 300</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">words[i]</code> consists of lowercase English letters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def palindromePairs(self, words: List[str]) -> List[List[int]]:
+        def is_palindrome(word: str, start: int, end: int) -> bool:
+            while start < end:
+                if word[start] != word[end]:
+                    return False
+                start += 1
+                end -= 1
+            return True
+        
+        word_dict = {word: i for i, word in enumerate(words)}
+        result = []
+        
+        for i, word in enumerate(words):
+            n = len(word)
+            for j in range(n + 1):
+                # Check prefix
+                if is_palindrome(word, j, n - 1):
+                    rev_prefix = word[:j][::-1]
+                    if rev_prefix in word_dict and word_dict[rev_prefix] != i:
+                        result.append([i, word_dict[rev_prefix]])
+                
+                # Check suffix (skip if j = 0 to avoid duplicates)
+                if j > 0 and is_palindrome(word, 0, j - 1):
+                    rev_suffix = word[j:][::-1]
+                    if rev_suffix in word_dict and word_dict[rev_suffix] != i:
+                        result.append([word_dict[rev_suffix], i])
+        
+        return result</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average length of words.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word dictionary and result list.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    private boolean isPalindrome(String word, int start, int end) {
+        while (start < end) {
+            if (word.charAt(start) != word.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+    
+    public List<List<Integer>> palindromePairs(String[] words) {
+        List<List<Integer>> result = new ArrayList<>();
+        Map<String, Integer> wordMap = new HashMap<>();
+        
+        // Build word map
+        for (int i = 0; i < words.length; i++) {
+            wordMap.put(words[i], i);
+        }
+        
+        // Check each word
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            int len = word.length();
+            
+            for (int j = 0; j <= len; j++) {
+                // Check prefix
+                if (isPalindrome(word, j, len - 1)) {
+                    String revPrefix = new StringBuilder(word.substring(0, j)).reverse().toString();
+                    if (wordMap.containsKey(revPrefix) && wordMap.get(revPrefix) != i) {
+                        result.add(Arrays.asList(i, wordMap.get(revPrefix)));
+                    }
+                }
+                
+                // Check suffix
+                if (j > 0 && isPalindrome(word, 0, j - 1)) {
+                    String revSuffix = new StringBuilder(word.substring(j)).reverse().toString();
+                    if (wordMap.containsKey(revSuffix) && wordMap.get(revSuffix) != i) {
+                        result.add(Arrays.asList(wordMap.get(revSuffix), i));
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average length of words.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word map and result list.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    bool isPalindrome(const string& word, int start, int end) {
+        while (start < end) {
+            if (word[start] != word[end]) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+    
+public:
+    vector<vector<int>> palindromePairs(vector<string>& words) {
+        vector<vector<int>> result;
+        unordered_map<string, int> wordMap;
+        
+        // Build word map
+        for (int i = 0; i < words.size(); i++) {
+            wordMap[words[i]] = i;
+        }
+        
+        // Check each word
+        for (int i = 0; i < words.size(); i++) {
+            const string& word = words[i];
+            int len = word.length();
+            
+            for (int j = 0; j <= len; j++) {
+                // Check prefix
+                if (isPalindrome(word, j, len - 1)) {
+                    string revPrefix = word.substr(0, j);
+                    reverse(revPrefix.begin(), revPrefix.end());
+                    auto it = wordMap.find(revPrefix);
+                    if (it != wordMap.end() && it->second != i) {
+                        result.push_back({i, it->second});
+                    }
+                }
+                
+                // Check suffix
+                if (j > 0 && isPalindrome(word, 0, j - 1)) {
+                    string revSuffix = word.substr(j);
+                    reverse(revSuffix.begin(), revSuffix.end());
+                    auto it = wordMap.find(revSuffix);
+                    if (it != wordMap.end() && it->second != i) {
+                        result.push_back({it->second, i});
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average length of words.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word map and result vector.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string[]} words
+ * @return {number[][]}
+ */
+var palindromePairs = function(words) {
+    const isPalindrome = (word, start, end) => {
+        while (start < end) {
+            if (word[start] !== word[end]) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    };
+    
+    const result = [];
+    const wordMap = new Map();
+    
+    // Build word map
+    words.forEach((word, i) => {
+        wordMap.set(word, i);
+    });
+    
+    // Check each word
+    words.forEach((word, i) => {
+        const len = word.length;
+        
+        for (let j = 0; j <= len; j++) {
+            // Check prefix
+            if (isPalindrome(word, j, len - 1)) {
+                const revPrefix = word.slice(0, j).split('').reverse().join('');
+                if (wordMap.has(revPrefix) && wordMap.get(revPrefix) !== i) {
+                    result.push([i, wordMap.get(revPrefix)]);
+                }
+            }
+            
+            // Check suffix
+            if (j > 0 && isPalindrome(word, 0, j - 1)) {
+                const revSuffix = word.slice(j).split('').reverse().join('');
+                if (wordMap.has(revSuffix) && wordMap.get(revSuffix) !== i) {
+                    result.push([wordMap.get(revSuffix), i]);
+                }
+            }
+        }
+    });
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average length of words.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word map and result array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private bool IsPalindrome(string word, int start, int end) {
+        while (start < end) {
+            if (word[start] != word[end]) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+    
+    public IList<IList<int>> PalindromePairs(string[] words) {
+        var result = new List<IList<int>>();
+        var wordMap = new Dictionary<string, int>();
+        
+        // Build word map
+        for (int i = 0; i < words.Length; i++) {
+            wordMap[words[i]] = i;
+        }
+        
+        // Check each word
+        for (int i = 0; i < words.Length; i++) {
+            string word = words[i];
+            int len = word.Length;
+            
+            for (int j = 0; j <= len; j++) {
+                // Check prefix
+                if (IsPalindrome(word, j, len - 1)) {
+                    string revPrefix = new string(word.Substring(0, j).Reverse().ToArray());
+                    if (wordMap.ContainsKey(revPrefix) && wordMap[revPrefix] != i) {
+                        result.Add(new List<int> { i, wordMap[revPrefix] });
+                    }
+                }
+                
+                // Check suffix
+                if (j > 0 && IsPalindrome(word, 0, j - 1)) {
+                    string revSuffix = new string(word.Substring(j).Reverse().ToArray());
+                    if (wordMap.ContainsKey(revSuffix) && wordMap[revSuffix] != i) {
+                        result.Add(new List<int> { wordMap[revSuffix], i });
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average length of words.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing the word dictionary and result list.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a hash map and string manipulation:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Palindrome properties</li>
+                            <li>String reversal</li>
+                            <li>Hash map usage</li>
+                            <li>Prefix/suffix checks</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Build word map</li>
+                            <li>Check each word</li>
+                            <li>Find palindrome pairs</li>
+                            <li>Handle edge cases</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Map creation</li>
+                        <li>Word processing</li>
+                        <li>Palindrome checking</li>
+                        <li>Pair formation</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Early termination</li>
+                        <li>Efficient lookup</li>
+                        <li>Memory management</li>
+                        <li>String operations</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty strings</li>
+                        <li>Single character</li>
+                        <li>Same words</li>
+                        <li>No pairs</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

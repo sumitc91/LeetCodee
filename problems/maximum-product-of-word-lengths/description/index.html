@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximum Product of Word Lengths - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">318. Maximum Product of Word Lengths</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string array <code class="bg-gray-100 px-1 rounded">words</code>, return the maximum value of <code class="bg-gray-100 px-1 rounded">length(word[i]) * length(word[j])</code> where the two words do not share common letters. If no such two words exist, return <code class="bg-gray-100 px-1 rounded">0</code>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["abcw","baz","foo","bar","xtfn","abcdef"]
+Output: 16
+Explanation: The two words can be "abcw", "xtfn".</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["a","ab","abc","d","cd","bcd","abcd"]
+Output: 4
+Explanation: The two words can be "ab", "cd".</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: words = ["a","aa","aaa","aaaa"]
+Output: 0
+Explanation: No such pair of words.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">2 <= words.length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= words[i].length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">words[i]</code> consists only of lowercase English letters</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def maxProduct(self, words: List[str]) -> int:
+        # Create bit masks for each word
+        masks = {}
+        for word in words:
+            # Create bit mask for current word
+            mask = 0
+            for c in word:
+                mask |= 1 << (ord(c) - ord('a'))
+            # Store maximum length for this mask
+            masks[mask] = max(masks.get(mask, 0), len(word))
+        
+        # Find maximum product
+        max_product = 0
+        for mask1 in masks:
+            for mask2 in masks:
+                # If no common letters (no bits in common)
+                if mask1 & mask2 == 0:
+                    max_product = max(max_product, 
+                                   masks[mask1] * masks[mask2])
+        
+        return max_product</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k + m²)</h4>
+                    <p class="text-gray-700">Where n is the number of words, k is the average word length, and m is the number of unique masks.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(m)</h4>
+                    <p class="text-gray-700">Where m is the number of unique masks.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int maxProduct(String[] words) {
+        int n = words.length;
+        int[] masks = new int[n];
+        int[] lengths = new int[n];
+        
+        // Create bit masks for each word
+        for (int i = 0; i < n; i++) {
+            String word = words[i];
+            int mask = 0;
+            for (char c : word.toCharArray()) {
+                mask |= 1 << (c - 'a');
+            }
+            masks[i] = mask;
+            lengths[i] = word.length();
+        }
+        
+        // Find maximum product
+        int maxProduct = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // If no common letters (no bits in common)
+                if ((masks[i] & masks[j]) == 0) {
+                    maxProduct = Math.max(maxProduct, 
+                                       lengths[i] * lengths[j]);
+                }
+            }
+        }
+        
+        return maxProduct;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k + n²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average word length.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing masks and lengths arrays.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        int n = words.size();
+        vector<int> masks(n, 0);
+        vector<int> lengths(n, 0);
+        
+        // Create bit masks for each word
+        for (int i = 0; i < n; i++) {
+            for (char c : words[i]) {
+                masks[i] |= 1 << (c - 'a');
+            }
+            lengths[i] = words[i].length();
+        }
+        
+        // Find maximum product
+        int maxProduct = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // If no common letters (no bits in common)
+                if ((masks[i] & masks[j]) == 0) {
+                    maxProduct = max(maxProduct, 
+                                   lengths[i] * lengths[j]);
+                }
+            }
+        }
+        
+        return maxProduct;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k + n²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average word length.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing masks and lengths vectors.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string[]} words
+ * @return {number}
+ */
+var maxProduct = function(words) {
+    const n = words.length;
+    const masks = new Array(n).fill(0);
+    const lengths = new Array(n).fill(0);
+    
+    // Create bit masks for each word
+    for (let i = 0; i < n; i++) {
+        for (const c of words[i]) {
+            masks[i] |= 1 << (c.charCodeAt(0) - 97); // 97 is 'a'
+        }
+        lengths[i] = words[i].length;
+    }
+    
+    // Find maximum product
+    let maxProduct = 0;
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            // If no common letters (no bits in common)
+            if ((masks[i] & masks[j]) === 0) {
+                maxProduct = Math.max(maxProduct, 
+                                    lengths[i] * lengths[j]);
+            }
+        }
+    }
+    
+    return maxProduct;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k + n²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average word length.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing masks and lengths arrays.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int MaxProduct(string[] words) {
+        int n = words.Length;
+        int[] masks = new int[n];
+        int[] lengths = new int[n];
+        
+        // Create bit masks for each word
+        for (int i = 0; i < n; i++) {
+            foreach (char c in words[i]) {
+                masks[i] |= 1 << (c - 'a');
+            }
+            lengths[i] = words[i].Length;
+        }
+        
+        // Find maximum product
+        int maxProduct = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // If no common letters (no bits in common)
+                if ((masks[i] & masks[j]) == 0) {
+                    maxProduct = Math.Max(maxProduct, 
+                                        lengths[i] * lengths[j]);
+                }
+            }
+        }
+        
+        return maxProduct;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n * k + n²)</h4>
+                    <p class="text-gray-700">Where n is the number of words and k is the average word length.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">For storing masks and lengths arrays.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses bit manipulation for efficient character comparison:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Use bit mask for character presence</li>
+                            <li>Bitwise AND for common letters</li>
+                            <li>Optimize comparison speed</li>
+                            <li>Handle duplicates efficiently</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Create bit masks</li>
+                            <li>Store word lengths</li>
+                            <li>Compare word pairs</li>
+                            <li>Track maximum product</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Convert words to bit masks</li>
+                        <li>Compare masks efficiently</li>
+                        <li>Calculate products</li>
+                        <li>Find maximum value</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Bit manipulation tricks</li>
+                        <li>Early termination</li>
+                        <li>Space-time tradeoff</li>
+                        <li>Cache optimization</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty strings</li>
+                        <li>Single character words</li>
+                        <li>All words share letters</li>
+                        <li>Duplicate words</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expression Add Operators - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">282. Expression Add Operators</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given a string <code class="bg-gray-100 px-1 rounded">num</code> that contains only digits and an integer <code class="bg-gray-100 px-1 rounded">target</code>, return all possibilities to insert the binary operators <code class="bg-gray-100 px-1 rounded">'+'</code>, <code class="bg-gray-100 px-1 rounded">'-'</code>, and/or <code class="bg-gray-100 px-1 rounded">'*'</code> between the digits of <code class="bg-gray-100 px-1 rounded">num</code> so that the resultant expression evaluates to the <code class="bg-gray-100 px-1 rounded">target</code> value.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Note that operands in the returned expressions should not contain leading zeros.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num = "123", target = 6
+Output: ["1*2*3","1+2+3"]
+Explanation: Both "1*2*3" and "1+2+3" evaluate to 6.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num = "232", target = 8
+Output: ["2*3+2","2+3*2"]
+Explanation: Both "2*3+2" and "2+3*2" evaluate to 8.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 3:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: num = "3456237490", target = 9191
+Output: []
+Explanation: There are no expressions that can be created from "3456237490" to evaluate to 9191.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= num.length <= 10</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">num</code> consists of only digits</li>
+                    <li><code class="bg-gray-100 px-1 rounded">-2³¹ <= target <= 2³¹ - 1</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def addOperators(self, num: str, target: int) -> List[str]:
+        def backtrack(expr, start, eval, multed):
+            if start == len(num):
+                if eval == target:
+                    ans.append(expr)
+                return
+            
+            for i in range(start, len(num)):
+                # Skip leading zero number
+                if i != start and num[start] == '0':
+                    break
+                    
+                # Get current number
+                cur = int(num[start:i + 1])
+                
+                # If it's the first number
+                if start == 0:
+                    backtrack(expr + str(cur), i + 1, cur, cur)
+                else:
+                    # Add
+                    backtrack(expr + '+' + str(cur), i + 1, eval + cur, cur)
+                    # Subtract
+                    backtrack(expr + '-' + str(cur), i + 1, eval - cur, -cur)
+                    # Multiply
+                    backtrack(expr + '*' + str(cur), i + 1, eval - multed + multed * cur, multed * cur)
+        
+        ans = []
+        backtrack("", 0, 0, 0)
+        return ans</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">For each position, we have 4 choices (no operator, +, -, *).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">The recursion stack can go up to n levels deep.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    List<String> ans = new ArrayList<>();
+    String num;
+    int target;
+    
+    public List<String> addOperators(String num, int target) {
+        this.num = num;
+        this.target = target;
+        backtrack("", 0, 0, 0);
+        return ans;
+    }
+    
+    private void backtrack(String expr, int start, long eval, long multed) {
+        if (start == num.length()) {
+            if (eval == target) {
+                ans.add(expr);
+            }
+            return;
+        }
+        
+        for (int i = start; i < num.length(); i++) {
+            // Skip leading zero number
+            if (i != start && num.charAt(start) == '0') {
+                break;
+            }
+            
+            // Get current number
+            long cur = Long.parseLong(num.substring(start, i + 1));
+            
+            // If it's the first number
+            if (start == 0) {
+                backtrack(expr + cur, i + 1, cur, cur);
+            } else {
+                // Add
+                backtrack(expr + "+" + cur, i + 1, eval + cur, cur);
+                // Subtract
+                backtrack(expr + "-" + cur, i + 1, eval - cur, -cur);
+                // Multiply
+                backtrack(expr + "*" + cur, i + 1, eval - multed + multed * cur, multed * cur);
+            }
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">For each position, we have 4 choices (no operator, +, -, *).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">The recursion stack can go up to n levels deep.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+private:
+    vector<string> ans;
+    string num;
+    int target;
+    
+    void backtrack(string expr, int start, long eval, long multed) {
+        if (start == num.length()) {
+            if (eval == target) {
+                ans.push_back(expr);
+            }
+            return;
+        }
+        
+        for (int i = start; i < num.length(); i++) {
+            // Skip leading zero number
+            if (i != start && num[start] == '0') {
+                break;
+            }
+            
+            // Get current number
+            long cur = stol(num.substr(start, i - start + 1));
+            
+            // If it's the first number
+            if (start == 0) {
+                backtrack(expr + to_string(cur), i + 1, cur, cur);
+            } else {
+                // Add
+                backtrack(expr + "+" + to_string(cur), i + 1, eval + cur, cur);
+                // Subtract
+                backtrack(expr + "-" + to_string(cur), i + 1, eval - cur, -cur);
+                // Multiply
+                backtrack(expr + "*" + to_string(cur), i + 1, eval - multed + multed * cur, multed * cur);
+            }
+        }
+    }
+    
+public:
+    vector<string> addOperators(string num, int target) {
+        this->num = num;
+        this->target = target;
+        backtrack("", 0, 0, 0);
+        return ans;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">For each position, we have 4 choices (no operator, +, -, *).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">The recursion stack can go up to n levels deep.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {string} num
+ * @param {number} target
+ * @return {string[]}
+ */
+var addOperators = function(num, target) {
+    const ans = [];
+    
+    function backtrack(expr, start, eval, multed) {
+        if (start === num.length) {
+            if (eval === target) {
+                ans.push(expr);
+            }
+            return;
+        }
+        
+        for (let i = start; i < num.length; i++) {
+            // Skip leading zero number
+            if (i !== start && num[start] === '0') {
+                break;
+            }
+            
+            // Get current number
+            const cur = parseInt(num.slice(start, i + 1));
+            
+            // If it's the first number
+            if (start === 0) {
+                backtrack(expr + cur, i + 1, cur, cur);
+            } else {
+                // Add
+                backtrack(expr + '+' + cur, i + 1, eval + cur, cur);
+                // Subtract
+                backtrack(expr + '-' + cur, i + 1, eval - cur, -cur);
+                // Multiply
+                backtrack(expr + '*' + cur, i + 1, eval - multed + multed * cur, multed * cur);
+            }
+        }
+    }
+    
+    backtrack("", 0, 0, 0);
+    return ans;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">For each position, we have 4 choices (no operator, +, -, *).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">The recursion stack can go up to n levels deep.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    private List<string> ans = new List<string>();
+    private string num;
+    private int target;
+    
+    public IList<string> AddOperators(string num, int target) {
+        this.num = num;
+        this.target = target;
+        Backtrack("", 0, 0, 0);
+        return ans;
+    }
+    
+    private void Backtrack(string expr, int start, long eval, long multed) {
+        if (start == num.Length) {
+            if (eval == target) {
+                ans.Add(expr);
+            }
+            return;
+        }
+        
+        for (int i = start; i < num.Length; i++) {
+            // Skip leading zero number
+            if (i != start && num[start] == '0') {
+                break;
+            }
+            
+            // Get current number
+            long cur = long.Parse(num.Substring(start, i - start + 1));
+            
+            // If it's the first number
+            if (start == 0) {
+                Backtrack(expr + cur, i + 1, cur, cur);
+            } else {
+                // Add
+                Backtrack(expr + "+" + cur, i + 1, eval + cur, cur);
+                // Subtract
+                Backtrack(expr + "-" + cur, i + 1, eval - cur, -cur);
+                // Multiply
+                Backtrack(expr + "*" + cur, i + 1, eval - multed + multed * cur, multed * cur);
+            }
+        }
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(4^n)</h4>
+                    <p class="text-gray-700">For each position, we have 4 choices (no operator, +, -, *).</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">The recursion stack can go up to n levels deep.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses backtracking to generate all possible expressions:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Need to try all possible combinations of operators</li>
+                            <li>Handle multiplication precedence</li>
+                            <li>Track previous multiplication term</li>
+                            <li>Avoid leading zeros</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Use backtracking to try all combinations</li>
+                            <li>For each position, try all possible numbers</li>
+                            <li>Apply each operator and recurse</li>
+                            <li>Track evaluation and multiplication term</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough for "123" and target 6:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Start with "1"</li>
+                        <li>Try "1+2" and "1*2"</li>
+                        <li>From "1+2", try "1+2+3" (=6)</li>
+                        <li>From "1*2", try "1*2*3" (=6)</li>
+                        <li>Found two valid expressions</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Key insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Handle multiplication precedence carefully</li>
+                        <li>Use long to avoid overflow</li>
+                        <li>Skip leading zeros</li>
+                        <li>Track previous multiplication term</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Single digit numbers</li>
+                        <li>Numbers with leading zeros</li>
+                        <li>Large numbers causing overflow</li>
+                        <li>No valid expressions</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

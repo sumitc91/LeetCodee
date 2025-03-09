@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intersection of Two Arrays - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">349. Intersection of Two Arrays</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Given two integer arrays <code class="bg-gray-100 px-1 rounded">nums1</code> and <code class="bg-gray-100 px-1 rounded">nums2</code>, return an array of their intersection. Each element in the result must be <strong>unique</strong> and you may return the result in <strong>any order</strong>.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+Explanation: [4,9] is also accepted.</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= nums1.length, nums2.length <= 1000</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= nums1[i], nums2[i] <= 1000</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        # Convert arrays to sets for O(1) lookup
+        set1 = set(nums1)
+        set2 = set(nums2)
+        
+        # Return intersection of sets
+        return list(set1 & set2)</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n + m)</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of the input arrays.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(min(n, m))</h4>
+                    <p class="text-gray-700">For storing the intersection set.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        // Convert first array to set for O(1) lookup
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums1) {
+            set.add(num);
+        }
+        
+        // Find intersection
+        Set<Integer> intersection = new HashSet<>();
+        for (int num : nums2) {
+            if (set.contains(num)) {
+                intersection.add(num);
+            }
+        }
+        
+        // Convert set to array
+        int[] result = new int[intersection.size()];
+        int i = 0;
+        for (int num : intersection) {
+            result[i++] = num;
+        }
+        
+        return result;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n + m)</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of the input arrays.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(min(n, m))</h4>
+                    <p class="text-gray-700">For storing the sets.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        // Convert first array to set for O(1) lookup
+        unordered_set<int> set(nums1.begin(), nums1.end());
+        
+        // Find intersection
+        unordered_set<int> intersection;
+        for (int num : nums2) {
+            if (set.count(num)) {
+                intersection.insert(num);
+            }
+        }
+        
+        // Convert set to vector
+        return vector<int>(intersection.begin(), intersection.end());
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n + m)</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of the input arrays.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(min(n, m))</h4>
+                    <p class="text-gray-700">For storing the sets.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+var intersection = function(nums1, nums2) {
+    // Convert arrays to sets for O(1) lookup
+    const set1 = new Set(nums1);
+    const set2 = new Set(nums2);
+    
+    // Find intersection
+    const result = [];
+    for (const num of set1) {
+        if (set2.has(num)) {
+            result.push(num);
+        }
+    }
+    
+    return result;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n + m)</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of the input arrays.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(min(n, m))</h4>
+                    <p class="text-gray-700">For storing the sets.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public int[] Intersection(int[] nums1, int[] nums2) {
+        // Convert first array to set for O(1) lookup
+        HashSet<int> set = new HashSet<int>(nums1);
+        
+        // Find intersection
+        HashSet<int> intersection = new HashSet<int>();
+        foreach (int num in nums2) {
+            if (set.Contains(num)) {
+                intersection.Add(num);
+            }
+        }
+        
+        return intersection.ToArray();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n + m)</h4>
+                    <p class="text-gray-700">Where n and m are the lengths of the input arrays.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(min(n, m))</h4>
+                    <p class="text-gray-700">For storing the sets.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses hash sets for efficient lookup:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Set operations</li>
+                            <li>O(1) lookup</li>
+                            <li>Unique elements</li>
+                            <li>Order irrelevant</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Create sets</li>
+                            <li>Find common</li>
+                            <li>Convert result</li>
+                            <li>Handle duplicates</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Convert to sets</li>
+                        <li>Check membership</li>
+                        <li>Build result</li>
+                        <li>Return array</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Hash set usage</li>
+                        <li>Single pass</li>
+                        <li>Memory efficient</li>
+                        <li>Built-in methods</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Edge Cases:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Empty arrays</li>
+                        <li>No intersection</li>
+                        <li>All same elements</li>
+                        <li>Different sizes</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

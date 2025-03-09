@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implement Queue using Stacks - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">232. Implement Queue using Stacks</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (<code class="bg-gray-100 px-1 rounded">push</code>, <code class="bg-gray-100 px-1 rounded">peek</code>, <code class="bg-gray-100 px-1 rounded">pop</code>, and <code class="bg-gray-100 px-1 rounded">empty</code>).
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Implement the <code class="bg-gray-100 px-1 rounded">MyQueue</code> class:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">void push(int x)</code> Pushes element x to the back of the queue.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int pop()</code> Removes the element from the front of the queue and returns it.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">int peek()</code> Returns the element at the front of the queue.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">boolean empty()</code> Returns true if the queue is empty, false otherwise.</li>
+                </ul>
+                <p class="text-gray-700 mb-4">
+                    <strong>Notes:</strong>
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>You must use only standard operations of a stack, which means only <code class="bg-gray-100 px-1 rounded">push to top</code>, <code class="bg-gray-100 px-1 rounded">peek/pop from top</code>, <code class="bg-gray-100 px-1 rounded">size</code>, and <code class="bg-gray-100 px-1 rounded">is empty</code> operations are valid.</li>
+                    <li>Depending on your language, the stack may not be supported natively. You may simulate a stack using a list or deque (double-ended queue) as long as you use only a stack's standard operations.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["MyQueue", "push", "push", "peek", "pop", "empty"]
+[[], [1], [2], [], [], []]
+Output
+[null, null, null, 1, 1, false]
+
+Explanation
+MyQueue myQueue = new MyQueue();
+myQueue.push(1); // queue is: [1]
+myQueue.push(2); // queue is: [1, 2]
+myQueue.peek(); // return 1
+myQueue.pop(); // return 1, queue is [2]
+myQueue.empty(); // return false</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= x <= 9</code></li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">100</code> calls will be made to <code class="bg-gray-100 px-1 rounded">push</code>, <code class="bg-gray-100 px-1 rounded">pop</code>, <code class="bg-gray-100 px-1 rounded">peek</code>, and <code class="bg-gray-100 px-1 rounded">empty</code></li>
+                    <li>All the calls to <code class="bg-gray-100 px-1 rounded">pop</code> and <code class="bg-gray-100 px-1 rounded">peek</code> are valid</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Follow-up:</h2>
+                <p class="text-gray-700">
+                    Can you implement the queue such that each operation is amortized O(1) time complexity? In other words, performing n operations will take overall O(n) time even if one of those operations may take longer.
+                </p>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class MyQueue:
+    def __init__(self):
+        # Stack for pushing elements
+        self.stack1 = []
+        # Stack for popping elements
+        self.stack2 = []
+
+    def push(self, x: int) -> None:
+        # Always push to stack1
+        self.stack1.append(x)
+
+    def pop(self) -> int:
+        # If stack2 is empty, transfer all elements from stack1
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+        return self.stack2.pop()
+
+    def peek(self) -> int:
+        # If stack2 is empty, transfer all elements from stack1
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+        return self.stack2[-1]
+
+    def empty(self) -> bool:
+        # Queue is empty if both stacks are empty
+        return not self.stack1 and not self.stack2</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Push: O(1)</li>
+                        <li>Pop: Amortized O(1)</li>
+                        <li>Peek: Amortized O(1)</li>
+                        <li>Empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the queue.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class MyQueue {
+    private Stack<Integer> stack1;
+    private Stack<Integer> stack2;
+
+    public MyQueue() {
+        // Stack for pushing elements
+        stack1 = new Stack<>();
+        // Stack for popping elements
+        stack2 = new Stack<>();
+    }
+    
+    public void push(int x) {
+        // Always push to stack1
+        stack1.push(x);
+    }
+    
+    public int pop() {
+        // If stack2 is empty, transfer all elements from stack1
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.pop();
+    }
+    
+    public int peek() {
+        // If stack2 is empty, transfer all elements from stack1
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+        return stack2.peek();
+    }
+    
+    public boolean empty() {
+        // Queue is empty if both stacks are empty
+        return stack1.isEmpty() && stack2.isEmpty();
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Push: O(1)</li>
+                        <li>Pop: Amortized O(1)</li>
+                        <li>Peek: Amortized O(1)</li>
+                        <li>Empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the queue.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class MyQueue {
+private:
+    stack<int> stack1;  // Stack for pushing elements
+    stack<int> stack2;  // Stack for popping elements
+
+public:
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+        // Always push to stack1
+        stack1.push(x);
+    }
+    
+    int pop() {
+        // If stack2 is empty, transfer all elements from stack1
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }
+        int result = stack2.top();
+        stack2.pop();
+        return result;
+    }
+    
+    int peek() {
+        // If stack2 is empty, transfer all elements from stack1
+        if (stack2.empty()) {
+            while (!stack1.empty()) {
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }
+        return stack2.top();
+    }
+    
+    bool empty() {
+        // Queue is empty if both stacks are empty
+        return stack1.empty() && stack2.empty();
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Push: O(1)</li>
+                        <li>Pop: Amortized O(1)</li>
+                        <li>Peek: Amortized O(1)</li>
+                        <li>Empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the queue.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>var MyQueue = function() {
+    // Stack for pushing elements
+    this.stack1 = [];
+    // Stack for popping elements
+    this.stack2 = [];
+};
+
+/** 
+ * @param {number} x
+ * @return {void}
+ */
+MyQueue.prototype.push = function(x) {
+    // Always push to stack1
+    this.stack1.push(x);
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.pop = function() {
+    // If stack2 is empty, transfer all elements from stack1
+    if (this.stack2.length === 0) {
+        while (this.stack1.length > 0) {
+            this.stack2.push(this.stack1.pop());
+        }
+    }
+    return this.stack2.pop();
+};
+
+/**
+ * @return {number}
+ */
+MyQueue.prototype.peek = function() {
+    // If stack2 is empty, transfer all elements from stack1
+    if (this.stack2.length === 0) {
+        while (this.stack1.length > 0) {
+            this.stack2.push(this.stack1.pop());
+        }
+    }
+    return this.stack2[this.stack2.length - 1];
+};
+
+/**
+ * @return {boolean}
+ */
+MyQueue.prototype.empty = function() {
+    // Queue is empty if both stacks are empty
+    return this.stack1.length === 0 && this.stack2.length === 0;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Push: O(1)</li>
+                        <li>Pop: Amortized O(1)</li>
+                        <li>Peek: Amortized O(1)</li>
+                        <li>Empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the queue.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class MyQueue {
+    private Stack<int> stack1;  // Stack for pushing elements
+    private Stack<int> stack2;  // Stack for popping elements
+
+    public MyQueue() {
+        stack1 = new Stack<int>();
+        stack2 = new Stack<int>();
+    }
+    
+    public void Push(int x) {
+        // Always push to stack1
+        stack1.Push(x);
+    }
+    
+    public int Pop() {
+        // If stack2 is empty, transfer all elements from stack1
+        if (stack2.Count == 0) {
+            while (stack1.Count > 0) {
+                stack2.Push(stack1.Pop());
+            }
+        }
+        return stack2.Pop();
+    }
+    
+    public int Peek() {
+        // If stack2 is empty, transfer all elements from stack1
+        if (stack2.Count == 0) {
+            while (stack1.Count > 0) {
+                stack2.Push(stack1.Pop());
+            }
+        }
+        return stack2.Peek();
+    }
+    
+    public bool Empty() {
+        // Queue is empty if both stacks are empty
+        return stack1.Count == 0 && stack2.Count == 0;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Push: O(1)</li>
+                        <li>Pop: Amortized O(1)</li>
+                        <li>Peek: Amortized O(1)</li>
+                        <li>Empty: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the number of elements in the queue.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses two stacks to implement a queue. Here's how it works:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Two Stacks:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>stack1: Used for pushing new elements</li>
+                            <li>stack2: Used for popping and peeking elements</li>
+                        </ul>
+                    </li>
+                    <li>Operations:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Push: Always add to stack1</li>
+                            <li>Pop/Peek: Transfer elements from stack1 to stack2 if stack2 is empty</li>
+                            <li>Empty: Check if both stacks are empty</li>
+                        </ul>
+                    </li>
+                    <li>Amortized Analysis:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Each element is pushed and popped at most twice</li>
+                            <li>Once onto/from stack1</li>
+                            <li>Once onto/from stack2</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Key insights about the solution:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Elements maintain FIFO order when transferred between stacks</li>
+                        <li>Transfer operation is only needed when stack2 is empty</li>
+                        <li>Amortized O(1) time complexity is achieved</li>
+                        <li>Space complexity is optimal as each element is stored exactly once</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

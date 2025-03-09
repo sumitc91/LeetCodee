@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Median from Data Stream - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">295. Find Median from Data Stream</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    The <code class="bg-gray-100 px-1 rounded">MedianFinder</code> class is designed to find the median of a data stream. The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Implement the MedianFinder class:</li>
+                    <li><code class="bg-gray-100 px-1 rounded">MedianFinder()</code> initializes the MedianFinder object.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">void addNum(int num)</code> adds the integer num from the data stream to the data structure.</li>
+                    <li><code class="bg-gray-100 px-1 rounded">double findMedian()</code> returns the median of all elements so far. Answers within 10⁻⁵ of the actual answer will be accepted.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input
+["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"]
+[[], [1], [2], [], [3], []]
+Output
+[null, null, null, 1.5, null, 2.0]
+
+Explanation
+MedianFinder medianFinder = new MedianFinder();
+medianFinder.addNum(1);    // arr = [1]
+medianFinder.addNum(2);    // arr = [1, 2]
+medianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)
+medianFinder.addNum(3);    // arr[1, 2, 3]
+medianFinder.findMedian(); // return 2.0</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁵ <= num <= 10⁵</code></li>
+                    <li>There will be at least one element in the data structure before calling <code class="bg-gray-100 px-1 rounded">findMedian</code>.</li>
+                    <li>At most <code class="bg-gray-100 px-1 rounded">5 * 10⁴</code> calls will be made to <code class="bg-gray-100 px-1 rounded">addNum</code> and <code class="bg-gray-100 px-1 rounded">findMedian</code>.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Follow up:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li>If all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?</li>
+                    <li>If 99% of all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class MedianFinder:
+    def __init__(self):
+        # max heap for the first half
+        self.small = []
+        # min heap for the second half
+        self.large = []
+
+    def addNum(self, num: int) -> None:
+        # Always add to small (max heap) first
+        heapq.heappush(self.small, -num)
+        
+        # Make sure every num in small <= every num in large
+        if self.small and self.large and -self.small[0] > self.large[0]:
+            val = -heapq.heappop(self.small)
+            heapq.heappush(self.large, val)
+            
+        # Handle uneven size
+        if len(self.small) > len(self.large) + 1:
+            val = -heapq.heappop(self.small)
+            heapq.heappush(self.large, val)
+        if len(self.large) > len(self.small):
+            val = heapq.heappop(self.large)
+            heapq.heappush(self.small, -val)
+
+    def findMedian(self) -> float:
+        if len(self.small) > len(self.large):
+            return -self.small[0]
+        return (-self.small[0] + self.large[0]) / 2</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>addNum: O(log n)</li>
+                        <li>findMedian: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">To store n numbers in the heaps.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class MedianFinder {
+    private PriorityQueue<Integer> small;  // max heap
+    private PriorityQueue<Integer> large;  // min heap
+    
+    public MedianFinder() {
+        small = new PriorityQueue<>((a, b) -> b - a);  // max heap
+        large = new PriorityQueue<>();  // min heap
+    }
+    
+    public void addNum(int num) {
+        // Always add to small (max heap) first
+        small.offer(num);
+        
+        // Make sure every num in small <= every num in large
+        if (!small.isEmpty() && !large.isEmpty() && small.peek() > large.peek()) {
+            large.offer(small.poll());
+        }
+        
+        // Handle uneven size
+        if (small.size() > large.size() + 1) {
+            large.offer(small.poll());
+        }
+        if (large.size() > small.size()) {
+            small.offer(large.poll());
+        }
+    }
+    
+    public double findMedian() {
+        if (small.size() > large.size()) {
+            return small.peek();
+        }
+        return (small.peek() + large.peek()) / 2.0;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>addNum: O(log n)</li>
+                        <li>findMedian: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">To store n numbers in the heaps.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class MedianFinder {
+private:
+    priority_queue<int> small;  // max heap
+    priority_queue<int, vector<int>, greater<int>> large;  // min heap
+    
+public:
+    MedianFinder() {}
+    
+    void addNum(int num) {
+        // Always add to small (max heap) first
+        small.push(num);
+        
+        // Make sure every num in small <= every num in large
+        if (!small.empty() && !large.empty() && small.top() > large.top()) {
+            large.push(small.top());
+            small.pop();
+        }
+        
+        // Handle uneven size
+        if (small.size() > large.size() + 1) {
+            large.push(small.top());
+            small.pop();
+        }
+        if (large.size() > small.size()) {
+            small.push(large.top());
+            large.pop();
+        }
+    }
+    
+    double findMedian() {
+        if (small.size() > large.size()) {
+            return small.top();
+        }
+        return (small.top() + large.top()) / 2.0;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>addNum: O(log n)</li>
+                        <li>findMedian: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">To store n numbers in the heaps.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>var MedianFinder = function() {
+    this.nums = [];
+};
+
+/** 
+ * @param {number} num
+ * @return {void}
+ */
+MedianFinder.prototype.addNum = function(num) {
+    if (this.nums.length === 0) {
+        this.nums.push(num);
+        return;
+    }
+    
+    // Binary search to find insertion position
+    let left = 0;
+    let right = this.nums.length;
+    while (left < right) {
+        let mid = Math.floor((left + right) / 2);
+        if (this.nums[mid] < num) {
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+    
+    this.nums.splice(left, 0, num);
+};
+
+/**
+ * @return {number}
+ */
+MedianFinder.prototype.findMedian = function() {
+    const n = this.nums.length;
+    if (n % 2 === 1) {
+        return this.nums[Math.floor(n/2)];
+    }
+    return (this.nums[n/2-1] + this.nums[n/2]) / 2;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>addNum: O(n) due to array insertion</li>
+                        <li>findMedian: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">To store n numbers in the array.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class MedianFinder {
+    private PriorityQueue<int, int> small;  // max heap
+    private PriorityQueue<int, int> large;  // min heap
+    
+    public MedianFinder() {
+        small = new PriorityQueue<int, int>();  // max heap
+        large = new PriorityQueue<int, int>();  // min heap
+    }
+    
+    public void AddNum(int num) {
+        // Always add to small (max heap) first
+        small.Enqueue(num, -num);
+        
+        // Make sure every num in small <= every num in large
+        if (small.Count > 0 && large.Count > 0 && -small.Peek() > large.Peek()) {
+            large.Enqueue(-small.Dequeue(), -small.Dequeue());
+        }
+        
+        // Handle uneven size
+        if (small.Count > large.Count + 1) {
+            large.Enqueue(-small.Dequeue(), -small.Dequeue());
+        }
+        if (large.Count > small.Count) {
+            small.Enqueue(large.Dequeue(), -large.Dequeue());
+        }
+    }
+    
+    public double FindMedian() {
+        if (small.Count > large.Count) {
+            return -small.Peek();
+        }
+        return (-small.Peek() + large.Peek()) / 2.0;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity:</h4>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>addNum: O(log n)</li>
+                        <li>findMedian: O(1)</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(n)</h4>
+                    <p class="text-gray-700">To store n numbers in the heaps.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses two heaps to maintain the median:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Use max heap for smaller half</li>
+                            <li>Use min heap for larger half</li>
+                            <li>Keep heaps balanced or max heap one larger</li>
+                            <li>Median is either max heap top or average</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Add to max heap first</li>
+                            <li>Balance values between heaps</li>
+                            <li>Maintain size property</li>
+                            <li>Calculate median from tops</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Add 1: small=[1], large=[]</li>
+                        <li>Add 2: small=[1], large=[2]</li>
+                        <li>Add 3: small=[1], large=[2,3]</li>
+                        <li>Rebalance: small=[1,2], large=[3]</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Optimization insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Constant time median finding</li>
+                        <li>Logarithmic insertion time</li>
+                        <li>Automatic sorting through heaps</li>
+                        <li>Minimal memory overhead</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Follow-up Solutions:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>For [0,100]: Use counting sort array</li>
+                        <li>For 99% in [0,100]: Use bucket + heap</li>
+                        <li>Space-time tradeoff possible</li>
+                        <li>Consider streaming requirements</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

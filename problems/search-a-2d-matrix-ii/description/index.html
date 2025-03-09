@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search a 2D Matrix II - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">240. Search a 2D Matrix II</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    Write an efficient algorithm that searches for a value <code class="bg-gray-100 px-1 rounded">target</code> in an <code class="bg-gray-100 px-1 rounded">m x n</code> integer matrix <code class="bg-gray-100 px-1 rounded">matrix</code>. This matrix has the following properties:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Integers in each row are sorted in ascending from left to right.</li>
+                    <li>Integers in each column are sorted in ascending from top to bottom.</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
+Output: true</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
+Output: false</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">m == matrix.length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">n == matrix[i].length</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">1 <= n, m <= 300</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁹ <= matrix[i][j] <= 10⁹</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">All the integers in each row are sorted in ascending order.</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">All the integers in each column are sorted in ascending order.</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-10⁹ <= target <= 10⁹</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        if not matrix or not matrix[0]:
+            return False
+        
+        # Start from top-right corner
+        row, col = 0, len(matrix[0]) - 1
+        
+        while row < len(matrix) and col >= 0:
+            if matrix[row][col] == target:
+                return True
+            elif matrix[row][col] > target:
+                col -= 1  # Move left
+            else:
+                row += 1  # Move down
+                
+        return False</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m + n)</h4>
+                    <p class="text-gray-700">Where m is the number of rows and n is the number of columns. We traverse at most m + n elements.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
+        
+        // Start from top-right corner
+        int row = 0;
+        int col = matrix[0].length - 1;
+        
+        while (row < matrix.length && col >= 0) {
+            if (matrix[row][col] == target) {
+                return true;
+            } else if (matrix[row][col] > target) {
+                col--;  // Move left
+            } else {
+                row++;  // Move down
+            }
+        }
+        
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m + n)</h4>
+                    <p class="text-gray-700">Where m is the number of rows and n is the number of columns. We traverse at most m + n elements.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if (matrix.empty() || matrix[0].empty()) {
+            return false;
+        }
+        
+        // Start from top-right corner
+        int row = 0;
+        int col = matrix[0].size() - 1;
+        
+        while (row < matrix.size() && col >= 0) {
+            if (matrix[row][col] == target) {
+                return true;
+            } else if (matrix[row][col] > target) {
+                col--;  // Move left
+            } else {
+                row++;  // Move down
+            }
+        }
+        
+        return false;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m + n)</h4>
+                    <p class="text-gray-700">Where m is the number of rows and n is the number of columns. We traverse at most m + n elements.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[][]} matrix
+ * @param {number} target
+ * @return {boolean}
+ */
+var searchMatrix = function(matrix, target) {
+    if (!matrix || !matrix.length || !matrix[0].length) {
+        return false;
+    }
+    
+    // Start from top-right corner
+    let row = 0;
+    let col = matrix[0].length - 1;
+    
+    while (row < matrix.length && col >= 0) {
+        if (matrix[row][col] === target) {
+            return true;
+        } else if (matrix[row][col] > target) {
+            col--;  // Move left
+        } else {
+            row++;  // Move down
+        }
+    }
+    
+    return false;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m + n)</h4>
+                    <p class="text-gray-700">Where m is the number of rows and n is the number of columns. We traverse at most m + n elements.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public bool SearchMatrix(int[][] matrix, int target) {
+        if (matrix == null || matrix.Length == 0 || matrix[0].Length == 0) {
+            return false;
+        }
+        
+        // Start from top-right corner
+        int row = 0;
+        int col = matrix[0].Length - 1;
+        
+        while (row < matrix.Length && col >= 0) {
+            if (matrix[row][col] == target) {
+                return true;
+            } else if (matrix[row][col] > target) {
+                col--;  // Move left
+            } else {
+                row++;  // Move down
+            }
+        }
+        
+        return false;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(m + n)</h4>
+                    <p class="text-gray-700">Where m is the number of rows and n is the number of columns. We traverse at most m + n elements.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Only constant extra space is used.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a clever approach by starting from the top-right corner of the matrix and using the sorted properties to eliminate portions of the matrix:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Key Insight:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Start from top-right corner (could also start from bottom-left)</li>
+                            <li>Use matrix properties to eliminate search space</li>
+                            <li>Move left if current value is too large</li>
+                            <li>Move down if current value is too small</li>
+                        </ul>
+                    </li>
+                    <li>Algorithm Steps:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Initialize position at top-right corner</li>
+                            <li>While within matrix bounds:
+                                <ul class="list-disc list-inside ml-8">
+                                    <li>If current element equals target, return true</li>
+                                    <li>If current element > target, move left (eliminate column)</li>
+                                    <li>If current element < target, move down (eliminate row)</li>
+                                </ul>
+                            </li>
+                            <li>If target not found, return false</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Example walkthrough with matrix:
+                    <pre class="bg-gray-100 p-4 rounded mt-2">[ 1  4  7 11 15]
+[ 2  5  8 12 19]
+[ 3  6  9 16 22]
+[10 13 14 17 24]
+[18 21 23 26 30]</pre>
+                    <p class="mt-2">Searching for target = 5:</p>
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Start at 15 (too large) → move left</li>
+                        <li>At 11 (too large) → move left</li>
+                        <li>At 7 (too large) → move left</li>
+                        <li>At 4 (too small) → move down</li>
+                        <li>At 5 (found!) → return true</li>
+                    </ul>
+                </p>
+
+                <p class="text-gray-700 mt-4">
+                    Key insights:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Efficient O(m + n) solution</li>
+                        <li>No need to search entire matrix</li>
+                        <li>Uses sorted properties in both directions</li>
+                        <li>Constant space complexity</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 

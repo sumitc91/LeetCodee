@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary Ranges - LeetCodee Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto">
+            <a href="/" class="text-xl font-bold">LeetCodee</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold mb-4">228. Summary Ranges</h1>
+
+            <div class="solution-nav mb-6">
+                Jump to Solution:
+                <a href="#python" class="ml-2 text-blue-600 hover:text-blue-800">Python</a>
+                <a href="#java" class="ml-2 text-blue-600 hover:text-blue-800">Java</a>
+                <a href="#cpp" class="ml-2 text-blue-600 hover:text-blue-800">C++</a>
+                <a href="#javascript" class="ml-2 text-blue-600 hover:text-blue-800">JavaScript</a>
+                <a href="#csharp" class="ml-2 text-blue-600 hover:text-blue-800">C#</a>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Problem Description</h2>
+                <p class="text-gray-700 mb-4">
+                    You are given a sorted unique integer array <code class="bg-gray-100 px-1 rounded">nums</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    A range <code class="bg-gray-100 px-1 rounded">[a,b]</code> is the set of all integers from <code class="bg-gray-100 px-1 rounded">a</code> to <code class="bg-gray-100 px-1 rounded">b</code> (inclusive).
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Return the smallest sorted list of ranges that cover all the numbers in the array exactly. That is, each element of <code class="bg-gray-100 px-1 rounded">nums</code> is covered by exactly one of the ranges, and there are no integers in the ranges that are not in <code class="bg-gray-100 px-1 rounded">nums</code>.
+                </p>
+                <p class="text-gray-700 mb-4">
+                    Each range <code class="bg-gray-100 px-1 rounded">[a,b]</code> in the list should be output as:
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li><code class="bg-gray-100 px-1 rounded">"a->b"</code> if <code class="bg-gray-100 px-1 rounded">a != b</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">"a"</code> if <code class="bg-gray-100 px-1 rounded">a == b</code></li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 1:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [0,1,2,4,5,7]
+Output: ["0->2","4->5","7"]
+Explanation: The ranges are:
+[0,2] --> "0->2"
+[4,5] --> "4->5"
+[7,7] --> "7"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Example 2:</h2>
+                <pre class="bg-gray-100 p-4 rounded"><code>Input: nums = [0,2,3,4,6,8,9]
+Output: ["0","2->4","6","8->9"]
+Explanation: The ranges are:
+[0,0] --> "0"
+[2,4] --> "2->4"
+[6,6] --> "6"
+[8,9] --> "8->9"</code></pre>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">Constraints:</h2>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li><code class="bg-gray-100 px-1 rounded">0 <= nums.length <= 20</code></li>
+                    <li><code class="bg-gray-100 px-1 rounded">-2³¹ <= nums[i] <= 2³¹ - 1</code></li>
+                    <li>All the values of <code class="bg-gray-100 px-1 rounded">nums</code> are unique</li>
+                    <li><code class="bg-gray-100 px-1 rounded">nums</code> is sorted in ascending order</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Solution Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Solution</h2>
+            
+            <!-- Python Solution -->
+            <div id="python" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Python Solution</h3>
+                <pre class="language-python"><code>class Solution:
+    def summaryRanges(self, nums: List[int]) -> List[str]:
+        if not nums:
+            return []
+            
+        ranges = []
+        start = nums[0]
+        
+        for i in range(1, len(nums)):
+            if nums[i] != nums[i-1] + 1:
+                # End of current range
+                if start == nums[i-1]:
+                    ranges.append(str(start))
+                else:
+                    ranges.append(f"{start}->{nums[i-1]}")
+                start = nums[i]
+        
+        # Handle the last range
+        if start == nums[-1]:
+            ranges.append(str(start))
+        else:
+            ranges.append(f"{start}->{nums[-1]}")
+            
+        return ranges</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array. We traverse the array once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space used for output, we only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- Java Solution -->
+            <div id="java" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">Java Solution</h3>
+                <pre class="language-java"><code>class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> ranges = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return ranges;
+        }
+        
+        int start = nums[0];
+        
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i-1] + 1) {
+                // End of current range
+                if (start == nums[i-1]) {
+                    ranges.add(String.valueOf(start));
+                } else {
+                    ranges.add(start + "->" + nums[i-1]);
+                }
+                start = nums[i];
+            }
+        }
+        
+        // Handle the last range
+        if (start == nums[nums.length-1]) {
+            ranges.add(String.valueOf(start));
+        } else {
+            ranges.add(start + "->" + nums[nums.length-1]);
+        }
+        
+        return ranges;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array. We traverse the array once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space used for output, we only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C++ Solution -->
+            <div id="cpp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C++ Solution</h3>
+                <pre class="language-cpp"><code>class Solution {
+public:
+    vector<string> summaryRanges(vector<int>& nums) {
+        vector<string> ranges;
+        if (nums.empty()) {
+            return ranges;
+        }
+        
+        int start = nums[0];
+        
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] != nums[i-1] + 1) {
+                // End of current range
+                if (start == nums[i-1]) {
+                    ranges.push_back(to_string(start));
+                } else {
+                    ranges.push_back(to_string(start) + "->" + to_string(nums[i-1]));
+                }
+                start = nums[i];
+            }
+        }
+        
+        // Handle the last range
+        if (start == nums.back()) {
+            ranges.push_back(to_string(start));
+        } else {
+            ranges.push_back(to_string(start) + "->" + to_string(nums.back()));
+        }
+        
+        return ranges;
+    }
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array. We traverse the array once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space used for output, we only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- JavaScript Solution -->
+            <div id="javascript" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">JavaScript Solution</h3>
+                <pre class="language-javascript"><code>/**
+ * @param {number[]} nums
+ * @return {string[]}
+ */
+var summaryRanges = function(nums) {
+    if (!nums.length) {
+        return [];
+    }
+    
+    const ranges = [];
+    let start = nums[0];
+    
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] !== nums[i-1] + 1) {
+            // End of current range
+            if (start === nums[i-1]) {
+                ranges.push(start.toString());
+            } else {
+                ranges.push(`${start}->${nums[i-1]}`);
+            }
+            start = nums[i];
+        }
+    }
+    
+    // Handle the last range
+    if (start === nums[nums.length-1]) {
+        ranges.push(start.toString());
+    } else {
+        ranges.push(`${start}->${nums[nums.length-1]}`);
+    }
+    
+    return ranges;
+};</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array. We traverse the array once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space used for output, we only use a constant amount of extra space.</p>
+                </div>
+            </div>
+
+            <!-- C# Solution -->
+            <div id="csharp" class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">C# Solution</h3>
+                <pre class="language-csharp"><code>public class Solution {
+    public IList<string> SummaryRanges(int[] nums) {
+        var ranges = new List<string>();
+        if (nums == null || nums.Length == 0) {
+            return ranges;
+        }
+        
+        int start = nums[0];
+        
+        for (int i = 1; i < nums.Length; i++) {
+            if (nums[i] != nums[i-1] + 1) {
+                // End of current range
+                if (start == nums[i-1]) {
+                    ranges.Add(start.ToString());
+                } else {
+                    ranges.Add($"{start}->{nums[i-1]}");
+                }
+                start = nums[i];
+            }
+        }
+        
+        // Handle the last range
+        if (start == nums[nums.Length-1]) {
+            ranges.Add(start.ToString());
+        } else {
+            ranges.Add($"{start}->{nums[nums.Length-1]}");
+        }
+        
+        return ranges;
+    }
+}</code></pre>
+                
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Time Complexity: O(n)</h4>
+                    <p class="text-gray-700">Where n is the length of the input array. We traverse the array once.</p>
+                    
+                    <h4 class="text-lg font-semibold mb-2 mt-4">Space Complexity: O(1)</h4>
+                    <p class="text-gray-700">Not counting the space used for output, we only use a constant amount of extra space.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approach Explanation -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Approach Explanation</h2>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700">
+                    The solution uses a single pass through the array to identify and format ranges. Here's how it works:
+                </p>
+                
+                <ol class="list-decimal list-inside text-gray-700 ml-4">
+                    <li>Initialization:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Handle empty array case</li>
+                            <li>Initialize start with first number</li>
+                            <li>Prepare result list for ranges</li>
+                        </ul>
+                    </li>
+                    <li>Main Process:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Iterate through array starting from second element</li>
+                            <li>Check if current number is consecutive to previous</li>
+                            <li>If not consecutive, end current range and start new one</li>
+                            <li>Format range based on whether it's single number or range</li>
+                        </ul>
+                    </li>
+                    <li>Final Step:
+                        <ul class="list-disc list-inside ml-8">
+                            <li>Handle the last range after loop ends</li>
+                            <li>Format appropriately based on range size</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p class="text-gray-700 mt-4">
+                    Key points about the solution:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Takes advantage of the fact that array is sorted</li>
+                        <li>Handles single-number ranges differently from multi-number ranges</li>
+                        <li>Special handling for the last range is necessary</li>
+                        <li>String formatting varies by language but logic remains same</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2024 LeetCodee. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html> 
